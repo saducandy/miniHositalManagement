@@ -8,10 +8,10 @@ export const DoctorsPage: React.FC = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Meet Our Expert Doctors</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Meet Our Expert Ophthalmologists</h1>
           <p className="text-xl lg:text-2xl text-blue-100 max-w-3xl mx-auto">
-            Our team of board-certified physicians and specialists are dedicated to providing 
-            exceptional healthcare with compassion and expertise
+            Our team of board-certified ophthalmologists and eye care specialists are dedicated to providing 
+            exceptional vision care with compassion and expertise
           </p>
         </div>
       </section>
@@ -89,10 +89,10 @@ export const DoctorsPage: React.FC = () => {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Doctors?</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Ophthalmologists?</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our physicians are not just experts in their fields, but compassionate caregivers 
-              committed to your health and well-being
+              Our ophthalmologists are not just experts in their fields, but compassionate caregivers 
+              committed to your vision health and well-being
             </p>
           </div>
 
@@ -102,7 +102,7 @@ export const DoctorsPage: React.FC = () => {
                 <Award className="h-6 w-6 text-emerald-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Board Certified</h3>
-              <p className="text-gray-600 text-sm">All our doctors are board-certified specialists</p>
+              <p className="text-gray-600 text-sm">All our doctors are board-certified ophthalmologists</p>
             </div>
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">
@@ -118,7 +118,7 @@ export const DoctorsPage: React.FC = () => {
                 <Star className="h-6 w-6 text-purple-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Patient Focused</h3>
-              <p className="text-gray-600 text-sm">Personalized care tailored to your unique needs</p>
+              <p className="text-gray-600 text-sm">Personalized eye care tailored to your unique vision needs</p>
             </div>
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">

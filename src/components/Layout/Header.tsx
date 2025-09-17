@@ -72,8 +72,8 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
               <Heart className="h-8 w-8 text-emerald-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">HealthCare+</h1>
-              <p className="text-sm text-gray-600">Caring for Your Health</p>
+              <h1 className="text-2xl font-bold text-gray-900">Eye Care Center</h1>
+              <p className="text-sm text-gray-600">Vision Excellence</p>
             </div>
           </Link>
 

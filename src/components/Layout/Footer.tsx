@@ -14,12 +14,12 @@ export const Footer: React.FC = () => {
                 <Heart className="h-6 w-6 text-emerald-600" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">HealthCare+</h3>
-                <p className="text-sm text-gray-400">Caring for Your Health</p>
+                <h3 className="text-xl font-bold">Eye Care Center</h3>
+                <p className="text-sm text-gray-400">Vision Excellence</p>
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-6">
-              Providing exceptional healthcare services with compassion, innovation, and excellence. Your health is our priority.
+              Providing exceptional eye care services with advanced technology and compassionate care. Your vision is our priority.
             </p>
           </div>
 
@@ -44,12 +44,12 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-2 text-sm">
-              <li className="text-gray-400">Emergency Care</li>
-              <li className="text-gray-400">Cardiology</li>
-              <li className="text-gray-400">Orthopedics</li>
-              <li className="text-gray-400">Pediatrics</li>
-              <li className="text-gray-400">Surgery</li>
-              <li className="text-gray-400">Diagnostics</li>
+              <li className="text-gray-400">Comprehensive Eye Exams</li>
+              <li className="text-gray-400">LASIK Surgery</li>
+              <li className="text-gray-400">Retinal Care</li>
+              <li className="text-gray-400">Pediatric Eye Care</li>
+              <li className="text-gray-400">Glaucoma Treatment</li>
+              <li className="text-gray-400">Cataract Surgery</li>
             </ul>
           </div>
 
@@ -63,15 +63,15 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                <span className="text-gray-400 text-sm">info@healthcareplus.com</span>
+                <span className="text-gray-400 text-sm">info@eyecarecenter.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-400 text-sm">123 Healthcare Ave<br />Medical City, MC 12345</span>
+                <span className="text-gray-400 text-sm">123 Vision Boulevard<br />Eye Care City, EC 12345</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Clock className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                <span className="text-gray-400 text-sm">24/7 Emergency</span>
+                <span className="text-gray-400 text-sm">Mon-Fri: 8AM-6PM</span>
               </li>
             </ul>
           </div>
@@ -80,7 +80,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 HealthCare+. All rights reserved.
+              © 2024 Eye Care Center. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy" className="text-gray-400 hover:text-emerald-400 text-sm transition-colors focus:outline-none focus:text-emerald-400">

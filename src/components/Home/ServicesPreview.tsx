@@ -1,32 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Stethoscope, Activity, Baby, ArrowRight } from 'lucide-react';
+import { Eye, Zap, Shield, Baby, ArrowRight } from 'lucide-react';
 
 export const ServicesPreview: React.FC = () => {
   const services = [
     {
-      icon: Heart,
-      title: 'Cardiology',
-      description: 'Comprehensive heart care with advanced diagnostic and treatment options.',
-      image: 'https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=400'
+      icon: Eye,
+      title: 'Comprehensive Eye Exams',
+      description: 'Complete eye health evaluations with advanced diagnostic technology.',
+      image: 'https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=400'
     },
     {
-      icon: Stethoscope,
-      title: 'General Medicine',
-      description: 'Primary care services for all your health needs and preventive care.',
-      image: 'https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=400'
+      icon: Zap,
+      title: 'LASIK Surgery',
+      description: 'Advanced laser vision correction for freedom from glasses and contacts.',
+      image: 'https://images.pexels.com/photos/5752270/pexels-photo-5752270.jpeg?auto=compress&cs=tinysrgb&w=400'
     },
     {
-      icon: Activity,
-      title: 'Emergency Care',
-      description: '24/7 emergency services with immediate response and expert care.',
-      image: 'https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=400'
+      icon: Shield,
+      title: 'Retinal Care',
+      description: 'Specialized treatment for diabetic retinopathy and macular degeneration.',
+      image: 'https://images.pexels.com/photos/5752251/pexels-photo-5752251.jpeg?auto=compress&cs=tinysrgb&w=400'
     },
     {
       icon: Baby,
-      title: 'Pediatrics',
-      description: 'Specialized care for infants, children, and adolescents.',
-      image: 'https://images.pexels.com/photos/4269698/pexels-photo-4269698.jpeg?auto=compress&cs=tinysrgb&w=400'
+      title: 'Pediatric Eye Care',
+      description: 'Specialized eye care for children from infancy through adolescence.',
+      image: 'https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=400'
     }
   ];
 
@@ -35,11 +35,11 @@ export const ServicesPreview: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Our Medical Services
+            Our Eye Care Services
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We provide comprehensive healthcare services with state-of-the-art technology 
-            and experienced medical professionals dedicated to your well-being.
+            We provide comprehensive eye care services with state-of-the-art technology 
+            and experienced ophthalmologists dedicated to your vision health.
           </p>
         </div>
 

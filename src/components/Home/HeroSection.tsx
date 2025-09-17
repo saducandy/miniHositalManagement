@@ -11,12 +11,12 @@ export const HeroSection: React.FC = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                Your Health, Our
-                <span className="text-emerald-600 block">Priority</span>
+                Your Vision, Our
+                <span className="text-emerald-600 block">Excellence</span>
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Experience exceptional healthcare with our team of dedicated professionals. 
-                Book appointments online, access your medical records, and get the care you deserve.
+                Experience exceptional eye care with our team of specialized ophthalmologists. 
+                Book appointments online, access your vision records, and get the expert care your eyes deserve.
               </p>
             </div>
 
@@ -39,10 +39,10 @@ export const HeroSection: React.FC = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
               {[
-                { icon: Users, value: '10K+', label: 'Patients Served' },
+                { icon: Users, value: '15K+', label: 'Patients Served' },
                 { icon: Award, value: '25+', label: 'Years Experience' },
-                { icon: Clock, value: '24/7', label: 'Emergency Care' },
-                { icon: Calendar, value: '99%', label: 'On-time Rate' },
+                { icon: Clock, value: '98%', label: 'Success Rate' },
+                { icon: Calendar, value: '5000+', label: 'Surgeries Performed' },
               ].map((stat, index) => (
                 <div key={index} className="text-center">
                   <stat.icon className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
@@ -57,8 +57,8 @@ export const HeroSection: React.FC = () => {
           <div className="relative">
             <div className="relative z-10">
               <img
-                src="https://images.pexels.com/photos/4386476/pexels-photo-4386476.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Medical professionals providing care"
+                src="https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=800"
+                alt="Eye care professionals providing vision care"
                 className="rounded-2xl shadow-2xl w-full h-auto"
               />
             </div>

@@ -327,9 +327,11 @@ export const AppointmentBooking: React.FC = () => {
                     >
                       <option value="">Select reason</option>
                       <option value="routine-checkup">Routine Checkup</option>
-                      <option value="consultation">Consultation</option>
+                      <option value="consultation">Vision Consultation</option>
+                      <option value="lasik">LASIK Consultation</option>
                       <option value="follow-up">Follow-up</option>
-                      <option value="symptoms">Symptoms</option>
+                      <option value="symptoms">Vision Problems</option>
+                      <option value="emergency">Urgent Eye Care</option>
                       <option value="other">Other</option>
                     </select>
                     {errors.reason && (
@@ -347,7 +349,7 @@ export const AppointmentBooking: React.FC = () => {
                     id="notes"
                     rows={4}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder="Any additional information you'd like to share..."
+                    placeholder="Any vision concerns or additional information you'd like to share..."
                   />
                 </div>
               </form>

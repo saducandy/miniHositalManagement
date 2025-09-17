@@ -9,9 +9,9 @@ export const ServicesPage: React.FC = () => {
       <section className="bg-gradient-to-br from-emerald-600 to-blue-600 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">Our Medical Services</h1>
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6">Our Eye Care Services</h1>
             <p className="text-xl lg:text-2xl text-emerald-100 max-w-3xl mx-auto">
-              Comprehensive healthcare services delivered by our expert medical professionals using state-of-the-art technology
+              Comprehensive eye care services delivered by our expert ophthalmologists using state-of-the-art technology
             </p>
           </div>
         </div>
@@ -70,7 +70,7 @@ export const ServicesPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Our Services?</h2>
-            <p className="text-xl text-gray-600">Excellence in healthcare through innovation and compassion</p>
+            <p className="text-xl text-gray-600">Excellence in eye care through innovation and compassion</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -80,7 +80,7 @@ export const ServicesPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Expert Care</h3>
               <p className="text-gray-600">
-                Board-certified specialists with years of experience in their respective fields
+                Board-certified ophthalmologists with years of experience in specialized eye care
               </p>
             </div>
 
@@ -88,9 +88,9 @@ export const ServicesPage: React.FC = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Clock className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">24/7 Availability</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Extended Hours</h3>
               <p className="text-gray-600">
-                Round-the-clock emergency services and urgent care when you need it most
+                Extended hours including evenings and weekends for your convenience
               </p>
             </div>
 
@@ -111,10 +111,10 @@ export const ServicesPage: React.FC = () => {
       <section className="py-16 bg-emerald-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Experience Quality Healthcare?
+            Ready to Experience Quality Eye Care?
           </h2>
           <p className="text-xl text-emerald-100 mb-8">
-            Book your appointment today and take the first step towards better health
+            Book your eye exam today and take the first step towards better vision
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="bg-white text-emerald-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-emerald-600">

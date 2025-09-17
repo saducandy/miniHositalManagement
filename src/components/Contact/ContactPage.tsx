@@ -46,19 +46,19 @@ export const ContactPage: React.FC = () => {
     {
       icon: Mail,
       title: 'Email',
-      details: ['info@healthcareplus.com', 'appointments@healthcareplus.com'],
+      details: ['info@eyecarecenter.com', 'appointments@eyecarecenter.com'],
       color: 'blue',
     },
     {
       icon: MapPin,
       title: 'Address',
-      details: ['123 Healthcare Avenue', 'Medical City, MC 12345'],
+      details: ['123 Vision Boulevard', 'Eye Care City, EC 12345'],
       color: 'purple',
     },
     {
       icon: Clock,
       title: 'Hours',
-      details: ['Mon-Fri: 6:00 AM - 10:00 PM', 'Sat-Sun: 8:00 AM - 6:00 PM'],
+      details: ['Mon-Fri: 8:00 AM - 6:00 PM', 'Sat: 9:00 AM - 3:00 PM'],
       color: 'orange',
     },
   ];
@@ -174,8 +174,9 @@ export const ContactPage: React.FC = () => {
                     >
                       <option value="">Select subject</option>
                       <option value="appointment">Appointment Inquiry</option>
-                      <option value="billing">Billing Question</option>
-                      <option value="medical">Medical Inquiry</option>
+                      <option value="insurance">Insurance Question</option>
+                      <option value="vision">Vision Inquiry</option>
+                      <option value="surgery">Surgery Consultation</option>
                       <option value="complaint">Complaint</option>
                       <option value="general">General Question</option>
                     </select>
@@ -241,12 +242,15 @@ export const ContactPage: React.FC = () => {
 
               {/* Additional Information */}
               <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
-                <h3 className="text-lg font-semibold text-blue-900 mb-3">Patient Resources</h3>
+                <h3 className="text-lg font-semibold text-red-900 mb-3">Urgent Eye Care</h3>
+                <p className="text-blue-800 mb-4">
+                  For urgent eye problems like sudden vision loss, severe eye pain, or eye injuries, please call us immediately or visit the nearest emergency room.
+                </p>
                 <ul className="space-y-2 text-sm text-blue-800">
-                  <li>• Patient Portal: Access your medical records online</li>
-                  <li>• Billing Questions: Call (555) 123-BILL</li>
-                  <li>• Insurance Verification: Call (555) 123-INS</li>
-                  <li>• Pharmacy Services: Call (555) 123-MEDS</li>
+                  <li>• Patient Portal: Access your vision records online</li>
+                  <li>• Insurance Questions: Call (555) 123-INS</li>
+                  <li>• LASIK Consultations: Call (555) 123-LASIK</li>
+                  <li>• Optical Shop: Call (555) 123-LENS</li>
                 </ul>
               </div>
             </div>
