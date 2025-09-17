@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart, Menu, X, Type, Contrast, Plus, Minus } from 'lucide-react';
+import { Menu, X, Contrast, Plus, Minus } from 'lucide-react';
 import { useAccessibility } from '../../hooks/useAccessibility';
 
 interface HeaderProps {
@@ -28,7 +28,15 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
       {/* Accessibility Bar */}
       <div className="bg-gray-100 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-end items-center py-2 space-x-4">
+          <div className="flex justify-between items-center py-2 space-x-4">
+            {/* Branding on top bar */}
+            <Link to="/" className="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded">
+              <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-8 w-8 rounded-full object-cover" />
+              <div className="leading-tight">
+                <span className="block text-base font-semibold text-gray-900 whitespace-nowrap">Bahir Dar Eye Care Center</span>
+                <span className="block text-xs text-gray-600">Vision Excellence</span>
+              </div>
+            </Link>
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-600">Font Size:</span>
               <button
@@ -66,16 +74,8 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
       {/* Main Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded">
-            <div className="p-2 bg-emerald-100 rounded-full">
-              <Heart className="h-8 w-8 text-emerald-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Eye Care Center</h1>
-              <p className="text-sm text-gray-600">Vision Excellence</p>
-            </div>
-          </Link>
+          {/* Logo moved to top bar - leaving an empty spacer for alignment on mobile if needed */}
+          <div className="flex-1 md:flex-none"></div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8" role="navigation">
@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
           <div className="hidden md:flex items-center space-x-4">
             <Link
               to="/appointments"
-              className="bg-emerald-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              className="bg-emerald-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 whitespace-nowrap"
             >
               Book Appointment
             </Link>

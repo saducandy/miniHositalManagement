@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
@@ -10,11 +10,9 @@ export const Footer: React.FC = () => {
           {/* Logo and Description */}
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="p-2 bg-emerald-100 rounded-full">
-                <Heart className="h-6 w-6 text-emerald-600" />
-              </div>
+              <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-8 w-8 rounded-full object-cover" />
               <div>
-                <h3 className="text-xl font-bold">Eye Care Center</h3>
+                <h3 className="text-xl font-bold">Bahir Dar Eye Care Center</h3>
                 <p className="text-sm text-gray-400">Vision Excellence</p>
               </div>
             </div>
@@ -80,7 +78,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 Eye Care Center. All rights reserved.
+              © 2024 Bahir Dar Eye Care Center. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy" className="text-gray-400 hover:text-emerald-400 text-sm transition-colors focus:outline-none focus:text-emerald-400">
