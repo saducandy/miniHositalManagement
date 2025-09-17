@@ -26,18 +26,18 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
   return (
     <header className="bg-white shadow-lg relative z-50">
       {/* Accessibility Bar */}
-      <div className="bg-gray-100 border-b">
+      <div className="bg-gray-100 border-b hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-2 space-x-4">
+          <div className="flex items-center py-2 gap-2 sm:gap-4 flex-wrap">
             {/* Branding on top bar */}
-            <Link to="/" className="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded">
-              <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-8 w-8 rounded-full object-cover" />
-              <div className="leading-tight">
-                <span className="block text-base font-semibold text-gray-900 whitespace-nowrap">Bahir Dar Eye Care Center</span>
-                <span className="block text-xs text-gray-600">Vision Excellence</span>
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded min-w-0 flex-1">
+              <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full object-cover flex-shrink-0" />
+              <div className="leading-tight min-w-0">
+                <span className="block text-sm sm:text-base font-semibold text-gray-900 truncate">Bahir Dar Eye Care Center</span>
+                <span className="hidden sm:block text-xs text-gray-600">Vision Excellence</span>
               </div>
             </Link>
-            <div className="flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-2 sm:space-x-2 ml-auto flex-wrap gap-y-2">
               <span className="text-sm text-gray-600">Font Size:</span>
               <button
                 onClick={decreaseFontSize}
@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
             </div>
             <button
               onClick={toggleHighContrast}
-              className={`flex items-center space-x-1 px-3 py-1 rounded text-sm transition-colors ${
+              className={`hidden md:flex items-center space-x-1 px-3 py-1 rounded text-sm transition-colors ${
                 highContrast
                   ? 'bg-yellow-500 text-black'
                   : 'text-gray-600 hover:text-gray-900'
@@ -74,8 +74,16 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
       {/* Main Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo moved to top bar - leaving an empty spacer for alignment on mobile if needed */}
-          <div className="flex-1 md:flex-none"></div>
+          {/* Mobile: branding on left; burger on right */}
+          <div className="flex items-center gap-3 md:hidden">
+            <Link to="/" className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded">
+              <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-8 w-8 rounded-full object-cover" />
+              <div className="leading-tight">
+                <span className="block text-base font-semibold text-gray-900">Bahir Dar Eye Care Center</span>
+                <span className="block text-xs text-gray-600">Vision Excellence</span>
+              </div>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8" role="navigation">
@@ -110,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
             </Link>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button on right */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 text-gray-700 hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded"
@@ -138,6 +146,38 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                   {item.name}
                 </Link>
               ))}
+              {/* Accessibility controls on mobile */}
+              <div className="px-3 pt-2 mt-2 border-t border-gray-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">Font Size</span>
+                  <span className="text-sm text-gray-600">{fontSize}px</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={decreaseFontSize}
+                    className="flex-1 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    aria-label="Decrease font size"
+                  >
+                    <Minus className="inline h-4 w-4 mr-1" /> Smaller
+                  </button>
+                  <button
+                    onClick={increaseFontSize}
+                    className="flex-1 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    aria-label="Increase font size"
+                  >
+                    <Plus className="inline h-4 w-4 mr-1" /> Larger
+                  </button>
+                </div>
+                <button
+                  onClick={toggleHighContrast}
+                  className={`mt-3 w-full py-2 rounded text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                    highContrast ? 'bg-yellow-500 text-black' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                  aria-label="Toggle high contrast mode"
+                >
+                  <Contrast className="inline h-4 w-4 mr-2" /> High Contrast
+                </button>
+              </div>
               <div className="pt-4 border-t border-gray-200 space-y-2">
                 <Link
                   to="/appointments"
