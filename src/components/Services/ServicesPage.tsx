@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { departments } from '../../data/mockData';
 import { ArrowRight, Users, Clock, Award, MapPin } from 'lucide-react';
 
@@ -54,9 +55,9 @@ export const ServicesPage: React.FC = () => {
                       <Users className="h-4 w-4 mr-2 text-emerald-600" />
                       <span>Department Head: {department.head}</span>
                     </div>
-                    <button className="w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                    <Link to="/appointments" className="w-full inline-block text-center bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                       Book Consultation
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Contrast, Plus, Minus } from 'lucide-react';
 import { useAccessibility } from '../../hooks/useAccessibility';
@@ -11,6 +11,14 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => {
   const location = useLocation();
   const { fontSize, highContrast, increaseFontSize, decreaseFontSize, toggleHighContrast } = useAccessibility();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 0);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -25,119 +33,76 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
 
   return (
     <header className="bg-white shadow-lg relative z-50">
-      {/* Accessibility Bar */}
-      <div className="bg-gray-100 border-b hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center py-2 gap-2 sm:gap-4 flex-wrap">
-            {/* Branding on top bar */}
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded min-w-0 flex-1">
-              <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-7 w-7 sm:h-8 sm:w-8 rounded-full object-cover flex-shrink-0" />
-              <div className="leading-tight min-w-0">
-                <span className="block text-sm sm:text-base font-semibold text-gray-900 truncate">Bahir Dar Eye Care Center</span>
-                <span className="hidden sm:block text-xs text-gray-600">Vision Excellence</span>
+      {/* Accessibility Bar (hidden on scroll) */}
+      {!isScrolled && (
+        <div className="bg-gray-100 border-b hidden md:block">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center py-1 gap-2 sm:gap-3 flex-wrap">
+              {/* Branding on top bar */}
+              <Link to="/" className="flex items-center gap-2 sm:gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded min-w-0 flex-1">
+                <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-6 w-6 sm:h-7 sm:w-7 rounded-full object-cover flex-shrink-0" />
+                <div className="leading-tight min-w-0">
+                  <span className="block text-sm sm:text-base font-semibold text-gray-900 truncate">Bahir Dar Eye Care Center</span>
+                  <span className="hidden sm:block text-xs text-gray-600">Vision Excellence</span>
+                </div>
+              </Link>
+              <div className="hidden md:flex items-center space-x-2 sm:space-x-2 ml-auto flex-wrap gap-y-2">
+              <span className="text-xs text-gray-600">Font Size:</span>
+                <button
+                  onClick={decreaseFontSize}
+                  className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  aria-label="Decrease font size"
+                >
+                <Minus className="h-3 w-3" />
+                </button>
+              <span className="text-xs text-gray-600 min-w-[2rem] text-center">{fontSize}px</span>
+                <button
+                  onClick={increaseFontSize}
+                  className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  aria-label="Increase font size"
+                >
+                <Plus className="h-3 w-3" />
+                </button>
               </div>
-            </Link>
-            <div className="hidden md:flex items-center space-x-2 sm:space-x-2 ml-auto flex-wrap gap-y-2">
-              <span className="text-sm text-gray-600">Font Size:</span>
               <button
-                onClick={decreaseFontSize}
-                className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                aria-label="Decrease font size"
+                onClick={toggleHighContrast}
+              className={`hidden md:flex items-center space-x-1 px-2 py-0.5 rounded text-xs transition-colors ${
+                  highContrast
+                    ? 'bg-yellow-500 text-black'
+                    : 'text-gray-600 hover:text-gray-900'
+                } focus:outline-none focus:ring-2 focus:ring-emerald-500`}
+                aria-label="Toggle high contrast mode"
               >
-                <Minus className="h-4 w-4" />
-              </button>
-              <span className="text-sm text-gray-600 min-w-[2rem] text-center">{fontSize}px</span>
-              <button
-                onClick={increaseFontSize}
-                className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                aria-label="Increase font size"
-              >
-                <Plus className="h-4 w-4" />
+              <Contrast className="h-3 w-3" />
+              <span>Contrast</span>
               </button>
             </div>
-            <button
-              onClick={toggleHighContrast}
-              className={`hidden md:flex items-center space-x-1 px-3 py-1 rounded text-sm transition-colors ${
-                highContrast
-                  ? 'bg-yellow-500 text-black'
-                  : 'text-gray-600 hover:text-gray-900'
-              } focus:outline-none focus:ring-2 focus:ring-emerald-500`}
-              aria-label="Toggle high contrast mode"
-            >
-              <Contrast className="h-4 w-4" />
-              <span>High Contrast</span>
-            </button>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          {/* Mobile: branding on left; burger on right */}
-          <div className="flex items-center gap-3 md:hidden">
-            <Link to="/" className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded">
-              <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-8 w-8 rounded-full object-cover" />
-              <div className="leading-tight">
-                <span className="block text-base font-semibold text-gray-900">Bahir Dar Eye Care Center</span>
-                <span className="block text-xs text-gray-600">Vision Excellence</span>
-              </div>
-            </Link>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8" role="navigation">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`px-3 py-2 text-sm font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                  isActive(item.href)
-                    ? 'text-emerald-600 bg-emerald-50'
-                    : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
-                }`}
-              >
-                {item.name}
+      {/* Main Header (fixed, always visible). On desktop, offset below the accessibility bar until scrolled */}
+      <div className={`fixed left-0 right-0 ${isScrolled ? 'top-0' : 'top-0 md:top-[48px]'} bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow z-50`}> 
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            {/* Mobile: branding on left; burger on right */}
+            <div className="flex items-center gap-3 md:hidden">
+              <Link to="/" className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded">
+                <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-8 w-8 rounded-full object-cover" />
+                <div className="leading-tight">
+                  <span className="block text-base font-semibold text-gray-900">Bahir Dar Eye Care Center</span>
+                  <span className="block text-xs text-gray-600">Vision Excellence</span>
+                </div>
               </Link>
-            ))}
-          </nav>
+            </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/appointments"
-              className="bg-emerald-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 whitespace-nowrap"
-            >
-              Book Appointment
-            </Link>
-            <Link
-              to="/admin"
-              className="text-emerald-600 border border-emerald-600 px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-            >
-              Admin
-            </Link>
-          </div>
-
-          {/* Mobile menu button on right */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200">
-            <nav className="py-4 space-y-2" role="navigation">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex space-x-8" role="navigation">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block px-3 py-2 text-base font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                  className={`px-3 py-2 text-sm font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                     isActive(item.href)
                       ? 'text-emerald-600 bg-emerald-50'
                       : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
@@ -146,57 +111,104 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                   {item.name}
                 </Link>
               ))}
-              {/* Accessibility controls on mobile */}
-              <div className="px-3 pt-2 mt-2 border-t border-gray-200">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-600">Font Size</span>
-                  <span className="text-sm text-gray-600">{fontSize}px</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <button
-                    onClick={decreaseFontSize}
-                    className="flex-1 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    aria-label="Decrease font size"
-                  >
-                    <Minus className="inline h-4 w-4 mr-1" /> Smaller
-                  </button>
-                  <button
-                    onClick={increaseFontSize}
-                    className="flex-1 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    aria-label="Increase font size"
-                  >
-                    <Plus className="inline h-4 w-4 mr-1" /> Larger
-                  </button>
-                </div>
-                <button
-                  onClick={toggleHighContrast}
-                  className={`mt-3 w-full py-2 rounded text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                    highContrast ? 'bg-yellow-500 text-black' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                  }`}
-                  aria-label="Toggle high contrast mode"
-                >
-                  <Contrast className="inline h-4 w-4 mr-2" /> High Contrast
-                </button>
-              </div>
-              <div className="pt-4 border-t border-gray-200 space-y-2">
-                <Link
-                  to="/appointments"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block bg-emerald-600 text-white px-3 py-2 rounded text-base font-medium text-center hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                >
-                  Book Appointment
-                </Link>
-                <Link
-                  to="/admin"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-emerald-600 border border-emerald-600 px-3 py-2 rounded text-base font-medium text-center hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                >
-                  Admin Panel
-                </Link>
-              </div>
             </nav>
+
+            {/* CTA Button */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Link
+                to="/appointments"
+                className="bg-emerald-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 whitespace-nowrap"
+              >
+                Book Appointment
+              </Link>
+              <Link
+                to="/admin"
+                className="text-emerald-600 border border-emerald-600 px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              >
+                Admin
+              </Link>
+            </div>
+
+            {/* Mobile menu button on right */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 text-gray-700 hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
-        )}
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="md:hidden border-t border-gray-200">
+              <nav className="py-4 space-y-2" role="navigation">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block px-3 py-2 text-base font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      isActive(item.href)
+                        ? 'text-emerald-600 bg-emerald-50'
+                        : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                {/* Accessibility controls on mobile */}
+                <div className="px-3 pt-2 mt-2 border-t border-gray-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-600">Font Size</span>
+                    <span className="text-sm text-gray-600">{fontSize}px</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={decreaseFontSize}
+                      className="flex-1 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      aria-label="Decrease font size"
+                    >
+                      <Minus className="inline h-4 w-4 mr-1" /> Smaller
+                    </button>
+                    <button
+                      onClick={increaseFontSize}
+                      className="flex-1 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      aria-label="Increase font size"
+                    >
+                      <Plus className="inline h-4 w-4 mr-1" /> Larger
+                    </button>
+                  </div>
+                  <button
+                    onClick={toggleHighContrast}
+                    className={`mt-3 w-full py-2 rounded text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      highContrast ? 'bg-yellow-500 text-black' : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                    aria-label="Toggle high contrast mode"
+                  >
+                    <Contrast className="inline h-4 w-4 mr-2" /> High Contrast
+                  </button>
+                </div>
+                <div className="pt-4 border-t border-gray-200 space-y-2">
+                  <Link
+                    to="/appointments"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block bg-emerald-600 text-white px-3 py-2 rounded text-base font-medium text-center hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    Book Appointment
+                  </Link>
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-emerald-600 border border-emerald-600 px-3 py-2 rounded text-base font-medium text-center hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    Admin Panel
+                  </Link>
+                </div>
+              </nav>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

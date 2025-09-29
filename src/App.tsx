@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout/Layout';
 import { HomePage } from './pages/HomePage';
 import { AppointmentBooking } from './components/Appointments/AppointmentBooking';
@@ -12,6 +12,7 @@ import { ContactPage } from './components/Contact/ContactPage';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -26,5 +27,13 @@ function App() {
     </Router>
   );
 }
+
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [pathname]);
+  return null;
+};
 
 export default App;

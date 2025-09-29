@@ -4,9 +4,9 @@ import { Calendar, Clock, Users, Award } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
   return (
-    <section className="relative bg-gradient-to-br from-emerald-50 to-blue-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="relative h-screen bg-gradient-to-br from-emerald-50 to-blue-50 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
           {/* Content */}
           <div className="space-y-8">
             <div className="space-y-4">
@@ -59,7 +59,7 @@ export const HeroSection: React.FC = () => {
               <img
                 src="https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=800"
                 alt="Eye care professionals providing vision care"
-                className="rounded-2xl shadow-2xl w-full h-auto"
+                className="rounded-2xl shadow-2xl w-full h-auto object-cover max-h-[60vh] md:max-h-[70vh] lg:max-h-[75vh]"
               />
             </div>
             {/* Decorative elements */}

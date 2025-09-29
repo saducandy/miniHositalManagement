@@ -20,6 +20,18 @@ interface ContactFormData {
   message: string;
 }
 
+let SwalRef: any = null;
+async function getSwal() {
+  if (SwalRef) return SwalRef;
+  try {
+    const mod = await import('sweetalert2');
+    SwalRef = mod.default || mod;
+  } catch {
+    SwalRef = { fire: (t: string, m: string, _i?: string) => alert(`${t}: ${m}`) };
+  }
+  return SwalRef;
+}
+
 export const ContactPage: React.FC = () => {
   const {
     register,
@@ -30,10 +42,30 @@ export const ContactPage: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: ContactFormData) => {
-    console.log('Contact Form Data:', data);
-    alert('Message sent successfully! We will get back to you soon.');
-    reset();
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      const res = await fetch('https://strapi.hielav.com/api/ec-message-from-customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data: {
+            fullName: data.name,
+            email: data.email,
+            phoneNumber: data.phone,
+            subject: data.subject,
+            message: data.message,
+          },
+        }),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Failed with status ${res.status}`);
+      }
+      (await getSwal()).fire('Success', 'Your message has been sent successfully.', 'success');
+      reset();
+    } catch (e: any) {
+      (await getSwal()).fire('Error', e?.message || 'Failed to send your message.', 'error');
+    }
   };
 
   const contactInfo = [
@@ -219,11 +251,19 @@ export const ContactPage: React.FC = () => {
               {/* Map Placeholder */}
               <div className="bg-white p-8 rounded-xl shadow-lg">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Find Us</h3>
-                <div className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <MapPin className="h-16 w-16 mx-auto mb-4" />
-                    <p className="text-lg font-medium">Interactive Map</p>
-                    <p className="text-sm">123 Healthcare Avenue, Medical City</p>
+                <div className="rounded-lg overflow-hidden">
+                  <div className="aspect-video">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.406901393574!2d37.33957957452743!3d11.594312043576672!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1644d3000ed84847%3A0xd3ca252bbba86b86!2sBahir%20Dar%20Specialty%20Eye%20Center!5e0!3m2!1sen!2set!4v1759158737762!5m2!1sen!2set"
+                      width="600"
+                      height="450"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="w-full h-full"
+                      title="Map - Bahir Dar Specialty Eye Center"
+                    />
                   </div>
                 </div>
               </div>

@@ -83,6 +83,14 @@ export const departments: Department[] = [
     image: 'https://images.pexels.com/photos/5752265/pexels-photo-5752265.jpeg?auto=compress&cs=tinysrgb&w=600',
     services: ['Glaucoma Screening', 'Visual Field Testing', 'MIGS Procedures', 'Trabeculectomy'],
     head: 'Dr. James Thompson'
+  },
+  {
+    id: '6',
+    name: 'Comprehensive Eye Exams',
+    description: 'Complete eye health evaluations including vision testing, eye pressure checks, and retinal examinations.',
+    image: 'https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=600',
+    services: ['Vision Testing', 'Dilated Eye Exams', 'Eye Pressure Screening', 'Retinal Photography'],
+    head: 'Dr. Sarah Mitchell'
   }
 ];
 
@@ -152,11 +160,27 @@ export const testimonials: Testimonial[] = [
   },
   {
     id: '4',
-    patientName: 'David Wilson',
+    patientName: 'Jennifer Adams',
     rating: 5,
-    review: 'The glaucoma treatment I received from Dr. Thompson has preserved my vision. The staff is knowledgeable, and the technology is state-of-the-art.',
-    date: '2023-12-28',
-    treatment: 'Glaucoma Treatment'
+    review: 'Dr. Mitchell performed my retinal surgery with incredible skill. My vision has improved dramatically, and the care I received was exceptional throughout the entire process.',
+    date: '2024-01-15',
+    treatment: 'Retinal Surgery'
+  },
+  {
+    id: '5',
+    patientName: 'Robert Kim',
+    rating: 5,
+    review: 'LASIK with Dr. Chen was life-changing! I went from thick glasses to 20/20 vision. The procedure was quick and painless, and the results exceeded my expectations.',
+    date: '2024-01-10',
+    treatment: 'LASIK Surgery'
+  },
+  {
+    id: '6',
+    patientName: 'Maria Santos',
+    rating: 5,
+    review: 'Dr. Rodriguez is wonderful with children. My daughter was nervous about her eye exam, but Dr. Rodriguez made her feel comfortable and explained everything in kid-friendly terms.',
+    date: '2024-01-05',
+    treatment: 'Pediatric Eye Care'
   }
 ];
 
@@ -210,5 +234,15 @@ export const events: Event[] = [
     type: 'campaign',
     image: 'https://images.pexels.com/photos/5752251/pexels-photo-5752251.jpeg?auto=compress&cs=tinysrgb&w=600',
     location: 'Community Room'
+  },
+  {
+    id: '6',
+    title: 'Diabetic Eye Disease Awareness Month',
+    description: 'Free diabetic eye screenings and educational seminars about preventing vision loss from diabetes.',
+    date: '2024-02-14',
+    time: '09:00',
+    type: 'awareness',
+    image: 'https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=600',
+    location: 'Main Eye Care Center'
   }
 ];
