@@ -1,8 +1,78 @@
 import React from 'react';
-import { doctors } from '../../data/mockData';
 import { Calendar, Award, Clock, Star } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+type ApiDoctor = {
+  id: number;
+  name: string;
+  speciality: string;
+  description: string;
+  exprience: string | number;
+  availability: boolean;
+  qualification: string;
+  rating: number;
+  doctorsImage?: { url?: string } | null;
+};
+
+type Doctor = {
+  id: number;
+  name: string;
+  speciality: string;
+  description: string;
+  experienceYears: string;
+  availability: boolean;
+  qualification: string;
+  rating: number;
+  imageUrl: string;
+};
 
 export const DoctorsPage: React.FC = () => {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchDoctors = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const res = await fetch('https://strapi.hielav.com/api/ec-doctors?populate=*', {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`Failed to load doctors: ${res.status}`);
+        const json: { data: ApiDoctor[] } = await res.json();
+
+        const mapped: Doctor[] = (json.data || []).map((d) => {
+          const imagePath = d?.doctorsImage?.url || '';
+          const absoluteUrl = imagePath
+            ? imagePath.startsWith('http')
+              ? imagePath
+              : `https://strapi.hielav.com${imagePath}`
+            : '';
+          return {
+            id: d.id,
+            name: d.name,
+            speciality: d.speciality,
+            description: d.description,
+            experienceYears: `${d.exprience} Years of Experience`,
+            availability: Boolean(d.availability),
+            qualification: d.qualification,
+            rating: Number(d.rating ?? 0),
+            imageUrl: absoluteUrl,
+          };
+        });
+        setDoctors(mapped);
+      } catch (err: any) {
+        if (err?.name !== 'AbortError') setError(err?.message || 'Failed to load doctors');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDoctors();
+    return () => controller.abort();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -20,18 +90,24 @@ export const DoctorsPage: React.FC = () => {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {doctors.map((doctor) => (
+            {isLoading && (
+              <div className="col-span-full text-center text-gray-600">Loading doctors...</div>
+            )}
+            {error && (
+              <div className="col-span-full text-center text-red-600">{error}</div>
+            )}
+            {!isLoading && !error && doctors.map((doctor) => (
               <div key={doctor.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                 <div className="relative">
                   <img
-                    src={doctor.image}
+                    src={doctor.imageUrl || '/logo.png'}
                     alt={doctor.name}
                     className="w-full h-80 object-cover"
                   />
                   <div className="absolute top-4 right-4 bg-white bg-opacity-90 px-3 py-1 rounded-full">
                     <div className="flex items-center space-x-1">
                       <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium">4.9</span>
+                      <span className="text-sm font-medium">{doctor.rating?.toFixed(1)}</span>
                     </div>
                   </div>
                 </div>
@@ -39,33 +115,31 @@ export const DoctorsPage: React.FC = () => {
                 <div className="p-8">
                   <div className="mb-4">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{doctor.name}</h3>
-                    <p className="text-emerald-600 font-semibold text-lg">{doctor.specialty}</p>
+                    <p className="text-emerald-600 font-semibold text-lg">{doctor.speciality}</p>
                   </div>
 
                   <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                    {doctor.bio}
+                    {doctor.description}
                   </p>
 
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center text-sm text-gray-600">
                       <Award className="h-4 w-4 mr-2 text-emerald-600" />
-                      <span>{doctor.experience} years experience</span>
+                      <span>{doctor.experienceYears}</span>
                     </div>
                     <div className="flex items-center text-sm text-gray-600">
                       <Clock className="h-4 w-4 mr-2 text-emerald-600" />
-                      <span>Available for appointments</span>
+                      <span>{doctor.availability ? 'Available for appointments' : 'Currently unavailable'}</span>
                     </div>
                   </div>
 
                   <div className="mb-6">
                     <h4 className="font-semibold text-gray-900 mb-3">Qualifications:</h4>
                     <ul className="space-y-1">
-                      {doctor.qualifications.slice(0, 2).map((qual, index) => (
-                        <li key={index} className="text-xs text-gray-600 flex items-start">
-                          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2 mt-1.5 flex-shrink-0"></div>
-                          {qual}
-                        </li>
-                      ))}
+                      <li className="text-xs text-gray-600 flex items-start">
+                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2 mt-1.5 flex-shrink-0"></div>
+                        {doctor.qualification}
+                      </li>
                     </ul>
                   </div>
 

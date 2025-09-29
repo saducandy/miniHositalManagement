@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
-import { Calendar, Users, FileText, Settings, Activity, TrendingUp, Clock, CheckCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Calendar, Users, FileText, Settings, Activity, Clock, CheckCircle } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [appointments, setAppointments] = useState<Array<{
+    dateAndTime: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    resonForVisit: string;
+    additionalNotes?: string | null;
+    ec_doctor?: { name?: string; speciality?: string } | null;
+  }>>([]);
+  const [loadingAppointments, setLoadingAppointments] = useState(false);
+  const [appointmentsError, setAppointmentsError] = useState<string | null>(null);
 
   const stats = [
     { label: 'Total Appointments', value: '1,234', change: '+12%', icon: Calendar, color: 'emerald' },
@@ -25,6 +36,50 @@ export const AdminDashboard: React.FC = () => {
     { id: 'content', label: 'Content', icon: FileText },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
+
+  // Fetch appointments when Appointments tab is active
+  useEffect(() => {
+    if (activeTab !== 'appointments') return;
+    const controller = new AbortController();
+    const fetchAppointments = async () => {
+      try {
+        setLoadingAppointments(true);
+        setAppointmentsError(null);
+        const res = await fetch('https://strapi.hielav.com/api/ec-appointments?populate=*', {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`Failed to load appointments: ${res.status}`);
+        const json: { data: Array<any> } = await res.json();
+        const mapped = (json.data || []).map((a) => ({
+          dateAndTime: a.dateAndTime,
+          fullName: a.fullName,
+          email: a.email,
+          phoneNumber: a.phoneNumber,
+          resonForVisit: a.resonForVisit,
+          additionalNotes: a.additionalNotes,
+          ec_doctor: a.ec_doctor ? { name: a.ec_doctor.name, speciality: a.ec_doctor.speciality } : null,
+        }));
+        setAppointments(mapped);
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') setAppointmentsError(e?.message || 'Failed to load appointments');
+      } finally {
+        setLoadingAppointments(false);
+      }
+    };
+    fetchAppointments();
+    return () => controller.abort();
+  }, [activeTab]);
+
+  const formatFancyDate = (iso: string) => {
+    try {
+      const d = new Date(iso);
+      const date = d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      return { date, time };
+    } catch {
+      return { date: iso, time: '' };
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -177,8 +232,81 @@ export const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Other tabs would have similar content structures */}
-        {activeTab !== 'overview' && (
+        {/* Appointments Tab */}
+        {activeTab === 'appointments' && (
+          <div className="bg-white rounded-lg shadow p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">All Appointments</h2>
+            {loadingAppointments && (
+              <p className="text-gray-600">Loading appointments...</p>
+            )}
+            {appointmentsError && (
+              <p className="text-red-600">{appointmentsError}</p>
+            )}
+            {!loadingAppointments && !appointmentsError && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {appointments.map((a, idx) => {
+                  const { date, time } = formatFancyDate(a.dateAndTime);
+                  return (
+                    <div key={idx} className="border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                      <div className="p-6 space-y-4">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-xs uppercase text-gray-500">Patient</p>
+                            <h3 className="text-lg font-semibold text-gray-900">{a.fullName}</h3>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs uppercase text-gray-500">Doctor</p>
+                            <p className="text-sm font-medium text-emerald-700">{a.ec_doctor?.name || '-'}</p>
+                            <p className="text-xs text-gray-600">{a.ec_doctor?.speciality || '-'}</p>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex items-center space-x-3">
+                            <Calendar className="h-5 w-5 text-emerald-600" />
+                            <div>
+                              <p className="text-xs text-gray-500">Date</p>
+                              <p className="text-sm font-medium">{date}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <Clock className="h-5 w-5 text-emerald-600" />
+                            <div>
+                              <p className="text-xs text-gray-500">Time</p>
+                              <p className="text-sm font-medium">{time}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-xs text-gray-500">Email</p>
+                            <p className="text-sm text-gray-700 break-all">{a.email}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Phone</p>
+                            <p className="text-sm text-gray-700">{a.phoneNumber}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500">Reason</p>
+                          <p className="text-sm text-gray-700">{a.resonForVisit}</p>
+                        </div>
+                        {a.additionalNotes ? (
+                          <div>
+                            <p className="text-xs text-gray-500">Notes</p>
+                            <p className="text-sm text-gray-700 whitespace-pre-line line-clamp-3">{a.additionalNotes}</p>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Other tabs placeholder */}
+        {activeTab !== 'overview' && activeTab !== 'appointments' && (
           <div className="bg-white rounded-lg shadow p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               {tabs.find(t => t.id === activeTab)?.label} Management

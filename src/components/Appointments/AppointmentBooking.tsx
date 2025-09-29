@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Calendar, Clock, User, Phone, Mail, FileText, ChevronRight, ChevronLeft } from 'lucide-react';
-import { doctors } from '../../data/mockData';
+import { Calendar, Clock, User, FileText, ChevronRight, ChevronLeft } from 'lucide-react';
 import { formatDate, formatTime, getNextWeekDays, generateTimeSlots } from '../../utils/dateUtils';
 import { useAccessibility } from '../../hooks/useAccessibility';
+let SwalRef: any = null;
+async function getSwal() {
+  if (SwalRef) return SwalRef;
+  try {
+    const mod = await import('sweetalert2');
+    SwalRef = mod.default || mod;
+  } catch {
+    SwalRef = {
+      fire: (_t: string, _m: string, _i: string) => alert(`${_t}: ${_m}`),
+    };
+  }
+  return SwalRef;
+}
 
 const schema = yup.object({
   patientName: yup.string().required('Full name is required'),
   patientEmail: yup.string().email('Invalid email').required('Email is required'),
   patientPhone: yup.string().required('Phone number is required'),
   reason: yup.string().required('Reason for visit is required'),
-  notes: yup.string(),
+  notes: yup.string().optional(),
 });
 
 interface AppointmentFormData {
@@ -25,11 +37,21 @@ interface AppointmentFormData {
 
 export const AppointmentBooking: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedDoctor, setSelectedDoctor] = useState('');
+  const [selectedDoctor, setSelectedDoctor] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { announceToScreenReader } = useAccessibility();
+  const [doctors, setDoctors] = useState<{
+    id: number;
+    name: string;
+    speciality: string;
+    exprience: string | number;
+    imageUrl: string;
+  }[]>([]);
+  const [loadingDoctors, setLoadingDoctors] = useState(false);
+  const [doctorsError, setDoctorsError] = useState<string | null>(null);
+  const [savedUserData, setSavedUserData] = useState<AppointmentFormData | null>(null);
 
   const {
     register,
@@ -37,7 +59,7 @@ export const AppointmentBooking: React.FC = () => {
     formState: { errors },
     reset,
   } = useForm<AppointmentFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as any,
   });
 
   const availableDates = getNextWeekDays();
@@ -64,25 +86,110 @@ export const AppointmentBooking: React.FC = () => {
     }
   };
 
-  const onSubmit = (data: AppointmentFormData) => {
-    console.log('Appointment Data:', {
-      ...data,
-      doctorId: selectedDoctor,
-      date: selectedDate,
-      time: selectedTime,
-    });
-    setIsSubmitted(true);
-    announceToScreenReader('Appointment booked successfully');
-    // Here you would typically send the data to your backend
+  const onSubmit: import('react-hook-form').SubmitHandler<AppointmentFormData> = (data) => {
+    setSavedUserData(data);
+    setCurrentStep(4);
+    announceToScreenReader('Review your appointment details');
   };
 
   const resetForm = () => {
     setCurrentStep(1);
-    setSelectedDoctor('');
+    setSelectedDoctor(null);
     setSelectedDate('');
     setSelectedTime('');
     setIsSubmitted(false);
     reset();
+    setSavedUserData(null);
+  };
+
+  // Fetch doctors from API
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchDoctors = async () => {
+      try {
+        setLoadingDoctors(true);
+        setDoctorsError(null);
+        const res = await fetch('https://strapi.hielav.com/api/ec-doctors?populate=*', {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`Failed to load doctors: ${res.status}`);
+        const json: {
+          data: Array<{
+            id: number;
+            name: string;
+            speciality: string;
+            exprience: string | number;
+            doctorsImage?: { url?: string } | null;
+          }>;
+        } = await res.json();
+        const mapped = (json.data || []).map(d => ({
+          id: d.id,
+          name: d.name,
+          speciality: d.speciality,
+          exprience: d.exprience,
+          imageUrl: d?.doctorsImage?.url
+            ? (d.doctorsImage.url.startsWith('http') ? d.doctorsImage.url : `https://strapi.hielav.com${d.doctorsImage.url}`)
+            : '/logo.png',
+        }));
+        setDoctors(mapped);
+      } catch (err: any) {
+        if (err?.name !== 'AbortError') setDoctorsError(err?.message || 'Failed to load doctors');
+      } finally {
+        setLoadingDoctors(false);
+      }
+    };
+    fetchDoctors();
+    return () => controller.abort();
+  }, []);
+
+  const buildISODateTime = (): string | null => {
+    if (!selectedDate || !selectedTime) return null;
+    try {
+      // Combine local date and time, then convert to ISO (UTC)
+      const iso = new Date(`${selectedDate}T${selectedTime}:00`).toISOString();
+      return iso;
+    } catch {
+      return null;
+    }
+  };
+
+  const confirmAppointment = async () => {
+    if (!selectedDoctor || !selectedDate || !selectedTime || !savedUserData) {
+      (await getSwal()).fire('Missing information', 'Please complete all steps before confirming.', 'warning');
+      return;
+    }
+    const dateAndTime = buildISODateTime();
+    if (!dateAndTime) {
+      (await getSwal()).fire('Invalid date/time', 'Please reselect date and time.', 'error');
+      return;
+    }
+    try {
+      const response = await fetch('https://strapi.hielav.com/api/ec-appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            dateAndTime,
+            fullName: savedUserData.patientName,
+            email: savedUserData.patientEmail,
+            phoneNumber: savedUserData.patientPhone,
+            resonForVisit: savedUserData.reason,
+            additionalNotes: savedUserData.notes || '',
+            ec_doctor: selectedDoctor,
+          },
+        }),
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `Failed with status ${response.status}`);
+      }
+      (await getSwal()).fire('Success', 'Your appointment has been booked!', 'success');
+      setIsSubmitted(true);
+    } catch (e: any) {
+      (await getSwal()).fire('Error', e?.message || 'Failed to submit appointment.', 'error');
+    }
   };
 
   if (isSubmitted) {
@@ -103,6 +210,17 @@ export const AppointmentBooking: React.FC = () => {
                 <p><span className="font-medium">Doctor:</span> {doctors.find(d => d.id === selectedDoctor)?.name}</p>
                 <p><span className="font-medium">Date:</span> {formatDate(selectedDate)}</p>
                 <p><span className="font-medium">Time:</span> {formatTime(selectedTime)}</p>
+                {savedUserData && (
+                  <>
+                    <p><span className="font-medium">Full Name:</span> {savedUserData.patientName}</p>
+                    <p><span className="font-medium">Email:</span> {savedUserData.patientEmail}</p>
+                    <p><span className="font-medium">Phone:</span> {savedUserData.patientPhone}</p>
+                    <p><span className="font-medium">Reason:</span> {savedUserData.reason}</p>
+                    {savedUserData.notes && (
+                      <p><span className="font-medium">Notes:</span> {savedUserData.notes}</p>
+                    )}
+                  </>
+                )}
               </div>
             </div>
             <button
@@ -163,7 +281,13 @@ export const AppointmentBooking: React.FC = () => {
               <div className="space-y-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Select a Doctor</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {doctors.map((doctor) => (
+                  {loadingDoctors && (
+                    <div className="col-span-full text-center text-gray-600">Loading doctors...</div>
+                  )}
+                  {doctorsError && (
+                    <div className="col-span-full text-center text-red-600">{doctorsError}</div>
+                  )}
+                  {!loadingDoctors && !doctorsError && doctors.map((doctor) => (
                     <div
                       key={doctor.id}
                       className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
@@ -182,14 +306,14 @@ export const AppointmentBooking: React.FC = () => {
                       aria-pressed={selectedDoctor === doctor.id}
                     >
                       <img
-                        src={doctor.image}
+                        src={doctor.imageUrl}
                         alt={doctor.name}
                         className="w-16 h-16 rounded-full object-cover mx-auto mb-4"
                       />
                       <div className="text-center">
                         <h3 className="font-semibold text-gray-900 mb-1">{doctor.name}</h3>
-                        <p className="text-emerald-600 text-sm font-medium mb-2">{doctor.specialty}</p>
-                        <p className="text-gray-600 text-xs">{doctor.experience} years experience</p>
+                        <p className="text-emerald-600 text-sm font-medium mb-2">{doctor.speciality}</p>
+                        <p className="text-gray-600 text-xs">{doctor.exprience} Years of Experience</p>
                       </div>
                     </div>
                   ))}
@@ -363,7 +487,7 @@ export const AppointmentBooking: React.FC = () => {
                 <div className="bg-gray-50 rounded-lg p-6 space-y-4">
                   <div className="flex items-start space-x-4">
                     <img
-                      src={doctors.find(d => d.id === selectedDoctor)?.image}
+                      src={doctors.find(d => d.id === selectedDoctor)?.imageUrl}
                       alt="Doctor"
                       className="w-16 h-16 rounded-full object-cover"
                     />
@@ -372,7 +496,7 @@ export const AppointmentBooking: React.FC = () => {
                         {doctors.find(d => d.id === selectedDoctor)?.name}
                       </h3>
                       <p className="text-emerald-600 font-medium">
-                        {doctors.find(d => d.id === selectedDoctor)?.specialty}
+                        {doctors.find(d => d.id === selectedDoctor)?.speciality}
                       </p>
                     </div>
                   </div>
@@ -432,7 +556,7 @@ export const AppointmentBooking: React.FC = () => {
                 </button>
               ) : currentStep === 3 ? (
                 <button
-                  onClick={nextStep}
+                  onClick={handleSubmit(onSubmit)}
                   type="button"
                   className="flex items-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
@@ -441,7 +565,7 @@ export const AppointmentBooking: React.FC = () => {
                 </button>
               ) : (
                 <button
-                  onClick={handleSubmit(onSubmit)}
+                  onClick={confirmAppointment}
                   type="button"
                   className="flex items-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
