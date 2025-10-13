@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useLocation } from 'react-router-dom';
 import { Calendar, Clock, User, FileText, ChevronRight, ChevronLeft } from 'lucide-react';
 import { formatDate, formatTime, getNextWeekDays, generateTimeSlots } from '../../utils/dateUtils';
 import { useAccessibility } from '../../hooks/useAccessibility';
@@ -36,6 +37,8 @@ interface AppointmentFormData {
 }
 
 export const AppointmentBooking: React.FC = () => {
+  const location = useLocation();
+  const patientData = location.state?.patientData;
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedDoctor, setSelectedDoctor] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -58,12 +61,29 @@ export const AppointmentBooking: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<AppointmentFormData>({
     resolver: yupResolver(schema) as any,
+    defaultValues: {
+      patientName: patientData?.fullName || '',
+      patientEmail: patientData?.email || '',
+      patientPhone: patientData?.phoneNumber || '',
+      reason: '',
+      notes: '',
+    },
   });
 
   const availableDates = getNextWeekDays();
   const timeSlots = generateTimeSlots();
+
+  // Set form values when patient data is available
+  useEffect(() => {
+    if (patientData) {
+      setValue('patientName', patientData.fullName);
+      setValue('patientEmail', patientData.email);
+      setValue('patientPhone', patientData.phoneNumber);
+    }
+  }, [patientData, setValue]);
 
   const steps = [
     { number: 1, title: 'Select Doctor', icon: User },
@@ -381,7 +401,16 @@ export const AppointmentBooking: React.FC = () => {
             {/* Step 3: Personal Details */}
             {currentStep === 3 && (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Personal Details</h2>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Personal Details</h2>
+                  {patientData && (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+                      <p className="text-sm text-emerald-700 font-medium">
+                        ✓ Patient data pre-filled from admin panel
+                      </p>
+                    </div>
+                  )}
+                </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>

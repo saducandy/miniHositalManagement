@@ -148,9 +148,9 @@ export const DoctorsPage: React.FC = () => {
                       <Calendar className="h-4 w-4 inline mr-2" />
                       Book Appointment
                     </button>
-                    <button className="w-full border border-emerald-600 text-emerald-600 py-3 px-6 rounded-lg font-semibold hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
+                    {/* <button className="w-full border border-emerald-600 text-emerald-600 py-3 px-6 rounded-lg font-semibold hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
                       View Profile
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
