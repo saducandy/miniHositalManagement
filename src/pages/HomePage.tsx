@@ -5,6 +5,7 @@ import { ServicesPreview } from '../components/Home/ServicesPreview';
 import { testimonials, faqs } from '../data/mockData';
 import { Star, Quote, Plus, Minus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { I18nContext } from '../context/I18nContext';
 
 export const HomePage: React.FC = () => {
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
@@ -21,10 +22,7 @@ export const HomePage: React.FC = () => {
       {/* Testimonials Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Patients Say</h2>
-            <p className="text-xl text-gray-600">Real stories from real patients about their eye care experience</p>
-          </div>
+          <HomeTestimonialsHeader />
           <TestimonialsCarousel />
         </div>
       </section>
@@ -32,13 +30,10 @@ export const HomePage: React.FC = () => {
       {/* FAQ Section */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-xl text-gray-600">Find answers to common questions about our services</p>
-          </div>
+          <HomeFaqHeader />
 
           <div className="space-y-4">
-            {faqs.map((faq) => (
+            {faqs.map((faq: any) => (
               <div key={faq.id} className="border border-gray-200 rounded-lg overflow-hidden">
                 <button
                   onClick={() => toggleFaq(faq.id)}
@@ -46,7 +41,7 @@ export const HomePage: React.FC = () => {
                   aria-expanded={expandedFaq === faq.id}
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">{typeof faq.question === 'string' ? faq.question : (faq.question?.[React.useContext(I18nContext).language] || faq.question?.en)}</h3>
                     {expandedFaq === faq.id ? (
                       <Minus className="h-5 w-5 text-gray-600" />
                     ) : (
@@ -56,7 +51,7 @@ export const HomePage: React.FC = () => {
                 </button>
                 {expandedFaq === faq.id && (
                   <div className="px-6 py-4 bg-white border-t border-gray-200">
-                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                    <p className="text-gray-600 leading-relaxed">{typeof faq.answer === 'string' ? faq.answer : (faq.answer?.[React.useContext(I18nContext).language] || faq.answer?.en)}</p>
                   </div>
                 )}
               </div>
@@ -69,13 +64,13 @@ export const HomePage: React.FC = () => {
       <section className="py-16 bg-gradient-to-r from-emerald-600 to-blue-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Take Control of Your Vision?
+            {React.useContext(I18nContext).t('home.cta.heading')}
           </h2>
           <p className="text-xl text-emerald-100 mb-8">
-            Schedule your eye exam today and experience the difference quality eye care makes
+            {React.useContext(I18nContext).t('home.cta.subtitle')}
           </p>
           <Link to="/appointments" className="inline-block bg-white text-emerald-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-emerald-600 transform hover:scale-105">
-            Book Your Appointment Now
+            {React.useContext(I18nContext).t('home.cta.button')}
           </Link>
         </div>
       </section>
@@ -83,10 +78,39 @@ export const HomePage: React.FC = () => {
   );
 };
 
+const HomeTestimonialsHeader: React.FC = () => {
+  const { t } = React.useContext(I18nContext);
+  return (
+    <div className="text-center mb-16">
+      <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('home.testimonials.heading')}</h2>
+      <p className="text-xl text-gray-600">{t('home.testimonials.subtitle')}</p>
+    </div>
+  );
+};
+
+const HomeFaqHeader: React.FC = () => {
+  const { t } = React.useContext(I18nContext);
+  return (
+    <div className="text-center mb-16">
+      <h2 className="text-4xl font-bold text-gray-900 mb-4">{t('home.faq.heading')}</h2>
+      <p className="text-xl text-gray-600">{t('home.faq.subtitle')}</p>
+    </div>
+  );
+};
+
 const TestimonialsCarousel: React.FC = () => {
   const [visible, setVisible] = useState(3);
+  const { language } = React.useContext(I18nContext);
   const total = testimonials.length;
-  const quadrupled = useMemo(() => testimonials.concat(testimonials, testimonials, testimonials), []);
+  const localized = useMemo(() => (
+    testimonials.map((t: any) => ({
+      ...t,
+      patientName: typeof t.patientName === 'string' ? t.patientName : (t.patientName?.[language] || t.patientName?.en || ''),
+      review: typeof t.review === 'string' ? t.review : (t.review?.[language] || t.review?.en || ''),
+      treatment: typeof t.treatment === 'string' ? t.treatment : (t.treatment?.[language] || t.treatment?.en || ''),
+    }))
+  ), [language]);
+  const quadrupled = useMemo(() => localized.concat(localized, localized, localized), [localized]);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const trackRef = React.useRef<HTMLDivElement | null>(null);
   const [offsetPx, setOffsetPx] = useState(0);

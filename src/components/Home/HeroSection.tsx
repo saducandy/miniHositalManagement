@@ -1,8 +1,10 @@
 import React from 'react';
+import { I18nContext } from '../../context/I18nContext';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, Users, Award } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
+  const { t } = React.useContext(I18nContext);
   return (
     <section className="relative h-screen bg-gradient-to-br from-emerald-50 to-blue-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
@@ -11,12 +13,11 @@ export const HeroSection: React.FC = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                Your Vision, Our
-                <span className="text-emerald-600 block">Excellence</span>
+                {t('hero.title1')}
+                <span className="text-emerald-600 block">{t('hero.title2')}</span>
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                Experience exceptional eye care with our team of specialized ophthalmologists. 
-                Book appointments online, access your vision records, and get the expert care your eyes deserve.
+                {t('hero.subtitle')}
               </p>
             </div>
 
@@ -32,7 +33,7 @@ export const HeroSection: React.FC = () => {
                 to="/services"
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-full text-lg hover:bg-emerald-600 hover:text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
-                Learn More
+                {t('hero.learnMore')}
               </Link>
             </div>
 

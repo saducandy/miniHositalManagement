@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Calendar, Clock, MapPin, Users, Heart, Activity } from 'lucide-react';
 import { formatDate, formatTime } from '../../utils/dateUtils';
+import { I18nContext } from '../../context/I18nContext';
 
 type ApiEvent = {
   id: number;
@@ -41,6 +42,7 @@ type Event = {
 };
 
 export const EventsPage: React.FC = () => {
+  const { t } = useContext(I18nContext);
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,7 +78,7 @@ export const EventsPage: React.FC = () => {
         const res = await fetch('https://strapi.hielav.com/api/ec-events?populate=*', {
           signal: controller.signal,
         });
-        if (!res.ok) throw new Error(`Failed to load events: ${res.status}`);
+        if (!res.ok) throw new Error(`${t('events.error')}: ${res.status}`);
         const json: { data: ApiEvent[] } = await res.json();
 
         const mapped: Event[] = (json.data || []).map((event) => {
@@ -99,7 +101,7 @@ export const EventsPage: React.FC = () => {
         });
         setEvents(mapped);
       } catch (err: any) {
-        if (err?.name !== 'AbortError') setError(err?.message || 'Failed to load events');
+        if (err?.name !== 'AbortError') setError(err?.message || t('events.error'));
       } finally {
         setIsLoading(false);
       }
@@ -212,7 +214,7 @@ export const EventsPage: React.FC = () => {
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.error && errorData.error.message === 'This attribute must be unique') {
-          setSubscriptionError('This email is already subscribed to our newsletter.');
+          setSubscriptionError(t('events.newsletter.alreadySubscribed'));
         } else {
           throw new Error(`Subscription failed: ${response.status}`);
         }
@@ -228,7 +230,7 @@ export const EventsPage: React.FC = () => {
       }, 3000);
 
     } catch (err: any) {
-      setSubscriptionError(err.message || 'Failed to subscribe to newsletter');
+      setSubscriptionError(err.message || t('events.error'));
     } finally {
       setIsSubscribing(false);
     }
@@ -257,10 +259,9 @@ export const EventsPage: React.FC = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-purple-600 to-emerald-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Eye Health Events & Programs</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">{t('events.hero.title')}</h1>
           <p className="text-xl lg:text-2xl text-purple-100 max-w-3xl mx-auto">
-            Join our community eye health initiatives, educational workshops, and vision wellness programs 
-            designed to promote better eye health for everyone
+            {t('events.hero.subtitle')}
           </p>
         </div>
       </section>
@@ -270,13 +271,15 @@ export const EventsPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {isLoading && (
-              <div className="col-span-full text-center text-gray-600">Loading events...</div>
+              <div className="col-span-full text-center text-gray-600">{t('events.loading')}</div>
             )}
             {error && (
               <div className="col-span-full text-center text-red-600">{error}</div>
             )}
             {!isLoading && !error && events.map((event) => {
               const EventIcon = getEventIcon(event.category);
+              const categoryKey = `events.category.${event.category}`;
+              const categoryLabel = t(categoryKey);
               return (
                 <div key={event.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                   <div className="relative">
@@ -287,14 +290,14 @@ export const EventsPage: React.FC = () => {
                     />
                     <div className="absolute top-4 right-4">
                       <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getEventTypeColor(event.category)}`}>
-                        {event.category.charAt(0).toUpperCase() + event.category.slice(1).replace('-', ' ')}
+                        {categoryLabel}
                       </span>
                     </div>
                     <div className="absolute bottom-4 left-4 bg-white bg-opacity-95 p-3 rounded-lg">
                       <div className="flex items-center space-x-2">
                         <EventIcon className="h-5 w-5 text-emerald-600" />
                         <span className="text-sm font-medium text-gray-900">
-                          {event.category.replace('-', ' ').toUpperCase()}
+                          {categoryLabel.toUpperCase()}
                         </span>
                       </div>
                     </div>
@@ -326,13 +329,13 @@ export const EventsPage: React.FC = () => {
                         onClick={() => handleRegisterClick(event.id)}
                         className="flex-1 bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                       >
-                        Register Now
+                        {t('events.card.register')}
                       </button>
                       <button 
                         onClick={() => handleLearnMoreClick(event)}
                         className="flex-1 border border-emerald-600 text-emerald-600 py-3 px-6 rounded-lg font-semibold hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                       >
-                        {event.learnMore}
+                        {t('events.card.learnMore')}
                       </button>
                     </div>
                   </div>
@@ -347,10 +350,10 @@ export const EventsPage: React.FC = () => {
       <section className="py-16 bg-emerald-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Stay Updated on Eye Health Events
+            {t('events.newsletter.title')}
           </h2>
           <p className="text-xl text-emerald-100 mb-8">
-            Subscribe to our newsletter to receive updates on upcoming eye health events, workshops, and community programs
+            {t('events.newsletter.subtitle')}
           </p>
           <div className="max-w-md mx-auto">
             <form onSubmit={handleNewsletterSubscription} className="space-y-4">
@@ -359,7 +362,7 @@ export const EventsPage: React.FC = () => {
                   type="email"
                   value={newsletterEmail}
                   onChange={handleNewsletterEmailChange}
-                  placeholder="Enter your email address"
+                  placeholder={t('events.newsletter.placeholder')}
                   required
                   className="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-emerald-600"
                 />
@@ -368,7 +371,7 @@ export const EventsPage: React.FC = () => {
                   disabled={isSubscribing}
                   className="bg-white text-emerald-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubscribing ? 'Subscribing...' : 'Subscribe'}
+                  {isSubscribing ? t('events.newsletter.subscribing') : t('events.newsletter.subscribe')}
                 </button>
               </div>
               
@@ -376,7 +379,7 @@ export const EventsPage: React.FC = () => {
               {subscriptionSuccess && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <p className="text-green-600 text-sm text-center">
-                    ✅ Successfully subscribed to our newsletter!
+                    ✅ {t('events.newsletter.success')}
                   </p>
                 </div>
               )}
@@ -398,8 +401,8 @@ export const EventsPage: React.FC = () => {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Types of Events We Offer</h2>
-            <p className="text-xl text-gray-600">Various programs designed to meet different eye health and vision wellness needs</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('events.categories.heading')}</h2>
+            <p className="text-xl text-gray-600">{t('events.categories.subheading')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -407,9 +410,9 @@ export const EventsPage: React.FC = () => {
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Heart className="h-8 w-8 text-red-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Awareness Campaigns</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('events.categories.awareness.title')}</h3>
               <p className="text-gray-600">
-                Educational programs focused on specific eye conditions and vision prevention strategies
+                {t('events.categories.awareness.desc')}
               </p>
             </div>
 
@@ -417,9 +420,9 @@ export const EventsPage: React.FC = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Users className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Community Campaigns</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('events.categories.community.title')}</h3>
               <p className="text-gray-600">
-                Community-wide eye health initiatives and workshops promoting vision wellness and eye care
+                {t('events.categories.community.desc')}
               </p>
             </div>
 
@@ -427,9 +430,9 @@ export const EventsPage: React.FC = () => {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Activity className="h-8 w-8 text-green-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Health Check-ups</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('events.categories.health.title')}</h3>
               <p className="text-gray-600">
-                Free and discounted eye screenings and preventive vision care services for the community
+                {t('events.categories.health.desc')}
               </p>
             </div>
           </div>
@@ -442,7 +445,7 @@ export const EventsPage: React.FC = () => {
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Register for Event</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{t('events.register.title')}</h2>
                 <button
                   onClick={closeModal}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -460,14 +463,14 @@ export const EventsPage: React.FC = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Registration Successful!</h3>
-                  <p className="text-gray-600">You have been successfully registered for the event.</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('events.register.success.title')}</h3>
+                  <p className="text-gray-600">{t('events.register.success.msg')}</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmitRegistration} className="space-y-4">
                   <div>
                     <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
+                      {t('events.register.fullName')}
                     </label>
                     <input
                       type="text"
@@ -477,13 +480,13 @@ export const EventsPage: React.FC = () => {
                       onChange={handleFormChange}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter your full name"
+                      placeholder={t('events.register.fullName.placeholder')}
                     />
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                      {t('events.register.email')}
                     </label>
                     <input
                       type="email"
@@ -493,13 +496,13 @@ export const EventsPage: React.FC = () => {
                       onChange={handleFormChange}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter your email address"
+                      placeholder={t('events.register.email.placeholder')}
                     />
                   </div>
 
                   <div>
                     <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number *
+                      {t('events.register.phone')}
                     </label>
                     <input
                       type="tel"
@@ -509,13 +512,13 @@ export const EventsPage: React.FC = () => {
                       onChange={handleFormChange}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter your phone number"
+                      placeholder={t('events.register.phone.placeholder')}
                     />
                   </div>
 
                   {registrationError && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                      <p className="text-red-600 text-sm">{registrationError}</p>
+                      <p className="text-red-600 text-sm">{t('events.register.error')}</p>
                     </div>
                   )}
 
@@ -525,14 +528,14 @@ export const EventsPage: React.FC = () => {
                       onClick={closeModal}
                       className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
-                      Cancel
+                      {t('events.register.cancel')}
                     </button>
                     <button
                       type="submit"
                       disabled={isSubmitting}
                       className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Submitting...' : 'Submit Registration'}
+                      {isSubmitting ? t('events.register.submitting') : t('events.register.submit')}
                     </button>
                   </div>
                 </form>
@@ -556,14 +559,14 @@ export const EventsPage: React.FC = () => {
                 />
                 <div className="absolute top-4 right-4">
                   <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getEventTypeColor(selectedEventForDetails.category)}`}>
-                    {selectedEventForDetails.category.charAt(0).toUpperCase() + selectedEventForDetails.category.slice(1).replace('-', ' ')}
+                    {t(`events.category.${selectedEventForDetails.category}`)}
                   </span>
                 </div>
                 <div className="absolute bottom-4 left-4 bg-white bg-opacity-95 p-3 rounded-lg">
                   <div className="flex items-center space-x-2">
                     {React.createElement(getEventIcon(selectedEventForDetails.category), { className: "h-5 w-5 text-emerald-600" })}
                     <span className="text-sm font-medium text-gray-900">
-                      {selectedEventForDetails.category.replace('-', ' ').toUpperCase()}
+                      {t(`events.category.${selectedEventForDetails.category}`).toUpperCase()}
                     </span>
                   </div>
                 </div>
@@ -592,7 +595,7 @@ export const EventsPage: React.FC = () => {
                 {/* Learn More Section */}
                 {selectedEventForDetails.learnMore && (
                   <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-8">
-                    <h3 className="text-xl font-semibold text-emerald-800 mb-3">Detail</h3>
+                    <h3 className="text-xl font-semibold text-emerald-800 mb-3">{t('events.learn.title')}</h3>
                     <p className="text-emerald-700 leading-relaxed">
                       {selectedEventForDetails.learnMore}
                     </p>
@@ -601,34 +604,34 @@ export const EventsPage: React.FC = () => {
 
                 {/* Event Information */}
                 <div className="bg-gray-50 rounded-xl p-6 mb-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Event Details</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('events.details.title')}</h3>
                   <div className="space-y-4">
                     <div className="flex items-center text-gray-700">
                       <Calendar className="h-5 w-5 mr-3 text-emerald-600 flex-shrink-0" />
                       <div>
-                        <span className="font-medium">Date:</span>
+                        <span className="font-medium">{t('events.details.date')}</span>
                         <span className="ml-2">{formatDate(selectedEventForDetails.date)}</span>
                       </div>
                     </div>
                     <div className="flex items-center text-gray-700">
                       <Clock className="h-5 w-5 mr-3 text-emerald-600 flex-shrink-0" />
                       <div>
-                        <span className="font-medium">Time:</span>
+                        <span className="font-medium">{t('events.details.time')}</span>
                         <span className="ml-2">{formatTime(selectedEventForDetails.date)}</span>
                       </div>
                     </div>
                     <div className="flex items-center text-gray-700">
                       <MapPin className="h-5 w-5 mr-3 text-emerald-600 flex-shrink-0" />
                       <div>
-                        <span className="font-medium">Location:</span>
+                        <span className="font-medium">{t('events.details.location')}</span>
                         <span className="ml-2">{selectedEventForDetails.location}</span>
                       </div>
                     </div>
                     <div className="flex items-center text-gray-700">
                       {React.createElement(getEventIcon(selectedEventForDetails.category), { className: "h-5 w-5 mr-3 text-emerald-600 flex-shrink-0" })}
                       <div>
-                        <span className="font-medium">Category:</span>
-                        <span className="ml-2 capitalize">{selectedEventForDetails.category.replace('-', ' ')}</span>
+                        <span className="font-medium">{t('events.details.category')}</span>
+                        <span className="ml-2 capitalize">{t(`events.category.${selectedEventForDetails.category}`)}</span>
                       </div>
                     </div>
                   </div>
@@ -644,13 +647,13 @@ export const EventsPage: React.FC = () => {
                     className="flex-1 bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                   >
                     <Calendar className="h-4 w-4 inline mr-2" />
-                    Register Now
+                    {t('events.learn.register')}
                   </button>
                   <button
                     onClick={closeLearnMoreModal}
                     className="flex-1 border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                   >
-                    Close
+                    {t('events.learn.close')}
                   </button>
                 </div>
               </div>

@@ -8,23 +8,26 @@ import { ServicesPage } from './components/Services/ServicesPage';
 import { DoctorsPage } from './components/Doctors/DoctorsPage';
 import { EventsPage } from './components/Events/EventsPage';
 import { ContactPage } from './components/Contact/ContactPage';
+import { I18nProvider } from './context/I18nContext';
 
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <Layout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/doctors" element={<DoctorsPage />} />
-          <Route path="/appointments" element={<AppointmentBooking />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <I18nProvider>
+      <Router>
+        <ScrollToTop />
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/doctors" element={<DoctorsPage />} />
+            <Route path="/appointments" element={<AppointmentBooking />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </I18nProvider>
   );
 }
 

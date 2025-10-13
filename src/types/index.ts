@@ -45,25 +45,25 @@ export interface Event {
 
 export interface Department {
   id: string;
-  name: string;
-  description: string;
+  name: string | { en: string; am: string };
+  description: string | { en: string; am: string };
   image: string;
-  services: string[];
-  head: string;
+  services: Array<string | { en: string; am: string }>;
+  head: string | { en: string; am: string };
 }
 
 export interface FAQ {
   id: string;
-  question: string;
-  answer: string;
+  question: string | { en: string; am: string };
+  answer: string | { en: string; am: string };
   category: string;
 }
 
 export interface Testimonial {
   id: string;
-  patientName: string;
+  patientName: string | { en: string; am: string };
   rating: number;
-  review: string;
+  review: string | { en: string; am: string };
   date: string;
-  treatment: string;
+  treatment: string | { en: string; am: string };
 }

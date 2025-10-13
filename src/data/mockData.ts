@@ -46,89 +46,119 @@ export const doctors: Doctor[] = [
 export const departments: Department[] = [
   {
     id: '1',
-    name: 'Comprehensive Eye Exams',
-    description: 'Complete eye health evaluations including vision testing, eye pressure checks, and retinal examinations.',
+    name: { en: 'Comprehensive Eye Exams', am: 'በሙሉ የዓይን ምርመራ' } as any,
+    description: { en: 'Complete eye health evaluations including vision testing, eye pressure checks, and retinal examinations.', am: 'የእይታ መርማሪያ፣ የዓይን ጫና ምርመራ እና የሬቲና ምርመራ ጨምሮ ሙሉ የዓይን ጤና ግምገማዎች።' } as any,
     image: 'https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=600',
-    services: ['Vision Testing', 'Dilated Eye Exams', 'Eye Pressure Screening', 'Retinal Photography'],
-    head: 'Dr. Sarah Mitchell'
+    services: [
+      { en: 'Vision Testing', am: 'የእይታ ሙከራ' },
+      { en: 'Dilated Eye Exams', am: 'የተስፋፋ የዓይን ምርመራ' },
+      { en: 'Eye Pressure Screening', am: 'የዓይን ጫና ምርመራ' },
+      { en: 'Retinal Photography', am: 'የሬቲና ፎቶግራፊ' }
+    ] as any,
+    head: { en: 'Dr. Sarah Mitchell', am: 'ዶ/ር ሳራ ሚቺል' } as any
   },
   {
     id: '2',
-    name: 'LASIK & Refractive Surgery',
-    description: 'Advanced laser vision correction procedures to reduce dependence on glasses and contact lenses.',
+    name: { en: 'LASIK & Refractive Surgery', am: 'ሌዚክ እና ሪፍራክቲቭ ቀዶ ጥገና' } as any,
+    description: { en: 'Advanced laser vision correction procedures to reduce dependence on glasses and contact lenses.', am: 'ከመነጽር እና ከኮንታክት ሌንስ ጥገኝነት ለመቀነስ የሌዘር እይታ ማስተካከያ ሂደቶች።' } as any,
     image: 'https://images.pexels.com/photos/5752270/pexels-photo-5752270.jpeg?auto=compress&cs=tinysrgb&w=600',
-    services: ['LASIK Surgery', 'PRK Surgery', 'ICL Implants', 'Astigmatism Correction'],
-    head: 'Dr. Michael Chen'
+    services: [
+      { en: 'LASIK Surgery', am: 'ሌዚክ ቀዶ ጥገና' },
+      { en: 'PRK Surgery', am: 'ፒአርኬ ቀዶ ጥገና' },
+      { en: 'ICL Implants', am: 'ICL ኢምፕላንት' },
+      { en: 'Astigmatism Correction', am: 'አስቲግማቲዝም ማስተካከያ' }
+    ] as any,
+    head: { en: 'Dr. Michael Chen', am: 'ዶ/ር ማይክል ቼን' } as any
   },
   {
     id: '3',
-    name: 'Retinal Services',
-    description: 'Specialized care for retinal conditions including diabetic retinopathy, macular degeneration, and retinal detachment.',
+    name: { en: 'Retinal Services', am: 'የሬቲና አገልግሎቶች' } as any,
+    description: { en: 'Specialized care for retinal conditions including diabetic retinopathy, macular degeneration, and retinal detachment.', am: 'ለሬቲና ህመሞች የተለየ እንክብካቤ፣ ድድብ ስኳር ሬቲኖፓቲ፣ ማኩላር እንጥረት እና ሬቲና መለያየት ጨምሮ።' } as any,
     image: 'https://images.pexels.com/photos/5752251/pexels-photo-5752251.jpeg?auto=compress&cs=tinysrgb&w=600',
-    services: ['Diabetic Eye Care', 'Macular Degeneration Treatment', 'Retinal Injections', 'Vitrectomy Surgery'],
-    head: 'Dr. Sarah Mitchell'
+    services: [
+      { en: 'Diabetic Eye Care', am: 'የድድብ ስኳር የዓይን እንክብካቤ' },
+      { en: 'Macular Degeneration Treatment', am: 'የማኩላር እንጥረት ሕክምና' },
+      { en: 'Retinal Injections', am: 'የሬቲና ኢንጀክሽኖች' },
+      { en: 'Vitrectomy Surgery', am: 'ቪትሬክቶሚ ቀዶ ጥገና' }
+    ] as any,
+    head: { en: 'Dr. Sarah Mitchell', am: 'ዶ/ር ሳራ ሚቺል' } as any
   },
   {
     id: '4',
-    name: 'Pediatric Eye Care',
-    description: 'Comprehensive eye care for children including vision screening, amblyopia treatment, and pediatric eye surgery.',
+    name: { en: 'Pediatric Eye Care', am: 'የህፃናት የዓይን እንክብካቤ' } as any,
+    description: { en: 'Comprehensive eye care for children including vision screening, amblyopia treatment, and pediatric eye surgery.', am: 'ለህፃናት የሙሉ የዓይን እንክብካቤ፣ የእይታ ስክሪኒንግ፣ አምብሊዮፒያ ሕክምና እና የህፃናት የዓይን ቀዶ ጥገና ጨምሮ።' } as any,
     image: 'https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600',
-    services: ['Children\'s Eye Exams', 'Amblyopia Treatment', 'Strabismus Surgery', 'Vision Therapy'],
-    head: 'Dr. Emily Rodriguez'
+    services: [
+      { en: "Children's Eye Exams", am: 'የህፃናት የዓይን ምርመራ' },
+      { en: 'Amblyopia Treatment', am: 'አምብሊዮፒያ ሕክምና' },
+      { en: 'Strabismus Surgery', am: 'ስትራቢስሙስ ቀዶ ጥገና' },
+      { en: 'Vision Therapy', am: 'የእይታ ሕክምና' }
+    ] as any,
+    head: { en: 'Dr. Emily Rodriguez', am: 'ዶ/ር ኤሚሊ ሮድሪጌዝ' } as any
   },
   {
     id: '5',
-    name: 'Glaucoma Treatment',
-    description: 'Advanced glaucoma diagnosis and treatment including medical therapy and minimally invasive surgical options.',
+    name: { en: 'Glaucoma Treatment', am: 'የግላኮማ ሕክምና' } as any,
+    description: { en: 'Advanced glaucoma diagnosis and treatment including medical therapy and minimally invasive surgical options.', am: 'የግላኮማ ምርመራ እና ሕክምና ፣ መድሃኒት ሕክምና እና በትንሽ መግባት የሚፈጽሙ ቀዶ ጥገናዎች ጨምሮ።' } as any,
     image: 'https://images.pexels.com/photos/5752265/pexels-photo-5752265.jpeg?auto=compress&cs=tinysrgb&w=600',
-    services: ['Glaucoma Screening', 'Visual Field Testing', 'MIGS Procedures', 'Trabeculectomy'],
-    head: 'Dr. James Thompson'
+    services: [
+      { en: 'Glaucoma Screening', am: 'የግላኮማ ስክሪኒንግ' },
+      { en: 'Visual Field Testing', am: 'የእይታ መስክ ሙከራ' },
+      { en: 'MIGS Procedures', am: 'MIGS ሂደቶች' },
+      { en: 'Trabeculectomy', am: 'ትራቤኩሌክቶሚ' }
+    ] as any,
+    head: { en: 'Dr. James Thompson', am: 'ዶ/ር ጄምስ ቶምፕሰን' } as any
   },
   {
     id: '6',
-    name: 'Comprehensive Eye Exams',
-    description: 'Complete eye health evaluations including vision testing, eye pressure checks, and retinal examinations.',
+    name: { en: 'Comprehensive Eye Exams', am: 'በሙሉ የዓይን ምርመራ' } as any,
+    description: { en: 'Complete eye health evaluations including vision testing, eye pressure checks, and retinal examinations.', am: 'የእይታ መርማሪያ፣ የዓይን ጫና ምርመራ እና የሬቲና ምርመራ ጨምሮ ሙሉ የዓይን ጤና ግምገማዎች።' } as any,
     image: 'https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=600',
-    services: ['Vision Testing', 'Dilated Eye Exams', 'Eye Pressure Screening', 'Retinal Photography'],
-    head: 'Dr. Sarah Mitchell'
+    services: [
+      { en: 'Vision Testing', am: 'የእይታ ሙከራ' },
+      { en: 'Dilated Eye Exams', am: 'የተስፋፋ የዓይን ምርመራ' },
+      { en: 'Eye Pressure Screening', am: 'የዓይን ጫና ምርመራ' },
+      { en: 'Retinal Photography', am: 'የሬቲና ፎቶግራፊ' }
+    ] as any,
+    head: { en: 'Dr. Sarah Mitchell', am: 'ዶ/ር ሳራ ሚቺል' } as any
   }
 ];
 
 export const faqs: FAQ[] = [
   {
     id: '1',
-    question: 'How often should I have an eye exam?',
-    answer: 'Adults should have comprehensive eye exams every 1-2 years, or annually if you have risk factors like diabetes, high blood pressure, or family history of eye disease. Children should have their first eye exam by age 1, then at age 3, and before starting school.',
+    question: { en: 'How often should I have an eye exam?', am: 'ምን ያህል በየጊዜው የዓይን ምርመራ ልላቀር?' } as any,
+    answer: { en: 'Adults should have comprehensive eye exams every 1-2 years, or annually if you have risk factors like diabetes, high blood pressure, or family history of eye disease. Children should have their first eye exam by age 1, then at age 3, and before starting school.', am: 'ወደ አንድ እስከ ሁለት ዓመት ድረስ አንድ ጊዜ የሚደረጉ ሙሉ የዓይን ምርመራዎች ይኖሩት። የስኳር በሽታ፣ ከፍተኛ የደም ግፊት ወይም በቤተሰብ የዓይን ችግኝ ተሞክሮ ካለ በየአመቱ ይመረመሩ። ህፃናት የመጀመሪያ ምርመራቸውን በ1 ዓመት፣ ከዚያም በ3 ዓመት እና ት/ቤት ከጀመሩ በፊት ያድርጉ።' } as any,
     category: 'General'
   },
   {
     id: '2',
-    question: 'Am I a candidate for LASIK surgery?',
-    answer: 'LASIK candidacy depends on several factors including age (18+), stable prescription for at least one year, adequate corneal thickness, and overall eye health. We offer free LASIK consultations to determine if you\'re a good candidate.',
+    question: { en: 'Am I a candidate for LASIK surgery?', am: 'ለሌዚክ ቀዶ ጥገና ተስማሚ ነኝ?' } as any,
+    answer: { en: 'LASIK candidacy depends on several factors including age (18+), stable prescription for at least one year, adequate corneal thickness, and overall eye health. We offer free LASIK consultations to determine if you\'re a good candidate.', am: 'ለሌዚክ ቀዶ ጥገና መቀበል በእድሜ (18+)፣ ቢያንስ ለአንድ ዓመት የቆመ መድሀኒት መጠቀም፣ በቂ የኮርኒያ ብዛት እና ጠቃሚ የዓይን ጤና ይወሰናል። ተስማሚ መሆንዎን ለመወሰን ነጻ የሌዚክ ምክር እናቀርባለን።' } as any,
     category: 'LASIK'
   },
   {
     id: '3',
-    question: 'What should I expect during a comprehensive eye exam?',
-    answer: 'A comprehensive eye exam includes vision testing, eye pressure measurement, pupil dilation, and examination of the retina and optic nerve. The exam typically takes 60-90 minutes, and you may experience blurred vision for 2-4 hours after dilation.',
+    question: { en: 'What should I expect during a comprehensive eye exam?', am: 'በሙሉ የዓይን ምርመራ ጊዜ ምን እጠብቃለሁ?' } as any,
+    answer: { en: 'A comprehensive eye exam includes vision testing, eye pressure measurement, pupil dilation, and examination of the retina and optic nerve. The exam typically takes 60-90 minutes, and you may experience blurred vision for 2-4 hours after dilation.', am: 'ሙሉ የዓይን ምርመራ የእይታ መርማሪያ፣ የዓይን ጫና መለኪያ፣ ተማሪ ተስፋፋ እና የሬቲና እና የኦፕቲክ ነርቭ ምርመራን ያካትታል። እንደ መደበኛ ምርመራው 60-90 ደቂቃ ይፈጅማል እና ከመስፋፋት በኋላ ለ2-4 ሰዓታት የተዳከመ እይታ ሊኖርዎ ይችላል።' } as any,
     category: 'Exams'
   },
   {
     id: '4',
-    question: 'Do you accept my insurance?',
-    answer: 'We accept most major vision and medical insurance plans including VSP, EyeMed, Davis Vision, and Medicare. Please contact our office to verify your specific coverage and benefits.',
+    question: { en: 'Do you accept my insurance?', am: 'የእኔን ኢንሹራንስ ታቀበላችሁ?' } as any,
+    answer: { en: 'We accept most major vision and medical insurance plans including VSP, EyeMed, Davis Vision, and Medicare. Please contact our office to verify your specific coverage and benefits.', am: 'VSP፣ EyeMed፣ Davis Vision እና Medicare ጨምሮ አብዛኛውን የእይታ እና የሕክምና ኢንሹራንስ ዕቅዶችን እንቀበላለን። ልዩ ጥቅሞችዎን ለማረጋገጥ እባኮትን ከቢሮአችን ያግኙን።' } as any,
     category: 'Insurance'
   },
   {
     id: '5',
-    question: 'What are the symptoms of glaucoma?',
-    answer: 'Early glaucoma often has no symptoms, which is why regular eye exams are crucial. Advanced glaucoma may cause peripheral vision loss, tunnel vision, eye pain, headaches, or seeing halos around lights.',
+    question: { en: 'What are the symptoms of glaucoma?', am: 'የግላኮማ ምልክቶች ምንድናቸው?' } as any,
+    answer: { en: 'Early glaucoma often has no symptoms, which is why regular eye exams are crucial. Advanced glaucoma may cause peripheral vision loss, tunnel vision, eye pain, headaches, or seeing halos around lights.', am: 'ግላኮማ በመጀመሪያ ደረጃ ምንም ምልክት አይኖረውም ስለዚህ መደበኛ የዓይን ምርመራ አስፈላጊ ነው። የተራቀቀ ግላኮማ የጎን እይታ መቀነስ፣ ቱናል እይታ፣ የዓይን ህመም፣ ራስ ምታት ወይም ከመብራቶች ላይ ሄሎዎች ማየት ሊያስከትል ይችላል።' } as any,
     category: 'Conditions'
   },
   {
     id: '6',
-    question: 'How do I prepare for cataract surgery?',
-    answer: 'Before cataract surgery, you\'ll need a pre-operative exam, measurements for your intraocular lens, and instructions about medications. Arrange for transportation as you cannot drive immediately after surgery.',
+    question: { en: 'How do I prepare for cataract surgery?', am: 'ለካታራክት ቀዶ ጥገና እንዴት እገናኛለሁ?' } as any,
+    answer: { en: 'Before cataract surgery, you\'ll need a pre-operative exam, measurements for your intraocular lens, and instructions about medications. Arrange for transportation as you cannot drive immediately after surgery.', am: 'ከካታራክት ቀዶ ጥገና በፊት የቀዶ ጥገና ቅድመ ምርመራ፣ ለውስጣዊ ዓይን ሌንስዎ መለኪያዎች እና ስለመድሃኒቶች መመሪያዎች ያስፈልግዎታል። ከቀዶ ጥገና በኋላ ወዲያውኑ መንዳት አልችሉም ስለዚህ መጓጓዣ ያዘጋጁ።' } as any,
     category: 'Surgery'
   }
 ];
@@ -136,51 +166,69 @@ export const faqs: FAQ[] = [
 export const testimonials: Testimonial[] = [
   {
     id: '1',
-    patientName: 'Jennifer Adams',
+    patientName: { en: 'Jennifer Adams', am: 'ጀኒፈር አዳምስ' } as any,
     rating: 5,
-    review: 'Dr. Mitchell performed my retinal surgery with incredible skill. My vision has improved dramatically, and the care I received was exceptional throughout the entire process.',
+    review: {
+      en: 'Dr. Mitchell performed my retinal surgery with incredible skill. My vision has improved dramatically, and the care I received was exceptional throughout the entire process.',
+      am: 'ዶ/ር ሚቺል የሬቲና ቀዶ ጥገናዬን በግልጽ ችሎታ አከናወነልኝ። እይታዬ በእጅጉ ተሻሽሏል እና በመርሀ ግብሩ ሙሉ የተቀበልኩት እንክብካቤ ልዩ ነበር።'
+    } as any,
     date: '2024-01-15',
-    treatment: 'Retinal Surgery'
+    treatment: { en: 'Retinal Surgery', am: 'የሬቲና ቀዶ ጥገና' } as any
   },
   {
     id: '2',
-    patientName: 'Robert Kim',
+    patientName: { en: 'Robert Kim', am: 'ሮበርት ኪም' } as any,
     rating: 5,
-    review: 'LASIK with Dr. Chen was life-changing! I went from thick glasses to 20/20 vision. The procedure was quick and painless, and the results exceeded my expectations.',
+    review: {
+      en: 'LASIK with Dr. Chen was life-changing! I went from thick glasses to 20/20 vision. The procedure was quick and painless, and the results exceeded my expectations.',
+      am: 'ከዶ/ር ቼን ጋር LASIK ህይወቴን ቀየረ! ከወፍራም መነጽር ወደ 20/20 እይታ ሄጥሁ። ሂደቱ ፈጣን እና ያልተሠቃየ ነበር፣ ውጤቱም ከምኞቴ ይልቅ ነበር።'
+    } as any,
     date: '2024-01-10',
-    treatment: 'LASIK Surgery'
+    treatment: { en: 'LASIK Surgery', am: 'ሌዚክ ቀዶ ጥገና' } as any
   },
   {
     id: '3',
-    patientName: 'Maria Santos',
+    patientName: { en: 'Maria Santos', am: 'ማሪያ ሳንቶስ' } as any,
     rating: 5,
-    review: 'Dr. Rodriguez is wonderful with children. My daughter was nervous about her eye exam, but Dr. Rodriguez made her feel comfortable and explained everything in kid-friendly terms.',
+    review: {
+      en: 'Dr. Rodriguez is wonderful with children. My daughter was nervous about her eye exam, but Dr. Rodriguez made her feel comfortable and explained everything in kid-friendly terms.',
+      am: 'ዶ/ር ሮድሪጌዝ ከህፃናት ጋር በጣም ጥሩ ነው። ልጄ ስለ ዓይን ምርመራዋ ተጨንቃ ነበር፣ ነገር ግን ዶ/ር ሮድሪጌዝ እርግጠኛ አደረጋት እና ሁሉንም በልጆች የሚገባ መንገድ ተረዳታት።'
+    } as any,
     date: '2024-01-05',
-    treatment: 'Pediatric Eye Care'
+    treatment: { en: 'Pediatric Eye Care', am: 'የህፃናት የዓይን እንክብካቤ' } as any
   },
   {
     id: '4',
-    patientName: 'Jennifer Adams',
+    patientName: { en: 'Jennifer Adams', am: 'ጀኒፈር አዳምስ' } as any,
     rating: 5,
-    review: 'Dr. Mitchell performed my retinal surgery with incredible skill. My vision has improved dramatically, and the care I received was exceptional throughout the entire process.',
+    review: {
+      en: 'Dr. Mitchell performed my retinal surgery with incredible skill. My vision has improved dramatically, and the care I received was exceptional throughout the entire process.',
+      am: 'ዶ/ር ሚቺል የሬቲና ቀዶ ጥገናዬን በግልጽ ችሎታ አከናወነልኝ። እይታዬ በእጅጉ ተሻሽሏል እና በመርሀ ግብሩ ሙሉ የተቀበልኩት እንክብካቤ ልዩ ነበር።'
+    } as any,
     date: '2024-01-15',
-    treatment: 'Retinal Surgery'
+    treatment: { en: 'Retinal Surgery', am: 'የሬቲና ቀዶ ጥገና' } as any
   },
   {
     id: '5',
-    patientName: 'Robert Kim',
+    patientName: { en: 'Robert Kim', am: 'ሮበርት ኪም' } as any,
     rating: 5,
-    review: 'LASIK with Dr. Chen was life-changing! I went from thick glasses to 20/20 vision. The procedure was quick and painless, and the results exceeded my expectations.',
+    review: {
+      en: 'LASIK with Dr. Chen was life-changing! I went from thick glasses to 20/20 vision. The procedure was quick and painless, and the results exceeded my expectations.',
+      am: 'ከዶ/ር ቼን ጋር LASIK ህይወቴን ቀየረ! ከወፍራም መነጽር ወደ 20/20 እይታ ሄጥሁ። ሂደቱ ፈጣን እና ያልተሠቃየ ነበር፣ ውጤቱም ከምኞቴ ይልቅ ነበር።'
+    } as any,
     date: '2024-01-10',
-    treatment: 'LASIK Surgery'
+    treatment: { en: 'LASIK Surgery', am: 'ሌዚክ ቀዶ ጥገና' } as any
   },
   {
     id: '6',
-    patientName: 'Maria Santos',
+    patientName: { en: 'Maria Santos', am: 'ማሪያ ሳንቶስ' } as any,
     rating: 5,
-    review: 'Dr. Rodriguez is wonderful with children. My daughter was nervous about her eye exam, but Dr. Rodriguez made her feel comfortable and explained everything in kid-friendly terms.',
+    review: {
+      en: 'Dr. Rodriguez is wonderful with children. My daughter was nervous about her eye exam, but Dr. Rodriguez made her feel comfortable and explained everything in kid-friendly terms.',
+      am: 'ዶ/ር ሮድሪጌዝ ከህፃናት ጋር በጣም ጥሩ ነው። ልጄ ስለ ዓይን ምርመራዋ ተጨንቃ ነበር፣ ነገር ግን ዶ/ር ሮድሪጌዝ እርግጠኛ አደረጋት እና ሁሉንም በልጆች የሚገባ መንገድ ተረዳታት።'
+    } as any,
     date: '2024-01-05',
-    treatment: 'Pediatric Eye Care'
+    treatment: { en: 'Pediatric Eye Care', am: 'የህፃናት የዓይን እንክብካቤ' } as any
   }
 ];
 

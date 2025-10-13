@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { Calendar, Clock, User, FileText, ChevronRight, ChevronLeft } from 'lucide-react';
 import { formatDate, formatTime, getNextWeekDays, generateTimeSlots } from '../../utils/dateUtils';
 import { useAccessibility } from '../../hooks/useAccessibility';
+import { I18nContext } from '../../context/I18nContext';
 let SwalRef: any = null;
 async function getSwal() {
   if (SwalRef) return SwalRef;
@@ -37,6 +38,7 @@ interface AppointmentFormData {
 }
 
 export const AppointmentBooking: React.FC = () => {
+  const { t } = React.useContext(I18nContext);
   const location = useLocation();
   const patientData = location.state?.patientData;
   const [currentStep, setCurrentStep] = useState(1);
@@ -86,10 +88,10 @@ export const AppointmentBooking: React.FC = () => {
   }, [patientData, setValue]);
 
   const steps = [
-    { number: 1, title: 'Select Doctor', icon: User },
-    { number: 2, title: 'Choose Date & Time', icon: Calendar },
-    { number: 3, title: 'Personal Details', icon: FileText },
-    { number: 4, title: 'Confirmation', icon: ChevronRight },
+    { number: 1, title: t('appt.step1'), icon: User },
+    { number: 2, title: t('appt.step2'), icon: Calendar },
+    { number: 3, title: t('appt.step3'), icon: FileText },
+    { number: 4, title: t('appt.step4'), icon: ChevronRight },
   ];
 
   const nextStep = () => {
@@ -205,6 +207,23 @@ export const AppointmentBooking: React.FC = () => {
         const text = await response.text();
         throw new Error(text || `Failed with status ${response.status}`);
       }
+      try {
+        // Notify other tabs (e.g., Admin Dashboard) in real-time on same origin
+        const bc = new BroadcastChannel('appointments');
+        bc.postMessage({
+          type: 'appointment_created',
+          payload: {
+            fullName: savedUserData.patientName,
+            email: savedUserData.patientEmail,
+            phoneNumber: savedUserData.patientPhone,
+            dateAndTime,
+            doctorId: selectedDoctor,
+            createdAt: new Date().toISOString(),
+          },
+        });
+        // Close channel shortly after
+        setTimeout(() => bc.close(), 1000);
+      } catch {}
       (await getSwal()).fire('Success', 'Your appointment has been booked!', 'success');
       setIsSubmitted(true);
     } catch (e: any) {
@@ -259,8 +278,8 @@ export const AppointmentBooking: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Book an Appointment</h1>
-          <p className="text-xl text-gray-600">Schedule your visit with our healthcare professionals</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('appt.title')}</h1>
+          <p className="text-xl text-gray-600">{t('appt.subtitle')}</p>
         </div>
 
         {/* Progress Steps */}
@@ -299,7 +318,7 @@ export const AppointmentBooking: React.FC = () => {
             {/* Step 1: Select Doctor */}
             {currentStep === 1 && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Select a Doctor</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('appt.selectDoctorHeading')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {loadingDoctors && (
                     <div className="col-span-full text-center text-gray-600">Loading doctors...</div>
@@ -344,10 +363,10 @@ export const AppointmentBooking: React.FC = () => {
             {/* Step 2: Select Date & Time */}
             {currentStep === 2 && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-bold text-gray-900">Choose Date & Time</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{t('appt.chooseDateTimeHeading')}</h2>
                 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Date</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('appt.selectDate')}</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                     {availableDates.slice(0, 14).map((date, index) => (
                       <button
@@ -376,7 +395,7 @@ export const AppointmentBooking: React.FC = () => {
 
                 {selectedDate && (
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Time</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('appt.selectTime')}</h3>
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                       {timeSlots.map((time) => (
                         <button
@@ -402,7 +421,7 @@ export const AppointmentBooking: React.FC = () => {
             {currentStep === 3 && (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Personal Details</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">{t('appt.personalDetails')}</h2>
                   {patientData && (
                     <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
                       <p className="text-sm text-emerald-700 font-medium">
@@ -415,7 +434,7 @@ export const AppointmentBooking: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="patientName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
+                      {t('appt.fullName')} *
                     </label>
                     <input
                       {...register('patientName')}
@@ -433,7 +452,7 @@ export const AppointmentBooking: React.FC = () => {
 
                   <div>
                     <label htmlFor="patientEmail" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                      {t('appt.email')} *
                     </label>
                     <input
                       {...register('patientEmail')}
@@ -451,7 +470,7 @@ export const AppointmentBooking: React.FC = () => {
 
                   <div>
                     <label htmlFor="patientPhone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number *
+                      {t('appt.phone')} *
                     </label>
                     <input
                       {...register('patientPhone')}
@@ -469,7 +488,7 @@ export const AppointmentBooking: React.FC = () => {
 
                   <div>
                     <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
-                      Reason for Visit *
+                      {t('appt.reason')} *
                     </label>
                     <select
                       {...register('reason')}
@@ -478,7 +497,7 @@ export const AppointmentBooking: React.FC = () => {
                         errors.reason ? 'border-red-500' : 'border-gray-300'
                       }`}
                     >
-                      <option value="">Select reason</option>
+                      <option value="">{t('appt.selectReason')}</option>
                       <option value="routine-checkup">Routine Checkup</option>
                       <option value="consultation">Vision Consultation</option>
                       <option value="lasik">LASIK Consultation</option>
@@ -495,7 +514,7 @@ export const AppointmentBooking: React.FC = () => {
 
                 <div>
                   <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-                    Additional Notes (Optional)
+                    {t('appt.notes')}
                   </label>
                   <textarea
                     {...register('notes')}
@@ -552,7 +571,7 @@ export const AppointmentBooking: React.FC = () => {
 
             {/* Navigation Buttons */}
             <div className="flex justify-between pt-8 border-t border-gray-200">
-              <button
+                <button
                 onClick={prevStep}
                 disabled={currentStep === 1}
                 className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
@@ -563,7 +582,7 @@ export const AppointmentBooking: React.FC = () => {
                 aria-disabled={currentStep === 1}
               >
                 <ChevronLeft className="h-5 w-5" />
-                <span>Previous</span>
+                <span>{t('appt.prev')}</span>
               </button>
 
               {currentStep < 3 ? (
@@ -580,7 +599,7 @@ export const AppointmentBooking: React.FC = () => {
                       : 'bg-emerald-600 text-white hover:bg-emerald-700'
                   }`}
                 >
-                  <span>Next</span>
+                  <span>{t('appt.next')}</span>
                   <ChevronRight className="h-5 w-5" />
                 </button>
               ) : currentStep === 3 ? (
@@ -589,7 +608,7 @@ export const AppointmentBooking: React.FC = () => {
                   type="button"
                   className="flex items-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
-                  <span>Review</span>
+                  <span>{t('appt.review')}</span>
                   <ChevronRight className="h-5 w-5" />
                 </button>
               ) : (
@@ -598,7 +617,7 @@ export const AppointmentBooking: React.FC = () => {
                   type="button"
                   className="flex items-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
-                  <span>Confirm Appointment</span>
+                  <span>{t('appt.confirm')}</span>
                   <ChevronRight className="h-5 w-5" />
                 </button>
               )}

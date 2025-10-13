@@ -1,16 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
-
-const schema = yup.object({
-  name: yup.string().required('Name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
-  phone: yup.string().required('Phone number is required'),
-  subject: yup.string().required('Subject is required'),
-  message: yup.string().required('Message is required'),
-});
+import { I18nContext } from '../../context/I18nContext';
 
 interface ContactFormData {
   name: string;
@@ -33,6 +26,18 @@ async function getSwal() {
 }
 
 export const ContactPage: React.FC = () => {
+  const { t } = useContext(I18nContext);
+
+  const schema = yup.object({
+    name: yup.string().required(t('contact.validation.nameRequired')),
+    email: yup
+      .string()
+      .email(t('contact.validation.emailInvalid'))
+      .required(t('contact.validation.emailRequired')),
+    phone: yup.string().required(t('contact.validation.phoneRequired')),
+    subject: yup.string().required(t('contact.validation.subjectRequired')),
+    message: yup.string().required(t('contact.validation.messageRequired')),
+  });
   const {
     register,
     handleSubmit,
@@ -61,36 +66,36 @@ export const ContactPage: React.FC = () => {
         const text = await res.text();
         throw new Error(text || `Failed with status ${res.status}`);
       }
-      (await getSwal()).fire('Success', 'Your message has been sent successfully.', 'success');
+      (await getSwal()).fire(t('contact.alert.success.title'), t('contact.alert.success.msg'), 'success');
       reset();
     } catch (e: any) {
-      (await getSwal()).fire('Error', e?.message || 'Failed to send your message.', 'error');
+      (await getSwal()).fire(t('contact.alert.error.title'), e?.message || t('contact.alert.error.msg'), 'error');
     }
   };
 
   const contactInfo = [
     {
       icon: Phone,
-      title: 'Phone',
-      details: ['Main: (555) 123-4567', 'Emergency: (555) 911-HELP'],
+      title: t('contact.info.phone.title'),
+      details: [t('contact.info.phone.main'), t('contact.info.phone.emergency')],
       color: 'emerald',
     },
     {
       icon: Mail,
-      title: 'Email',
-      details: ['info@eyecarecenter.com', 'appointments@eyecarecenter.com'],
+      title: t('contact.info.email.title'),
+      details: [t('contact.info.email.main'), t('contact.info.email.appt')],
       color: 'blue',
     },
     {
       icon: MapPin,
-      title: 'Address',
-      details: ['123 Vision Boulevard', 'Eye Care City, EC 12345'],
+      title: t('contact.info.address.title'),
+      details: [t('contact.info.address.line1'), t('contact.info.address.line2')],
       color: 'purple',
     },
     {
       icon: Clock,
-      title: 'Hours',
-      details: ['Mon-Fri: 8:00 AM - 6:00 PM', 'Sat: 9:00 AM - 3:00 PM'],
+      title: t('contact.info.hours.title'),
+      details: [t('contact.info.hours.weekday'), t('contact.info.hours.sat')],
       color: 'orange',
     },
   ];
@@ -100,9 +105,9 @@ export const ContactPage: React.FC = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-emerald-600 to-blue-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Contact Us</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">{t('contact.hero.title')}</h1>
           <p className="text-xl lg:text-2xl text-emerald-100 max-w-3xl mx-auto">
-            We're here to help you with any questions or concerns. Reach out to us anytime.
+            {t('contact.hero.subtitle')}
           </p>
         </div>
       </section>
@@ -134,12 +139,12 @@ export const ContactPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div className="bg-white p-8 rounded-xl shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('contact.form.title')}</h2>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
+                      {t('contact.form.name')}
                     </label>
                     <input
                       {...register('name')}
@@ -148,7 +153,7 @@ export const ContactPage: React.FC = () => {
                       className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                         errors.name ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Enter your full name"
+                      placeholder={t('contact.form.name.placeholder')}
                     />
                     {errors.name && (
                       <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
@@ -157,7 +162,7 @@ export const ContactPage: React.FC = () => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                      {t('contact.form.email')}
                     </label>
                     <input
                       {...register('email')}
@@ -166,7 +171,7 @@ export const ContactPage: React.FC = () => {
                       className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                         errors.email ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Enter your email address"
+                      placeholder={t('contact.form.email.placeholder')}
                     />
                     {errors.email && (
                       <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
@@ -177,7 +182,7 @@ export const ContactPage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number *
+                      {t('contact.form.phone')}
                     </label>
                     <input
                       {...register('phone')}
@@ -186,7 +191,7 @@ export const ContactPage: React.FC = () => {
                       className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                         errors.phone ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Enter your phone number"
+                      placeholder={t('contact.form.phone.placeholder')}
                     />
                     {errors.phone && (
                       <p className="text-red-600 text-sm mt-1">{errors.phone.message}</p>
@@ -195,7 +200,7 @@ export const ContactPage: React.FC = () => {
 
                   <div>
                     <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                      Subject *
+                      {t('contact.form.subject')}
                     </label>
                     <select
                       {...register('subject')}
@@ -204,13 +209,13 @@ export const ContactPage: React.FC = () => {
                         errors.subject ? 'border-red-500' : 'border-gray-300'
                       }`}
                     >
-                      <option value="">Select subject</option>
-                      <option value="appointment">Appointment Inquiry</option>
-                      <option value="insurance">Insurance Question</option>
-                      <option value="vision">Vision Inquiry</option>
-                      <option value="surgery">Surgery Consultation</option>
-                      <option value="complaint">Complaint</option>
-                      <option value="general">General Question</option>
+                      <option value="">{t('contact.form.subject.placeholder')}</option>
+                      <option value="appointment">{t('contact.form.subject.appointment')}</option>
+                      <option value="insurance">{t('contact.form.subject.insurance')}</option>
+                      <option value="vision">{t('contact.form.subject.vision')}</option>
+                      <option value="surgery">{t('contact.form.subject.surgery')}</option>
+                      <option value="complaint">{t('contact.form.subject.complaint')}</option>
+                      <option value="general">{t('contact.form.subject.general')}</option>
                     </select>
                     {errors.subject && (
                       <p className="text-red-600 text-sm mt-1">{errors.subject.message}</p>
@@ -220,7 +225,7 @@ export const ContactPage: React.FC = () => {
 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
+                    {t('contact.form.message')}
                   </label>
                   <textarea
                     {...register('message')}
@@ -229,7 +234,7 @@ export const ContactPage: React.FC = () => {
                     className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
                       errors.message ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="Type your message here..."
+                    placeholder={t('contact.form.message.placeholder')}
                   />
                   {errors.message && (
                     <p className="text-red-600 text-sm mt-1">{errors.message.message}</p>
@@ -241,7 +246,7 @@ export const ContactPage: React.FC = () => {
                   className="w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 flex items-center justify-center space-x-2"
                 >
                   <Send className="h-5 w-5" />
-                  <span>Send Message</span>
+                  <span>{t('contact.form.submit')}</span>
                 </button>
               </form>
             </div>
@@ -250,7 +255,7 @@ export const ContactPage: React.FC = () => {
             <div className="space-y-8">
               {/* Map Placeholder */}
               <div className="bg-white p-8 rounded-xl shadow-lg">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Find Us</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('contact.findUs.title')}</h3>
                 <div className="rounded-lg overflow-hidden">
                   <div className="aspect-video">
                     <iframe
@@ -262,7 +267,7 @@ export const ContactPage: React.FC = () => {
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                       className="w-full h-full"
-                      title="Map - Bahir Dar Specialty Eye Center"
+                      title={t('contact.map.title')}
                     />
                   </div>
                 </div>
@@ -270,27 +275,27 @@ export const ContactPage: React.FC = () => {
 
               {/* Emergency Information */}
               <div className="bg-red-50 p-6 rounded-xl border border-red-200">
-                <h3 className="text-lg font-semibold text-red-900 mb-3">Emergency Information</h3>
+                <h3 className="text-lg font-semibold text-red-900 mb-3">{t('contact.emergency.title')}</h3>
                 <p className="text-red-800 mb-4">
-                  For medical emergencies, please call 911 or visit our Emergency Department immediately.
+                  {t('contact.emergency.desc')}
                 </p>
                 <div className="space-y-2 text-sm text-red-700">
-                  <p><strong>Emergency Line:</strong> (555) 911-HELP</p>
-                  <p><strong>Available:</strong> 24 hours a day, 7 days a week</p>
+                  <p><strong>{t('contact.emergency.line')}</strong> (555) 911-HELP</p>
+                  <p><strong>{t('contact.emergency.available')}</strong> {t('contact.emergency.available.value')}</p>
                 </div>
               </div>
 
               {/* Additional Information */}
               <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
-                <h3 className="text-lg font-semibold text-red-900 mb-3">Urgent Eye Care</h3>
+                <h3 className="text-lg font-semibold text-red-900 mb-3">{t('contact.urgent.title')}</h3>
                 <p className="text-blue-800 mb-4">
-                  For urgent eye problems like sudden vision loss, severe eye pain, or eye injuries, please call us immediately or visit the nearest emergency room.
+                  {t('contact.urgent.desc')}
                 </p>
                 <ul className="space-y-2 text-sm text-blue-800">
-                  <li>• Patient Portal: Access your vision records online</li>
-                  <li>• Insurance Questions: Call (555) 123-INS</li>
-                  <li>• LASIK Consultations: Call (555) 123-LASIK</li>
-                  <li>• Optical Shop: Call (555) 123-LENS</li>
+                  <li>• {t('contact.urgent.portal')}</li>
+                  <li>• {t('contact.urgent.insurance')}</li>
+                  <li>• {t('contact.urgent.lasik')}</li>
+                  <li>• {t('contact.urgent.optical')}</li>
                 </ul>
               </div>
             </div>

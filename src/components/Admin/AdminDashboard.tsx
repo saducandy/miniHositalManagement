@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Users, Settings, Activity, Clock, CheckCircle, Mail, Search, Edit, Sun, Plus, Upload, X } from 'lucide-react';
+import { Calendar, Users, Settings, Activity, Clock, CheckCircle, Mail, Search, Edit, Sun, Plus, Upload, X, Bell } from 'lucide-react';
+import { I18nContext } from '../../context/I18nContext';
 
 export const AdminDashboard: React.FC = () => {
+  const { t } = useContext(I18nContext);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [appointments, setAppointments] = useState<Array<{
@@ -29,6 +32,9 @@ export const AdminDashboard: React.FC = () => {
   }>>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [messagesError, setMessagesError] = useState<string | null>(null);
+  const [isBellOpen, setIsBellOpen] = useState(false);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<null | typeof appointments[number]>(null);
   const [patientSearch, setPatientSearch] = useState('');
   
   // Patients state
@@ -169,10 +175,10 @@ export const AdminDashboard: React.FC = () => {
   }
 
   const stats = [
-    { label: 'Total Appointments', value: '1,234', change: '+12%', icon: Calendar, color: 'emerald' },
-    { label: 'Active Patients', value: '856', change: '+8%', icon: Users, color: 'blue' },
-    { label: 'Pending Requests', value: '23', change: '-5%', icon: Clock, color: 'yellow' },
-    { label: 'Completed Today', value: '47', change: '+15%', icon: CheckCircle, color: 'green' },
+    { label: t('admin.stats.totalAppointments'), value: '1,234', change: '+12%', icon: Calendar, color: 'emerald' },
+    { label: t('admin.stats.activePatients'), value: '856', change: '+8%', icon: Users, color: 'blue' },
+    { label: t('admin.stats.pendingRequests'), value: '23', change: '-5%', icon: Clock, color: 'yellow' },
+    { label: t('admin.stats.completedToday'), value: '47', change: '+15%', icon: CheckCircle, color: 'green' },
   ];
 
   // Get recent appointments from the fetched data (limit to 5 most recent)
@@ -197,12 +203,12 @@ export const AdminDashboard: React.FC = () => {
     });
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: Activity },
-    { id: 'appointments', label: 'Appointments', icon: Calendar },
-    { id: 'events', label: 'Events', icon: Calendar },
-    { id: 'patients', label: 'Patients', icon: Users },
-    { id: 'messages', label: 'Messages', icon: Mail },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'overview', label: t('admin.tabs.overview'), icon: Activity },
+    { id: 'appointments', label: t('admin.tabs.appointments'), icon: Calendar },
+    { id: 'events', label: t('admin.tabs.events'), icon: Calendar },
+    { id: 'patients', label: t('admin.tabs.patients'), icon: Users },
+    { id: 'messages', label: t('admin.tabs.messages'), icon: Mail },
+    { id: 'settings', label: t('admin.tabs.settings'), icon: Settings },
   ];
 
   // Fetch appointments on component mount and when Appointments tab is active
@@ -240,6 +246,38 @@ export const AdminDashboard: React.FC = () => {
     };
     fetchAppointments();
     return () => controller.abort();
+  }, [activeTab]);
+
+  // Realtime notification via BroadcastChannel (same-origin tabs/windows)
+  useEffect(() => {
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel('appointments');
+      bc.onmessage = (event) => {
+        const { type, payload } = event.data || {};
+        if (type === 'appointment_created') {
+          Swal.fire({
+            title: t('admin.toast.newAppointment.title'),
+            text: (t('admin.toast.newAppointment.msg') || '').replace('{name}', payload?.fullName || 'Unknown'),
+            icon: 'info',
+            timer: 4000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end',
+          });
+          // Optional: refresh appointments if on appointments or overview
+          if (activeTab === 'appointments' || activeTab === 'overview') {
+            // Trigger fetch by toggling tab briefly
+            const current = activeTab;
+            setActiveTab('messages');
+            setTimeout(() => setActiveTab(current), 150);
+          }
+        }
+      };
+    } catch {}
+    return () => {
+      try { bc && bc.close(); } catch {}
+    };
   }, [activeTab]);
 
   // Fetch messages when Messages tab is active
@@ -538,7 +576,7 @@ export const AdminDashboard: React.FC = () => {
         })
       });
 
-      if (!response.ok) throw new Error('Failed to update appointment state');
+      if (!response.ok) throw new Error(t('admin.toast.stateUpdated.errorMsg'));
       
       // Update the local state
       setAppointments(prev => prev.map(appointment => 
@@ -547,10 +585,10 @@ export const AdminDashboard: React.FC = () => {
           : appointment
       ));
       
-      (await getSwal()).fire('Success', `Appointment state updated to ${newState}`, 'success');
+      (await getSwal()).fire(t('admin.toast.stateUpdated.title'), (t('admin.toast.stateUpdated.msg') || '').replace('{state}', newState), 'success');
       
     } catch (error: any) {
-      (await getSwal()).fire('Error', error.message || 'Failed to update appointment state', 'error');
+      (await getSwal()).fire(t('admin.toast.stateUpdated.errorTitle'), error.message || t('admin.toast.stateUpdated.errorMsg'), 'error');
     }
   };
 
@@ -716,9 +754,47 @@ export const AdminDashboard: React.FC = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-400">Manage your hospital operations efficiently</p>
+        <div className="mb-8 flex items-start justify-between gap-4 relative">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{t('admin.title')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('admin.subtitle')}</p>
+          </div>
+          <div className="relative">
+            <button onClick={() => setIsBellOpen(o => !o)} aria-label="Notifications">
+              <BellBadge count={appointments.filter(a => (a.state || 'pending') === 'pending').length} />
+            </button>
+            {isBellOpen && (
+              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50">
+                <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">{t('admin.bell.pending')}</span>
+                  <button className="text-xs text-emerald-600 hover:underline" onClick={() => { setActiveTab('appointments'); setIsBellOpen(false); }}>{t('admin.bell.viewAll')}</button>
+                </div>
+                <div className="max-h-96 overflow-auto divide-y divide-gray-100 dark:divide-gray-700">
+                  {appointments.filter(a => (a.state || 'pending') === 'pending').length === 0 ? (
+                    <div className="p-4 text-sm text-gray-600 dark:text-gray-300">{t('admin.bell.none')}</div>
+                  ) : (
+                    appointments.filter(a => (a.state || 'pending') === 'pending').map((a, idx) => {
+                      const { date, time } = formatFancyDate(a.dateAndTime);
+                      return (
+                        <div key={idx} className="p-3 flex items-start gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{a.fullName}</p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{a.ec_doctor?.name || '—'} • {date} • {time}</p>
+                          </div>
+                          <button
+                            onClick={() => { setSelectedAppointment(a); setShowAppointmentModal(true); setIsBellOpen(false); }}
+                            className="text-xs px-2 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-700"
+                          >
+                            {t('admin.bell.detail')}
+                          </button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Tabs */}
@@ -769,12 +845,12 @@ export const AdminDashboard: React.FC = () => {
             {/* Recent Appointments */}
             <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Recent Appointments</h2>
+                <h2 className="text-lg font-semibold text-gray-900">{t('admin.overview.recent')}</h2>
               </div>
               <div className="overflow-x-auto">
                 {loadingAppointments ? (
                   <div className="px-6 py-8 text-center">
-                    <p className="text-gray-600">Loading appointments...</p>
+                    <p className="text-gray-600">{t('admin.overview.loadingAppointments')}</p>
                   </div>
                 ) : appointmentsError ? (
                   <div className="px-6 py-8 text-center">
@@ -782,42 +858,42 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                 ) : recentAppointments.length === 0 ? (
                   <div className="px-6 py-8 text-center">
-                    <p className="text-gray-600">No appointments found</p>
+                    <p className="text-gray-600">{t('admin.overview.noAppointments')}</p>
                   </div>
                 ) : (
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Doctor</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {recentAppointments.map((appointment) => (
-                        <tr key={appointment.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 text-sm font-medium text-gray-900">{appointment.patient}</td>
-                          <td className="px-6 py-4 text-sm text-gray-600">{appointment.doctor}</td>
-                          <td className="px-6 py-4 text-sm text-gray-600">{appointment.time}</td>
-                          <td className="px-6 py-4">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(appointment.status)}`}>
-                              {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-sm">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.table.patient')}</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.table.doctor')}</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.table.time')}</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.table.status')}</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.table.actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {recentAppointments.map((appointment) => (
+                      <tr key={appointment.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{appointment.patient}</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">{appointment.doctor}</td>
+                        <td className="px-6 py-4 text-sm text-gray-600">{appointment.time}</td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(appointment.status)}`}>
+                            {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm">
                             <button 
                               onClick={() => setActiveTab('appointments')}
                               className="text-emerald-600 hover:text-emerald-700 font-medium focus:outline-none focus:underline"
                             >
-                              View
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                            {t('admin.view')}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
                 )}
               </div>
             </div>
@@ -825,39 +901,39 @@ export const AdminDashboard: React.FC = () => {
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin.quick.title')}</h3>
                 <div className="space-y-3">
                   <button 
                   onClick={() => navigate('/appointments')}
                   className="w-full text-left p-3 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    Add New Appointment
+                    {t('admin.quick.addAppointment')}
                   </button>
                   <button className="w-full text-left p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Register New Patient
+                    {t('admin.quick.registerPatient')}
                   </button>
                   <button 
                     onClick={() => setShowAddEventForm(true)}
                     className="w-full text-left p-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
-                    Schedule Event
+                    {t('admin.quick.scheduleEvent')}
                   </button>
                 </div>
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">System Status</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{t('admin.system.title')}</h3>
                   <button
                     onClick={checkServerHealth}
                     disabled={isCheckingStatus}
                     className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200 transition-colors disabled:opacity-50"
                   >
-                    {isCheckingStatus ? 'Checking...' : 'Refresh'}
+                    {isCheckingStatus ? t('admin.system.checking') : t('admin.system.refresh')}
                   </button>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Server Status</span>
+                    <span className="text-sm text-gray-600">{t('admin.system.server')}</span>
                     <span className={`text-sm font-medium ${
                       serverStatus.server === 'Online' ? 'text-green-600' : 'text-red-600'
                     }`}>
@@ -865,7 +941,7 @@ export const AdminDashboard: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Database</span>
+                    <span className="text-sm text-gray-600">{t('admin.system.database')}</span>
                     <span className={`text-sm font-medium ${
                       serverStatus.database === 'Connected' ? 'text-green-600' : 'text-red-600'
                     }`}>
@@ -873,7 +949,7 @@ export const AdminDashboard: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">API Status</span>
+                    <span className="text-sm text-gray-600">{t('admin.system.api')}</span>
                     <span className={`text-sm font-medium ${
                       serverStatus.api === 'Active' ? 'text-green-600' : 'text-red-600'
                     }`}>
@@ -884,12 +960,12 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin.activity.title')}</h3>
                 <div className="space-y-3 text-sm">
-                  <p className="text-gray-600">New patient registered</p>
-                  <p className="text-gray-600">Appointment confirmed</p>
-                  <p className="text-gray-600">Event scheduled</p>
-                  <p className="text-gray-600">Content updated</p>
+                  <p className="text-gray-600">{t('admin.activity.newPatient')}</p>
+                  <p className="text-gray-600">{t('admin.activity.apptConfirmed')}</p>
+                  <p className="text-gray-600">{t('admin.activity.eventScheduled')}</p>
+                  <p className="text-gray-600">{t('admin.activity.contentUpdated')}</p>
                 </div>
               </div>
             </div>
@@ -899,9 +975,9 @@ export const AdminDashboard: React.FC = () => {
         {/* Appointments Tab */}
         {activeTab === 'appointments' && (
           <div className="bg-white rounded-lg shadow p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">All Appointments</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('admin.appts.title')}</h2>
             {loadingAppointments && (
-              <p className="text-gray-600">Loading appointments...</p>
+              <p className="text-gray-600">{t('admin.overview.loadingAppointments')}</p>
             )}
             {appointmentsError && (
               <p className="text-red-600">{appointmentsError}</p>
@@ -916,11 +992,11 @@ export const AdminDashboard: React.FC = () => {
                       <div className="p-6 space-y-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">Patient</p>
+                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.label.patient')}</p>
                             <h3 className="text-lg font-semibold text-emerald-900">{a.fullName}</h3>
                           </div>
                           <div className="text-right">
-                            <p className="text-[11px] uppercase tracking-wide text-blue-700">Doctor</p>
+                            <p className="text-[11px] uppercase tracking-wide text-blue-700">{t('admin.label.doctor')}</p>
                             <p className="text-sm font-semibold text-blue-900">{a.ec_doctor?.name || '-'}</p>
                             <span className="inline-block mt-1 px-2 py-0.5 text-[11px] rounded-full bg-blue-100 text-blue-700">{a.ec_doctor?.speciality || '-'}</span>
                           </div>
@@ -928,7 +1004,7 @@ export const AdminDashboard: React.FC = () => {
                         
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-purple-700">Status</p>
+                            <p className="text-[11px] uppercase tracking-wide text-purple-700">{t('admin.status')}</p>
                             <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
                               a.state === 'confirmed' ? 'bg-green-100 text-green-800' :
                               a.state === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -944,10 +1020,10 @@ export const AdminDashboard: React.FC = () => {
                               onChange={(e) => updateAppointmentState(a.documentId, e.target.value)}
                               className="text-xs px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500"
                             >
-                              <option value="pending">Pending</option>
-                              <option value="confirmed">Confirmed</option>
-                              <option value="cancelled">Cancelled</option>
-                              <option value="completed">Completed</option>
+                              <option value="pending">{t('admin.status.pending')}</option>
+                              <option value="confirmed">{t('admin.status.confirmed')}</option>
+                              <option value="cancelled">{t('admin.status.cancelled')}</option>
+                              <option value="completed">{t('admin.status.completed')}</option>
                             </select>
                           </div>
                         </div>
@@ -969,21 +1045,21 @@ export const AdminDashboard: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs text-emerald-700">Email</p>
+                              <p className="text-xs text-emerald-700">{t('admin.label.email')}</p>
                             <p className="text-sm text-emerald-900 break-all">{a.email}</p>
                           </div>
                           <div>
-                            <p className="text-xs text-blue-700">Phone</p>
+                              <p className="text-xs text-blue-700">{t('admin.label.phone')}</p>
                             <p className="text-sm text-blue-900">{a.phoneNumber}</p>
                           </div>
                         </div>
                         <div>
-                          <p className="text-xs text-purple-700">Reason</p>
+                          <p className="text-xs text-purple-700">{t('admin.label.reason')}</p>
                           <p className="text-sm text-purple-900">{a.resonForVisit}</p>
                         </div>
                         {a.additionalNotes ? (
                           <div>
-                            <p className="text-xs text-pink-700">Notes</p>
+                            <p className="text-xs text-pink-700">{t('admin.label.notes')}</p>
                             <p className="text-sm text-pink-900 whitespace-pre-line line-clamp-3">{a.additionalNotes}</p>
                           </div>
                         ) : null}
@@ -999,9 +1075,9 @@ export const AdminDashboard: React.FC = () => {
         {/* Messages Tab */}
         {activeTab === 'messages' && (
           <div className="bg-white rounded-lg shadow p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Message From Customers</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('admin.messages.title')}</h2>
             {loadingMessages && (
-              <p className="text-gray-600">Loading messages...</p>
+              <p className="text-gray-600">{t('admin.messages.loading')}</p>
             )}
             {messagesError && (
               <p className="text-red-600">{messagesError}</p>
@@ -1018,31 +1094,31 @@ export const AdminDashboard: React.FC = () => {
                       <div className="p-6 space-y-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-blue-700">From</p>
+                            <p className="text-[11px] uppercase tracking-wide text-blue-700">{t('admin.messages.from')}</p>
                             <h3 className="text-lg font-semibold text-blue-900">{m.fullName}</h3>
                           </div>
                           <div className="text-right">
-                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">Received</p>
+                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.messages.received')}</p>
                             <p className="text-sm font-semibold text-emerald-900">{createdDate}</p>
                             <p className="text-xs text-emerald-700">{createdTime}</p>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs text-blue-700">Email</p>
+                            <p className="text-xs text-blue-700">{t('admin.label.email')}</p>
                             <p className="text-sm text-blue-900 break-all">{m.email}</p>
                           </div>
                           <div>
-                            <p className="text-xs text-emerald-700">Phone</p>
+                            <p className="text-xs text-emerald-700">{t('admin.label.phone')}</p>
                             <p className="text-sm text-emerald-900">{m.phoneNumber}</p>
                           </div>
                         </div>
                         <div>
-                          <p className="text-xs text-purple-700">Subject</p>
+                          <p className="text-xs text-purple-700">{t('admin.label.subject')}</p>
                           <p className="text-sm text-purple-900 font-semibold">{m.subject}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-pink-700">Message</p>
+                          <p className="text-xs text-pink-700">{t('admin.label.message')}</p>
                           <p className="text-sm text-pink-900 whitespace-pre-line line-clamp-5">{m.message}</p>
                         </div>
                       </div>
@@ -1058,18 +1134,18 @@ export const AdminDashboard: React.FC = () => {
         {activeTab === 'events' && (
           <div className="bg-white rounded-lg shadow p-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Events Management</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('admin.events.title')}</h2>
               <button
                 onClick={() => setShowAddEventForm(true)}
                 className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Add New Event
+                {t('admin.events.add')}
               </button>
             </div>
             
             {loadingEvents && (
-              <p className="text-gray-600">Loading events...</p>
+              <p className="text-gray-600">{t('events.loading')}</p>
             )}
             {eventsError && (
               <p className="text-red-600">{eventsError}</p>
@@ -1084,11 +1160,11 @@ export const AdminDashboard: React.FC = () => {
                       <div className="p-6 space-y-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-purple-700">Event</p>
+                            <p className="text-[11px] uppercase tracking-wide text-purple-700">{t('events.category.awareness')}</p>
                             <h3 className="text-lg font-semibold text-purple-900">{event.title}</h3>
                           </div>
                           <div className="text-right">
-                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">Category</p>
+                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.events.category')}</p>
                             <span className="inline-block px-2 py-0.5 text-[11px] rounded-full bg-emerald-100 text-emerald-700">{event.category}</span>
                           </div>
                         </div>
@@ -1107,31 +1183,31 @@ export const AdminDashboard: React.FC = () => {
                           <div className="flex items-center space-x-3">
                             <Calendar className="h-5 w-5 text-purple-600" />
                             <div>
-                              <p className="text-xs text-purple-700">Date</p>
+                              <p className="text-xs text-purple-700">{t('admin.label.date')}</p>
                               <p className="text-sm font-semibold text-purple-900">{date}</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-3">
                             <Clock className="h-5 w-5 text-emerald-600" />
                             <div>
-                              <p className="text-xs text-emerald-700">Time</p>
+                              <p className="text-xs text-emerald-700">{t('admin.label.time')}</p>
                               <p className="text-sm font-semibold text-emerald-900">{time}</p>
                             </div>
                           </div>
                         </div>
                         
                         <div>
-                          <p className="text-xs text-blue-700">Location</p>
+                          <p className="text-xs text-blue-700">{t('admin.events.location')}</p>
                           <p className="text-sm text-blue-900">{event.location}</p>
                         </div>
                         
                         <div>
-                          <p className="text-xs text-gray-700">Description</p>
+                          <p className="text-xs text-gray-700">{t('admin.events.description')}</p>
                           <p className="text-sm text-gray-900 line-clamp-3">{event.descreption}</p>
                         </div>
                         
                         <div>
-                          <p className="text-xs text-pink-700">Learn More</p>
+                          <p className="text-xs text-pink-700">{t('admin.events.learnMore')}</p>
                           <p className="text-sm text-pink-900">{event.learnMore}</p>
                         </div>
                       </div>
@@ -1149,7 +1225,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Add New Event</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">{t('admin.addEvent.title')}</h2>
                   <button
                     onClick={() => setShowAddEventForm(false)}
                     className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -1162,7 +1238,7 @@ export const AdminDashboard: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Category *
+                        {t('admin.addEvent.category')}
                       </label>
                       <select
                         value={eventForm.category}
@@ -1170,15 +1246,15 @@ export const AdminDashboard: React.FC = () => {
                         required
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       >
-                        <option value="AWARENESS">Awareness</option>
-                        <option value="CAMPAIGN">Campaign</option>
-                        <option value="HEALTH CHECK">Health Check</option>
+                        <option value="AWARENESS">{t('events.category.awareness')}</option>
+                        <option value="CAMPAIGN">{t('events.category.campaign')}</option>
+                        <option value="HEALTH CHECK">{t('events.category.health-check')}</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Event Date & Time *
+                        {t('admin.addEvent.dateTime')}
                       </label>
                       <input
                         type="datetime-local"
@@ -1192,7 +1268,7 @@ export const AdminDashboard: React.FC = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Event Title *
+                      {t('admin.addEvent.titleLabel')}
                     </label>
                     <input
                       type="text"
@@ -1200,13 +1276,13 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handleEventFormChange('title', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter event title"
+                      placeholder={t('admin.addEvent.titlePlaceholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Location *
+                      {t('admin.addEvent.location')}
                     </label>
                     <input
                       type="text"
@@ -1214,13 +1290,13 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handleEventFormChange('location', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter event location"
+                      placeholder={t('admin.addEvent.locationPlaceholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Description *
+                      {t('admin.addEvent.description')}
                     </label>
                     <textarea
                       value={eventForm.descreption}
@@ -1228,33 +1304,33 @@ export const AdminDashboard: React.FC = () => {
                       required
                       rows={4}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter event description"
+                      placeholder={t('admin.addEvent.descriptionPlaceholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Learn More Text
+                      {t('admin.addEvent.learnMore')}
                     </label>
                     <input
                       type="text"
                       value={eventForm.learnMore}
                       onChange={(e) => handleEventFormChange('learnMore', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Learn More"
+                      placeholder={t('admin.addEvent.learnMorePlaceholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Event Image *
+                      {t('admin.addEvent.image')}
                     </label>
                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-emerald-400 transition-colors">
                       <div className="space-y-1 text-center">
                         <Upload className="mx-auto h-12 w-12 text-gray-400" />
                         <div className="flex text-sm text-gray-600">
                           <label htmlFor="event-image" className="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-emerald-500">
-                            <span>Upload an image</span>
+                            <span>{t('admin.addEvent.upload')}</span>
                             <input
                               id="event-image"
                               name="event-image"
@@ -1264,9 +1340,9 @@ export const AdminDashboard: React.FC = () => {
                               onChange={(e) => handleEventFormChange('image', e.target.files?.[0] || null)}
                             />
                           </label>
-                          <p className="pl-1">or drag and drop</p>
+                          <p className="pl-1">{t('admin.addEvent.orDrag')}</p>
                         </div>
-                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                        <p className="text-xs text-gray-500">{t('admin.addEvent.types')}</p>
                         {eventForm.image && (
                           <p className="text-sm text-emerald-600 font-medium">
                             Selected: {eventForm.image.name}
@@ -1288,14 +1364,14 @@ export const AdminDashboard: React.FC = () => {
                       onClick={() => setShowAddEventForm(false)}
                       className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
-                      Cancel
+                      {t('admin.addEvent.cancel')}
                     </button>
                     <button
                       type="submit"
                       disabled={creatingEvent || uploadingImage}
                       className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {creatingEvent ? 'Creating...' : uploadingImage ? 'Uploading Image...' : 'Create Event'}
+                      {creatingEvent ? t('admin.addEvent.creating') : uploadingImage ? t('admin.addEvent.uploading') : t('admin.addEvent.create')}
                     </button>
                   </div>
                 </form>
@@ -1308,13 +1384,13 @@ export const AdminDashboard: React.FC = () => {
         {activeTab === 'patients' && (
           <div className="bg-white rounded-lg shadow p-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Patients</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('admin.patients.title')}</h2>
               <div className="flex items-center space-x-4">
                 <div className="relative w-full max-w-sm">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search patients by name, email, ID..."
+                    placeholder={t('admin.patients.search')}
                     className="w-full pl-9 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     value={patientSearch}
                     onChange={(e) => setPatientSearch(e.target.value)}
@@ -1325,13 +1401,13 @@ export const AdminDashboard: React.FC = () => {
                   className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Patient
+                  {t('admin.patients.add')}
                 </button>
               </div>
             </div>
             
             {loadingPatients && (
-              <p className="text-gray-600">Loading patients...</p>
+              <p className="text-gray-600">{t('admin.patients.loading')}</p>
             )}
             {patientsError && (
               <p className="text-red-600">{patientsError}</p>
@@ -1344,22 +1420,22 @@ export const AdminDashboard: React.FC = () => {
                   <div className="p-6 space-y-3">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-[11px] uppercase tracking-wide text-emerald-700">Patient ID</p>
+                        <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.patients.patientId')}</p>
                         <h3 className="text-lg font-semibold text-emerald-900">{p.patientId}</h3>
                       </div>
-                      <span className="inline-block px-2 py-0.5 text-[11px] rounded-full bg-blue-100 text-blue-700">Last Visit: {new Date(p.lastVisit).toLocaleDateString()}</span>
+                      <span className="inline-block px-2 py-0.5 text-[11px] rounded-full bg-blue-100 text-blue-700">{t('admin.patients.lastVisit')} {new Date(p.lastVisit).toLocaleDateString()}</span>
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-wide text-blue-700">Name</p>
+                      <p className="text-[11px] uppercase tracking-wide text-blue-700">{t('admin.patients.name')}</p>
                       <p className="text-sm font-semibold text-blue-900">{p.fullName}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-xs text-emerald-700">Email</p>
+                        <p className="text-xs text-emerald-700">{t('admin.label.email')}</p>
                         <p className="text-sm text-emerald-900 break-all">{p.email}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-blue-700">Phone</p>
+                        <p className="text-xs text-blue-700">{t('admin.label.phone')}</p>
                         <p className="text-sm text-blue-900">{p.phoneNumber}</p>
                       </div>
                     </div>
@@ -1368,7 +1444,7 @@ export const AdminDashboard: React.FC = () => {
                         onClick={() => handleEditClick(p)}
                         className="inline-flex items-center px-3 py-2 text-sm rounded-lg border border-emerald-300 text-emerald-700 hover:bg-emerald-50 w-full sm:w-auto"
                       >
-                        <Edit className="h-4 w-4 mr-1" /> Edit
+                        <Edit className="h-4 w-4 mr-1" /> {t('admin.edit')}
                       </button>
                       <button 
                         onClick={() => navigate('/appointments', { 
@@ -1382,14 +1458,14 @@ export const AdminDashboard: React.FC = () => {
                         })}
                         className="inline-flex items-center px-3 py-2 text-sm rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 w-full sm:w-auto"
                       >
-                        <Calendar className="h-4 w-4 mr-1" /> New Appointment
+                        <Calendar className="h-4 w-4 mr-1" /> {t('admin.newAppointment')}
                       </button>
                     </div>
                   </div>
                 </div>
               ))}
               {filteredPatients.length === 0 && (
-                <p className="text-gray-600">No patients match your search.</p>
+                <p className="text-gray-600">{t('admin.patients.none')}</p>
               )}
             </div>
             )}
@@ -1402,7 +1478,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Add New Patient</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">{t('admin.addPatient.title')}</h2>
                   <button
                     onClick={() => setShowAddPatientForm(false)}
                     className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -1414,7 +1490,7 @@ export const AdminDashboard: React.FC = () => {
                 <form onSubmit={handleAddPatient} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
+                      {t('admin.form.fullName')}
                     </label>
                     <input
                       type="text"
@@ -1422,13 +1498,13 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handlePatientFormChange('fullName', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter patient's full name"
+                      placeholder={t('admin.form.fullName.placeholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                      {t('admin.form.email')}
                     </label>
                     <input
                       type="email"
@@ -1436,13 +1512,13 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handlePatientFormChange('email', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter patient's email"
+                      placeholder={t('admin.form.email.placeholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number *
+                      {t('admin.form.phone')}
                     </label>
                     <input
                       type="tel"
@@ -1450,13 +1526,13 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handlePatientFormChange('phoneNumber', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter patient's phone number"
+                      placeholder={t('admin.form.phone.placeholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Visit Date *
+                      {t('admin.form.lastVisit')}
                     </label>
                     <input
                       type="date"
@@ -1479,14 +1555,14 @@ export const AdminDashboard: React.FC = () => {
                       onClick={() => setShowAddPatientForm(false)}
                       className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
-                      Cancel
+                      {t('admin.btn.cancel')}
                     </button>
                     <button
                       type="submit"
                       disabled={creatingPatient}
                       className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {creatingPatient ? 'Creating...' : 'Create Patient'}
+                      {creatingPatient ? t('admin.btn.creating') : t('admin.btn.createPatient')}
                     </button>
                   </div>
                 </form>
@@ -1501,7 +1577,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Edit Patient</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">{t('admin.editPatient.title')}</h2>
                   <button
                     onClick={() => setShowEditPatientForm(false)}
                     className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -1513,7 +1589,7 @@ export const AdminDashboard: React.FC = () => {
                 <form onSubmit={handleEditPatient} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
+                      {t('admin.form.fullName')}
                     </label>
                     <input
                       type="text"
@@ -1521,13 +1597,13 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handlePatientFormChange('fullName', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter patient's full name"
+                      placeholder={t('admin.form.fullName.placeholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                      {t('admin.form.email')}
                     </label>
                     <input
                       type="email"
@@ -1535,13 +1611,13 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handlePatientFormChange('email', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter patient's email"
+                      placeholder={t('admin.form.email.placeholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number *
+                      {t('admin.form.phone')}
                     </label>
                     <input
                       type="tel"
@@ -1549,7 +1625,7 @@ export const AdminDashboard: React.FC = () => {
                       onChange={(e) => handlePatientFormChange('phoneNumber', e.target.value)}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Enter patient's phone number"
+                      placeholder={t('admin.form.phone.placeholder')}
                     />
                   </div>
 
@@ -1578,14 +1654,14 @@ export const AdminDashboard: React.FC = () => {
                       onClick={() => setShowEditPatientForm(false)}
                       className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
-                      Cancel
+                      {t('admin.btn.cancel')}
                     </button>
                     <button
                       type="submit"
                       disabled={updatingPatient}
                       className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {updatingPatient ? 'Updating...' : 'Update Patient'}
+                      {updatingPatient ? t('admin.btn.updating') : t('admin.btn.updatePatient')}
                     </button>
                   </div>
                 </form>
@@ -1639,6 +1715,108 @@ export const AdminDashboard: React.FC = () => {
           </div>
         )}
       </div>
+      {/* Appointment Detail Modal */}
+      {showAppointmentModal && selectedAppointment && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowAppointmentModal(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="h-1 w-full bg-gradient-to-r from-emerald-400 to-blue-400 rounded-t-xl" />
+            <div className="p-6 space-y-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[11px] uppercase tracking-wide text-emerald-700">Patient</p>
+                  <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">{selectedAppointment.fullName}</h3>
+                </div>
+                <div className="text-right">
+                  <p className="text-[11px] uppercase tracking-wide text-blue-700">Doctor</p>
+                  <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">{selectedAppointment.ec_doctor?.name || '-'}</p>
+                  <span className="inline-block mt-1 px-2 py-0.5 text-[11px] rounded-full bg-blue-100 text-blue-700">{selectedAppointment.ec_doctor?.speciality || '-'}</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-5 w-5 text-emerald-600" />
+                  <div>
+                    <p className="text-xs text-emerald-700">Date</p>
+                    <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-100">{formatFancyDate(selectedAppointment.dateAndTime).date}</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Clock className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="text-xs text-blue-700">Time</p>
+                    <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">{formatFancyDate(selectedAppointment.dateAndTime).time}</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-purple-700 mb-1">Status</p>
+                <div className="flex items-center space-x-2">
+                  <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
+                    (selectedAppointment.state || 'pending') === 'confirmed' ? 'bg-green-100 text-green-800' :
+                    (selectedAppointment.state || 'pending') === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                    (selectedAppointment.state || 'pending') === 'cancelled' ? 'bg-red-100 text-red-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {(selectedAppointment.state || 'pending').charAt(0).toUpperCase() + (selectedAppointment.state || 'pending').slice(1)}
+                  </span>
+                  <select
+                    value={selectedAppointment.state || 'pending'}
+                    onChange={async (e) => {
+                      const newState = e.target.value;
+                      await updateAppointmentState(selectedAppointment.documentId, newState);
+                      setSelectedAppointment({ ...selectedAppointment, state: newState });
+                    }}
+                    className="text-xs px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-emerald-700">Email</p>
+                  <p className="text-sm text-emerald-900 dark:text-emerald-100 break-all">{selectedAppointment.email}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-blue-700">Phone</p>
+                  <p className="text-sm text-blue-900 dark:text-blue-100">{selectedAppointment.phoneNumber}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-purple-700">Reason</p>
+                <p className="text-sm text-purple-900 dark:text-purple-100">{selectedAppointment.resonForVisit}</p>
+              </div>
+              {selectedAppointment.additionalNotes ? (
+                <div>
+                  <p className="text-xs text-pink-700">Notes</p>
+                  <p className="text-sm text-pink-900 dark:text-pink-100 whitespace-pre-line">{selectedAppointment.additionalNotes}</p>
+                </div>
+              ) : null}
+              <div className="flex justify-end pt-2">
+                <button onClick={() => setShowAppointmentModal(false)} className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const BellBadge: React.FC<{ count: number }> = ({ count }) => {
+  return (
+    <div className="relative">
+      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <Bell className="w-5 h-5" />
+      </div>
+      {count > 0 && (
+        <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 min-w-[20px] h-5 rounded-full text-xs font-semibold bg-red-600 text-white border border-white">
+          {count}
+        </span>
+      )}
     </div>
   );
 };

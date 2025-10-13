@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Contrast, Plus, Minus } from 'lucide-react';
+import { I18nContext } from '../../context/I18nContext';
 import { useAccessibility } from '../../hooks/useAccessibility';
 
 interface HeaderProps {
@@ -11,6 +12,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => {
   const location = useLocation();
   const { fontSize, highContrast, increaseFontSize, decreaseFontSize, toggleHighContrast } = useAccessibility();
+  const { language, toggleLanguage, t } = React.useContext(I18nContext);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -21,12 +23,12 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
   }, []);
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Services', href: '/services' },
-    { name: 'Doctors', href: '/doctors' },
-    { name: 'Appointments', href: '/appointments' },
-    { name: 'Events', href: '/events' },
-    { name: 'Contact', href: '/contact' },
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.services'), href: '/services' },
+    { name: t('nav.doctors'), href: '/doctors' },
+    { name: t('nav.appointments'), href: '/appointments' },
+    { name: t('nav.events'), href: '/events' },
+    { name: t('nav.contact'), href: '/contact' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -42,12 +44,12 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
               <Link to="/" className="flex items-center gap-2 sm:gap-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded min-w-0 flex-1">
                 <img src="/logo.png" alt="Bahir Dar Eye Care Center logo" className="h-6 w-6 sm:h-7 sm:w-7 rounded-full object-cover flex-shrink-0" />
                 <div className="leading-tight min-w-0">
-                  <span className="block text-sm sm:text-base font-semibold text-gray-900 truncate">Bahir Dar Eye Care Center</span>
-                  <span className="hidden sm:block text-xs text-gray-600">Vision Excellence</span>
+                  <span className="block text-sm sm:text-base font-semibold text-gray-900 truncate">{t('brand.name')}</span>
+                  <span className="hidden sm:block text-xs text-gray-600">{t('brand.tagline')}</span>
                 </div>
               </Link>
               <div className="hidden md:flex items-center space-x-2 sm:space-x-2 ml-auto flex-wrap gap-y-2">
-              <span className="text-xs text-gray-600">Font Size:</span>
+              <span className="text-xs text-gray-600">{t('accessibility.fontSize')}</span>
                 <button
                   onClick={decreaseFontSize}
                   className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -64,6 +66,16 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 <Plus className="h-3 w-3" />
                 </button>
               </div>
+              {/* Language toggle */}
+              <div className="hidden md:flex items-center ml-2">
+                <button
+                  onClick={toggleLanguage}
+                  className="px-2 py-0.5 rounded text-xs border border-gray-300 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  aria-label="Toggle language"
+                >
+                  {language === 'en' ? 'EN' : 'አማ'}
+                </button>
+              </div>
               <button
                 onClick={toggleHighContrast}
               className={`hidden md:flex items-center space-x-1 px-2 py-0.5 rounded text-xs transition-colors ${
@@ -74,7 +86,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 aria-label="Toggle high contrast mode"
               >
               <Contrast className="h-3 w-3" />
-              <span>Contrast</span>
+              <span>{t('accessibility.contrast')}</span>
               </button>
             </div>
           </div>
@@ -119,13 +131,13 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 to="/appointments"
                 className="bg-emerald-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 whitespace-nowrap"
               >
-                Book Appointment
+                {t('header.bookAppointment')}
               </Link>
               <Link
                 to="/admin"
                 className="text-emerald-600 border border-emerald-600 px-6 py-2 rounded-full text-sm font-medium hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
-                Admin
+                {t('header.admin')}
               </Link>
             </div>
 
