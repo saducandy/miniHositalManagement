@@ -27,7 +27,7 @@ export const HeroSection: React.FC = () => {
                 className="inline-flex items-center justify-center px-8 py-4 bg-emerald-600 text-white font-semibold rounded-full text-lg hover:bg-emerald-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
               >
                 <Calendar className="h-5 w-5 mr-2" />
-                Book Appointment
+                {t('header.bookAppointment')}
               </Link>
               <Link
                 to="/services"
