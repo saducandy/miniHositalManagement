@@ -25,6 +25,10 @@ const translations: Translations = {
     am: 'በልምድ ያለ የዓይን ሐኪሞች ቡድን ጋር ልዩ የዓይን እንክብካቤን ያግኙ። ቀጠሮ በመጀመር እና የእይታ መዝገቦትን በመዳሰስ ባለሙያ እንክብካቤ ይቀበሉ።'
   },
   'hero.learnMore': { en: 'Learn More', am: 'ተጨማሪ ይመልከቱ' },
+  'hero.stats.patientsServed': { en: 'Patients Served', am: 'የተስተናገዱ ታካሚዎች' },
+  'hero.stats.yearsExperience': { en: 'Years Experience', am: 'የልምድ ዓመታት' },
+  'hero.stats.successRate': { en: 'Success Rate', am: 'የስኬት መጠን' },
+  'hero.stats.surgeriesPerformed': { en: 'Surgeries Performed', am: 'የተከናወኑ ቀዶ ጥገናዎች' },
   // Home services preview
   'home.services.heading': { en: 'Our Eye Care Services', am: 'የእኛ የዓይን እንክብካቤ አገልግሎቶች' },
   'home.services.subtitle': {

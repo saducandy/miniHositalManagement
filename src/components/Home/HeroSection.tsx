@@ -40,10 +40,10 @@ export const HeroSection: React.FC = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
               {[
-                { icon: Users, value: '15K+', label: 'Patients Served' },
-                { icon: Award, value: '25+', label: 'Years Experience' },
-                { icon: Clock, value: '98%', label: 'Success Rate' },
-                { icon: Calendar, value: '5000+', label: 'Surgeries Performed' },
+                { icon: Users, value: '15K+', label: t('hero.stats.patientsServed') },
+                { icon: Award, value: '25+', label: t('hero.stats.yearsExperience') },
+                { icon: Clock, value: '98%', label: t('hero.stats.successRate') },
+                { icon: Calendar, value: '5000+', label: t('hero.stats.surgeriesPerformed') },
               ].map((stat, index) => (
                 <div key={index} className="text-center">
                   <stat.icon className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
