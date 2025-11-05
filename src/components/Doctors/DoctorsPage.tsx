@@ -78,10 +78,10 @@ export const DoctorsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-emerald-600 text-white py-16">
+      <section className="text-white py-16" style={{ background: `linear-gradient(to right, #32705a, #77a867)` }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">{t('doctors.hero.heading')}</h1>
-          <p className="text-xl lg:text-2xl text-blue-100 max-w-3xl mx-auto">{t('doctors.hero.subtitle')}</p>
+          <p className="text-xl lg:text-2xl max-w-3xl mx-auto" style={{ color: '#f0f8f4' }}>{t('doctors.hero.subtitle')}</p>
         </div>
       </section>
 
@@ -101,50 +101,58 @@ export const DoctorsPage: React.FC = () => {
                   <img
                     src={doctor.imageUrl || '/logo.png'}
                     alt={doctor.name}
-                    className="w-full h-80 object-cover"
+                    className="w-full h-48 object-cover"
                   />
-                  <div className="absolute top-4 right-4 bg-white bg-opacity-90 px-3 py-1 rounded-full">
+                  <div className="absolute top-2 right-2 bg-white bg-opacity-90 px-2 py-1 rounded-full">
                     <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium">{doctor.rating?.toFixed(1)}</span>
+                      <Star className="h-3 w-3 fill-current" style={{ color: '#fbce6e' }} />
+                      <span className="text-xs font-medium">{doctor.rating?.toFixed(1)}</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="p-8">
-                  <div className="mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{doctor.name}</h3>
-                    <p className="text-emerald-600 font-semibold text-lg">{doctor.speciality}</p>
+                <div className="p-4">
+                  <div className="mb-3">
+                    <h3 className="text-xl font-bold text-gray-900 mb-1">{doctor.name}</h3>
+                    <p className="font-semibold text-base" style={{ color: '#77a867' }}>{doctor.speciality}</p>
                   </div>
 
-                  <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                  <p className="text-gray-600 text-xs leading-relaxed mb-4 line-clamp-3">
                     {doctor.description}
                   </p>
 
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Award className="h-4 w-4 mr-2 text-emerald-600" />
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center text-xs text-gray-600">
+                      <Award className="h-3 w-3 mr-2" style={{ color: '#77a867' }} />
                       <span>{doctor.experienceYears.replace('Years of Experience', t('doctors.years'))}</span>
                     </div>
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Clock className="h-4 w-4 mr-2 text-emerald-600" />
+                    <div className="flex items-center text-xs text-gray-600">
+                      <Clock className="h-3 w-3 mr-2" style={{ color: '#77a867' }} />
                       <span>{doctor.availability ? t('doctors.available') : t('doctors.unavailable')}</span>
                     </div>
                   </div>
 
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">{t('doctors.qualifications')}</h4>
+                  <div className="mb-4">
+                    <h4 className="font-semibold text-gray-900 mb-2 text-sm">{t('doctors.qualifications')}</h4>
                     <ul className="space-y-1">
                       <li className="text-xs text-gray-600 flex items-start">
-                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2 mt-1.5 flex-shrink-0"></div>
+                        <div className="w-1 h-1 rounded-full mr-2 mt-1.5 flex-shrink-0" style={{ backgroundColor: '#77a867' }}></div>
                         {doctor.qualification}
                       </li>
                     </ul>
                   </div>
 
-                  <div className="space-y-3">
-                    <button className="w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
-                      <Calendar className="h-4 w-4 inline mr-2" />
+                  <div>
+                    <button 
+                      className="w-full text-white py-2 px-4 rounded-lg font-semibold text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{ 
+                        backgroundColor: '#77a867',
+                        '--tw-ring-color': '#77a867'
+                      } as React.CSSProperties & { '--tw-ring-color': string }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#32705a'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#77a867'}
+                    >
+                      <Calendar className="h-3 w-3 inline mr-2" />
                       {t('doctors.book')}
                     </button>
                     {/* <button className="w-full border border-emerald-600 text-emerald-600 py-3 px-6 rounded-lg font-semibold hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">
@@ -168,32 +176,32 @@ export const DoctorsPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-gray-50 rounded-xl">
-              <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-6 w-6 text-emerald-600" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#f0f8f4' }}>
+                <Award className="h-6 w-6" style={{ color: '#77a867' }} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('doctors.why.card1.title')}</h3>
               <p className="text-gray-600 text-sm">{t('doctors.why.card1.desc')}</p>
             </div>
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#fef7e8' }}>
+                <Clock className="h-6 w-6" style={{ color: '#fbce6e' }} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('doctors.why.card2.title')}</h3>
               <p className="text-gray-600 text-sm">{t('doctors.why.card2.desc')}</p>
             </div>
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Star className="h-6 w-6 text-purple-600" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#f0f8f4' }}>
+                <Star className="h-6 w-6" style={{ color: '#32705a' }} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('doctors.why.card3.title')}</h3>
               <p className="text-gray-600 text-sm">{t('doctors.why.card3.desc')}</p>
             </div>
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#fef7e8' }}>
+                <Calendar className="h-6 w-6" style={{ color: '#77a867' }} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('doctors.why.card4.title')}</h3>
               <p className="text-gray-600 text-sm">{t('doctors.why.card4.desc')}</p>

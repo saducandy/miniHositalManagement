@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Contrast, Plus, Minus } from 'lucide-react';
+import { Menu, X, Contrast, Plus, Minus, ChevronDown } from 'lucide-react';
 import { I18nContext } from '../../context/I18nContext';
 import { useAccessibility } from '../../hooks/useAccessibility';
 
@@ -9,11 +9,19 @@ interface HeaderProps {
   setIsMenuOpen: (open: boolean) => void;
 }
 
+interface NavItem {
+  name: string;
+  href?: string;
+  children?: NavItem[];
+}
+
 export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => {
   const location = useLocation();
   const { fontSize, highContrast, increaseFontSize, decreaseFontSize, toggleHighContrast } = useAccessibility();
   const { language, toggleLanguage, t } = React.useContext(I18nContext);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 0);
@@ -22,16 +30,74 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navigation = [
-    { name: t('nav.home'), href: '/' },
-    { name: t('nav.services'), href: '/services' },
-    { name: t('nav.doctors'), href: '/doctors' },
-    { name: t('nav.appointments'), href: '/appointments' },
-    { name: t('nav.events'), href: '/events' },
-    { name: t('nav.contact'), href: '/contact' },
+  const navigation: NavItem[] = [
+    { name: 'Home', href: '/' },
+    {
+      name: 'About Us',
+      children: [
+        { name: 'Our Story', href: '/about/story' },
+        { name: 'Vision & Mission', href: '/about/vision-mission' },
+        { name: 'Management Team', href: '/about/management' },
+        { name: 'Our Doctors', href: '/about/doctors' },
+        { name: 'Awards & Recognitions', href: '/about/awards' },
+        { name: 'Annual Activity Reports', href: '/about/reports' },
+        { name: 'BDSEC News', href: '/about/news' },
+        { name: 'Hospital Location', href: '/about/location' },
+      ],
+    },
+    {
+      name: 'Our Services',
+      children: [
+        { name: 'Eye Care center', href: '/services/eye-care' },
+        { name: 'Outreach', href: '/services/outreach' },
+        { name: 'Tele-Ophthalmology', href: '/services/tele-ophthalmology' },
+        { name: 'Education & Training', href: '/services/education' },
+        { name: 'Research', href: '/services/research' },
+      ],
+    },
+    {
+      name: 'Resources',
+      children: [
+        { name: 'Publications', href: '/resources/publications' },
+        { name: 'For Staffs: SOPS and Guidelines', href: '/resources/sops' },
+        { name: 'Annual Activity Reports', href: '/resources/reports' },
+      ],
+    },
+    {
+      name: 'For Patients',
+      children: [
+        { name: 'About the eye', href: '/patients/about-eye' },
+        { name: 'Eye Diseases & Treatment', href: '/patients/diseases' },
+        { name: 'What to expect at BDSEC?', href: '/patients/what-to-expect' },
+        { name: 'Insurance', href: '/patients/insurance' },
+        { name: 'Give us your Feedback', href: '/patients/feedback' },
+      ],
+    },
+    {
+      name: 'Get Involved',
+      children: [
+        { name: 'Donate', href: '/get-involved/donate' },
+        { name: 'Organize an outreach', href: '/get-involved/organize-outreach' },
+      ],
+    },
+    { name: 'Education & Training', href: '/education' },
+    {
+      name: 'Notice',
+      children: [
+        { name: 'Vacancy', href: '/notice/vacancy' },
+      ],
+    },
+    { name: 'Contact Us', href: '/contact' },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path?: string) => path && location.pathname === path;
+  const hasActiveChild = (item: NavItem): boolean => {
+    if (item.href && isActive(item.href)) return true;
+    if (item.children) {
+      return item.children.some(child => hasActiveChild(child));
+    }
+    return false;
+  };
 
   return (
     <header className="bg-white shadow-lg relative z-50">
@@ -109,19 +175,59 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-8" role="navigation">
+            <nav className="hidden md:flex space-x-0.5" role="navigation">
               {navigation.map((item) => (
-                <Link
+                <div
                   key={item.name}
-                  to={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                    isActive(item.href)
-                      ? 'text-emerald-600 bg-emerald-50'
-                      : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
-                  }`}
+                  className="relative"
+                  onMouseEnter={() => item.children && setOpenDropdown(item.name)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  {item.name}
-                </Link>
+                  {item.children ? (
+                    <>
+                      <button
+                        className={`px-2 py-2 text-xs font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center gap-0.5 ${
+                          hasActiveChild(item)
+                            ? 'text-emerald-600 bg-emerald-50'
+                            : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                        }`}
+                        onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
+                      >
+                        {item.name}
+                        <ChevronDown className={`h-3 w-3 transition-transform ${openDropdown === item.name ? 'rotate-180' : ''}`} />
+                      </button>
+                      {openDropdown === item.name && (
+                        <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.name}
+                              to={child.href || '#'}
+                              className={`block px-4 py-2 text-sm transition-colors ${
+                                isActive(child.href)
+                                  ? 'text-emerald-600 bg-emerald-50 font-medium'
+                                  : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                              }`}
+                              onClick={() => setOpenDropdown(null)}
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      to={item.href || '#'}
+                      className={`px-2 py-2 text-xs font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                        isActive(item.href)
+                          ? 'text-emerald-600 bg-emerald-50'
+                          : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
               ))}
             </nav>
 
@@ -154,20 +260,58 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
           {/* Mobile Navigation */}
           {isMenuOpen && (
             <div className="md:hidden border-t border-gray-200">
-              <nav className="py-4 space-y-2" role="navigation">
+              <nav className="py-4 space-y-1" role="navigation">
                 {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block px-3 py-2 text-base font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                      isActive(item.href)
-                        ? 'text-emerald-600 bg-emerald-50'
-                        : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
+                  <div key={item.name}>
+                    {item.children ? (
+                      <>
+                        <button
+                          onClick={() => setOpenMobileDropdown(openMobileDropdown === item.name ? null : item.name)}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-base font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                            hasActiveChild(item)
+                              ? 'text-emerald-600 bg-emerald-50'
+                              : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                          }`}
+                        >
+                          <span>{item.name}</span>
+                          <ChevronDown className={`h-4 w-4 transition-transform ${openMobileDropdown === item.name ? 'rotate-180' : ''}`} />
+                        </button>
+                        {openMobileDropdown === item.name && (
+                          <div className="pl-4 mt-1 space-y-1">
+                            {item.children.map((child) => (
+                              <Link
+                                key={child.name}
+                                to={child.href || '#'}
+                                onClick={() => {
+                                  setIsMenuOpen(false);
+                                  setOpenMobileDropdown(null);
+                                }}
+                                className={`block px-3 py-2 text-sm transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                                  isActive(child.href)
+                                    ? 'text-emerald-600 bg-emerald-50 font-medium'
+                                    : 'text-gray-600 hover:text-emerald-600 hover:bg-emerald-50'
+                                }`}
+                              >
+                                {child.name}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <Link
+                        to={item.href || '#'}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`block px-3 py-2 text-base font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                          isActive(item.href)
+                            ? 'text-emerald-600 bg-emerald-50'
+                            : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    )}
+                  </div>
                 ))}
                 {/* Accessibility controls on mobile */}
                 <div className="px-3 pt-2 mt-2 border-t border-gray-200">
