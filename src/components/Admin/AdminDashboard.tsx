@@ -804,10 +804,10 @@ export const AdminDashboard: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                   activeTab === tab.id
-                    ? 'bg-emerald-600 text-white'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
+                    ? 'bg-brandDeep text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-brandDeep hover:bg-brandYellow/10 dark:hover:bg-brandGreen/20'
                 }`}
               >
                 <tab.icon className="h-4 w-4" />
@@ -883,10 +883,10 @@ export const AdminDashboard: React.FC = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 text-sm">
-                            <button 
-                              onClick={() => setActiveTab('appointments')}
-                              className="text-emerald-600 hover:text-emerald-700 font-medium focus:outline-none focus:underline"
-                            >
+                      <button 
+                        onClick={() => setActiveTab('appointments')}
+                        className="text-brandDeep hover:opacity-80 font-medium focus:outline-none focus:underline"
+                      >
                             {t('admin.view')}
                           </button>
                         </td>
@@ -903,17 +903,17 @@ export const AdminDashboard: React.FC = () => {
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('admin.quick.title')}</h3>
                 <div className="space-y-3">
-                  <button 
-                  onClick={() => navigate('/appointments')}
-                  className="w-full text-left p-3 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <button 
+                onClick={() => navigate('/appointments')}
+                className="w-full text-left p-3 bg-brandGreen/10 text-brandDeep rounded-lg hover:bg-brandGreen/20 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep">
                     {t('admin.quick.addAppointment')}
                   </button>
-                  <button className="w-full text-left p-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button className="w-full text-left p-3 bg-brandYellow/20 text-brandDeep rounded-lg hover:bg-brandYellow/30 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep">
                     {t('admin.quick.registerPatient')}
                   </button>
                   <button 
                     onClick={() => setShowAddEventForm(true)}
-                    className="w-full text-left p-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full text-left p-3 bg-brandGreen/10 text-brandDeep rounded-lg hover:bg-brandGreen/20 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep"
                   >
                     {t('admin.quick.scheduleEvent')}
                   </button>
@@ -926,7 +926,7 @@ export const AdminDashboard: React.FC = () => {
                   <button
                     onClick={checkServerHealth}
                     disabled={isCheckingStatus}
-                    className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded hover:bg-emerald-200 transition-colors disabled:opacity-50"
+                    className="text-xs px-2 py-1 bg-brandYellow/30 text-brandDeep rounded hover:bg-brandYellow/40 transition-colors disabled:opacity-50"
                   >
                     {isCheckingStatus ? t('admin.system.checking') : t('admin.system.refresh')}
                   </button>
@@ -987,24 +987,24 @@ export const AdminDashboard: React.FC = () => {
                 {appointments.map((a, idx) => {
                   const { date, time } = formatFancyDate(a.dateAndTime);
                   return (
-                    <div key={idx} className="rounded-xl border border-emerald-200 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-emerald-50 to-blue-50">
-                      <div className="h-1 w-full bg-gradient-to-r from-emerald-400 to-blue-400 rounded-t-xl" />
+                    <div key={idx} className="rounded-xl border border-brandGreen/30 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-brandGreen/10 to-brandYellow/10">
+                      <div className="h-1 w-full bg-gradient-to-r from-brandYellow to-brandDeep rounded-t-xl" />
                       <div className="p-6 space-y-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.label.patient')}</p>
-                            <h3 className="text-lg font-semibold text-emerald-900">{a.fullName}</h3>
+                            <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.label.patient')}</p>
+                            <h3 className="text-lg font-semibold text-brandDeep">{a.fullName}</h3>
                           </div>
                           <div className="text-right">
-                            <p className="text-[11px] uppercase tracking-wide text-blue-700">{t('admin.label.doctor')}</p>
-                            <p className="text-sm font-semibold text-blue-900">{a.ec_doctor?.name || '-'}</p>
-                            <span className="inline-block mt-1 px-2 py-0.5 text-[11px] rounded-full bg-blue-100 text-blue-700">{a.ec_doctor?.speciality || '-'}</span>
+                            <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.label.doctor')}</p>
+                            <p className="text-sm font-semibold text-brandDeep">{a.ec_doctor?.name || '-'}</p>
+                            <span className="inline-block mt-1 px-2 py-0.5 text-[11px] rounded-full bg-brandYellow/30 text-brandDeep">{a.ec_doctor?.speciality || '-'}</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-purple-700">{t('admin.status')}</p>
+                            <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.status')}</p>
                             <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${
                               a.state === 'confirmed' ? 'bg-green-100 text-green-800' :
                               a.state === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -1018,7 +1018,7 @@ export const AdminDashboard: React.FC = () => {
                             <select
                               value={a.state || 'pending'}
                               onChange={(e) => updateAppointmentState(a.documentId, e.target.value)}
-                              className="text-xs px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                              className="text-xs px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brandDeep"
                             >
                               <option value="pending">{t('admin.status.pending')}</option>
                               <option value="confirmed">{t('admin.status.confirmed')}</option>
@@ -1029,38 +1029,38 @@ export const AdminDashboard: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="flex items-center space-x-3">
-                            <Calendar className="h-5 w-5 text-emerald-600" />
+                            <Calendar className="h-5 w-5 text-brandDeep" />
                             <div>
-                              <p className="text-xs text-emerald-700">Date</p>
-                              <p className="text-sm font-semibold text-emerald-900">{date}</p>
+                              <p className="text-xs text-brandDeep">Date</p>
+                              <p className="text-sm font-semibold text-brandDeep">{date}</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-3">
-                            <Clock className="h-5 w-5 text-blue-600" />
+                            <Clock className="h-5 w-5 text-brandDeep" />
                             <div>
-                              <p className="text-xs text-blue-700">Time</p>
-                              <p className="text-sm font-semibold text-blue-900">{time}</p>
+                              <p className="text-xs text-brandDeep">Time</p>
+                              <p className="text-sm font-semibold text-brandDeep">{time}</p>
                             </div>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                              <p className="text-xs text-emerald-700">{t('admin.label.email')}</p>
-                            <p className="text-sm text-emerald-900 break-all">{a.email}</p>
+                              <p className="text-xs text-brandDeep">{t('admin.label.email')}</p>
+                            <p className="text-sm text-brandDeep break-all">{a.email}</p>
                           </div>
                           <div>
-                              <p className="text-xs text-blue-700">{t('admin.label.phone')}</p>
-                            <p className="text-sm text-blue-900">{a.phoneNumber}</p>
+                              <p className="text-xs text-brandDeep">{t('admin.label.phone')}</p>
+                            <p className="text-sm text-brandDeep">{a.phoneNumber}</p>
                           </div>
                         </div>
                         <div>
-                          <p className="text-xs text-purple-700">{t('admin.label.reason')}</p>
-                          <p className="text-sm text-purple-900">{a.resonForVisit}</p>
+                          <p className="text-xs text-brandDeep">{t('admin.label.reason')}</p>
+                          <p className="text-sm text-brandDeep">{a.resonForVisit}</p>
                         </div>
                         {a.additionalNotes ? (
                           <div>
-                            <p className="text-xs text-pink-700">{t('admin.label.notes')}</p>
-                            <p className="text-sm text-pink-900 whitespace-pre-line line-clamp-3">{a.additionalNotes}</p>
+                            <p className="text-xs text-brandDeep">{t('admin.label.notes')}</p>
+                            <p className="text-sm text-brandDeep whitespace-pre-line line-clamp-3">{a.additionalNotes}</p>
                           </div>
                         ) : null}
                       </div>
@@ -1089,37 +1089,37 @@ export const AdminDashboard: React.FC = () => {
                   const createdDate = created.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
                   const createdTime = created.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
                   return (
-                    <div key={idx} className="rounded-xl border border-blue-200 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-blue-50 to-emerald-50">
-                      <div className="h-1 w-full bg-gradient-to-r from-blue-400 to-emerald-400 rounded-t-xl" />
+                    <div key={idx} className="rounded-xl border border-brandGreen/30 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-brandGreen/10 to-brandYellow/10">
+                      <div className="h-1 w-full bg-gradient-to-r from-brandYellow to-brandDeep rounded-t-xl" />
                       <div className="p-6 space-y-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-blue-700">{t('admin.messages.from')}</p>
-                            <h3 className="text-lg font-semibold text-blue-900">{m.fullName}</h3>
+                            <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.messages.from')}</p>
+                            <h3 className="text-lg font-semibold text-brandDeep">{m.fullName}</h3>
                           </div>
                           <div className="text-right">
-                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.messages.received')}</p>
-                            <p className="text-sm font-semibold text-emerald-900">{createdDate}</p>
-                            <p className="text-xs text-emerald-700">{createdTime}</p>
+                            <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.messages.received')}</p>
+                            <p className="text-sm font-semibold text-brandDeep">{createdDate}</p>
+                            <p className="text-xs text-brandDeep">{createdTime}</p>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <p className="text-xs text-blue-700">{t('admin.label.email')}</p>
-                            <p className="text-sm text-blue-900 break-all">{m.email}</p>
+                            <p className="text-xs text-brandDeep">{t('admin.label.email')}</p>
+                            <p className="text-sm text-brandDeep break-all">{m.email}</p>
                           </div>
                           <div>
-                            <p className="text-xs text-emerald-700">{t('admin.label.phone')}</p>
-                            <p className="text-sm text-emerald-900">{m.phoneNumber}</p>
+                            <p className="text-xs text-brandDeep">{t('admin.label.phone')}</p>
+                            <p className="text-sm text-brandDeep">{m.phoneNumber}</p>
                           </div>
                         </div>
                         <div>
-                          <p className="text-xs text-purple-700">{t('admin.label.subject')}</p>
-                          <p className="text-sm text-purple-900 font-semibold">{m.subject}</p>
+                          <p className="text-xs text-brandDeep">{t('admin.label.subject')}</p>
+                          <p className="text-sm text-brandDeep font-semibold">{m.subject}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-pink-700">{t('admin.label.message')}</p>
-                          <p className="text-sm text-pink-900 whitespace-pre-line line-clamp-5">{m.message}</p>
+                          <p className="text-xs text-brandDeep">{t('admin.label.message')}</p>
+                          <p className="text-sm text-brandDeep whitespace-pre-line line-clamp-5">{m.message}</p>
                         </div>
                       </div>
                     </div>
@@ -1137,7 +1137,7 @@ export const AdminDashboard: React.FC = () => {
               <h2 className="text-2xl font-bold text-gray-900">{t('admin.events.title')}</h2>
               <button
                 onClick={() => setShowAddEventForm(true)}
-                className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                className="inline-flex items-center px-4 py-2 bg-brandDeep text-white rounded-lg hover:brightness-110 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 {t('admin.events.add')}
@@ -1155,17 +1155,17 @@ export const AdminDashboard: React.FC = () => {
                 {events.map((event, idx) => {
                   const { date, time } = formatFancyDate(event.date);
                   return (
-                    <div key={idx} className="rounded-xl border border-purple-200 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-purple-50 to-emerald-50">
-                      <div className="h-1 w-full bg-gradient-to-r from-purple-400 to-emerald-400 rounded-t-xl" />
+                    <div key={idx} className="rounded-xl border border-brandGreen/30 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-brandGreen/10 to-brandYellow/10">
+                      <div className="h-1 w-full bg-gradient-to-r from-brandYellow to-brandDeep rounded-t-xl" />
                       <div className="p-6 space-y-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-purple-700">{t('events.category.awareness')}</p>
-                            <h3 className="text-lg font-semibold text-purple-900">{event.title}</h3>
+                            <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('events.category.awareness')}</p>
+                            <h3 className="text-lg font-semibold text-brandDeep">{event.title}</h3>
                           </div>
                           <div className="text-right">
-                            <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.events.category')}</p>
-                            <span className="inline-block px-2 py-0.5 text-[11px] rounded-full bg-emerald-100 text-emerald-700">{event.category}</span>
+                            <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.events.category')}</p>
+                            <span className="inline-block px-2 py-0.5 text-[11px] rounded-full bg-brandYellow/30 text-brandDeep">{event.category}</span>
                           </div>
                         </div>
                         
@@ -1181,24 +1181,24 @@ export const AdminDashboard: React.FC = () => {
                         
                         <div className="grid grid-cols-2 gap-4">
                           <div className="flex items-center space-x-3">
-                            <Calendar className="h-5 w-5 text-purple-600" />
+                            <Calendar className="h-5 w-5 text-brandDeep" />
                             <div>
-                              <p className="text-xs text-purple-700">{t('admin.label.date')}</p>
-                              <p className="text-sm font-semibold text-purple-900">{date}</p>
+                              <p className="text-xs text-brandDeep">{t('admin.label.date')}</p>
+                              <p className="text-sm font-semibold text-brandDeep">{date}</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-3">
-                            <Clock className="h-5 w-5 text-emerald-600" />
+                            <Clock className="h-5 w-5 text-brandDeep" />
                             <div>
-                              <p className="text-xs text-emerald-700">{t('admin.label.time')}</p>
-                              <p className="text-sm font-semibold text-emerald-900">{time}</p>
+                              <p className="text-xs text-brandDeep">{t('admin.label.time')}</p>
+                              <p className="text-sm font-semibold text-brandDeep">{time}</p>
                             </div>
                           </div>
                         </div>
                         
                         <div>
-                          <p className="text-xs text-blue-700">{t('admin.events.location')}</p>
-                          <p className="text-sm text-blue-900">{event.location}</p>
+                          <p className="text-xs text-brandDeep">{t('admin.events.location')}</p>
+                          <p className="text-sm text-brandDeep">{event.location}</p>
                         </div>
                         
                         <div>
@@ -1207,8 +1207,8 @@ export const AdminDashboard: React.FC = () => {
                         </div>
                         
                         <div>
-                          <p className="text-xs text-pink-700">{t('admin.events.learnMore')}</p>
-                          <p className="text-sm text-pink-900">{event.learnMore}</p>
+                          <p className="text-xs text-brandDeep">{t('admin.events.learnMore')}</p>
+                          <p className="text-sm text-brandDeep">{event.learnMore}</p>
                         </div>
                       </div>
                     </div>
@@ -1415,34 +1415,34 @@ export const AdminDashboard: React.FC = () => {
             {!loadingPatients && !patientsError && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPatients.map((p) => (
-                <div key={p.id} className="rounded-xl border border-emerald-200 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-emerald-50 to-blue-50">
-                  <div className="h-1 w-full bg-gradient-to-r from-emerald-400 to-blue-400 rounded-t-xl" />
+                <div key={p.id} className="rounded-xl border border-brandGreen/30 shadow-sm hover:shadow-lg transition-shadow bg-gradient-to-br from-brandGreen/10 to-brandYellow/10">
+                  <div className="h-1 w-full bg-gradient-to-r from-brandYellow to-brandDeep rounded-t-xl" />
                   <div className="p-6 space-y-3">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-[11px] uppercase tracking-wide text-emerald-700">{t('admin.patients.patientId')}</p>
-                        <h3 className="text-lg font-semibold text-emerald-900">{p.patientId}</h3>
+                        <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.patients.patientId')}</p>
+                        <h3 className="text-lg font-semibold text-brandDeep">{p.patientId}</h3>
                       </div>
-                      <span className="inline-block px-2 py-0.5 text-[11px] rounded-full bg-blue-100 text-blue-700">{t('admin.patients.lastVisit')} {new Date(p.lastVisit).toLocaleDateString()}</span>
+                      <span className="inline-block px-2 py-0.5 text-[11px] rounded-full bg-brandYellow/30 text-brandDeep">{t('admin.patients.lastVisit')} {new Date(p.lastVisit).toLocaleDateString()}</span>
                     </div>
                     <div>
-                      <p className="text-[11px] uppercase tracking-wide text-blue-700">{t('admin.patients.name')}</p>
-                      <p className="text-sm font-semibold text-blue-900">{p.fullName}</p>
+                      <p className="text-[11px] uppercase tracking-wide text-brandDeep">{t('admin.patients.name')}</p>
+                      <p className="text-sm font-semibold text-brandDeep">{p.fullName}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-xs text-emerald-700">{t('admin.label.email')}</p>
-                        <p className="text-sm text-emerald-900 break-all">{p.email}</p>
+                        <p className="text-xs text-brandDeep">{t('admin.label.email')}</p>
+                        <p className="text-sm text-brandDeep break-all">{p.email}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-blue-700">{t('admin.label.phone')}</p>
-                        <p className="text-sm text-blue-900">{p.phoneNumber}</p>
+                        <p className="text-xs text-brandDeep">{t('admin.label.phone')}</p>
+                        <p className="text-sm text-brandDeep">{p.phoneNumber}</p>
                       </div>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
                       <button 
                         onClick={() => handleEditClick(p)}
-                        className="inline-flex items-center px-3 py-2 text-sm rounded-lg border border-emerald-300 text-emerald-700 hover:bg-emerald-50 w-full sm:w-auto"
+                        className="inline-flex items-center px-3 py-2 text-sm rounded-lg border border-brandGreen/40 text-brandDeep hover:bg-brandGreen/10 w-full sm:w-auto"
                       >
                         <Edit className="h-4 w-4 mr-1" /> {t('admin.edit')}
                       </button>
@@ -1456,7 +1456,7 @@ export const AdminDashboard: React.FC = () => {
                             }
                           }
                         })}
-                        className="inline-flex items-center px-3 py-2 text-sm rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 w-full sm:w-auto"
+                        className="inline-flex items-center px-3 py-2 text-sm rounded-lg bg-brandDeep text-white hover:brightness-110 w-full sm:w-auto"
                       >
                         <Calendar className="h-4 w-4 mr-1" /> {t('admin.newAppointment')}
                       </button>
@@ -1673,16 +1673,16 @@ export const AdminDashboard: React.FC = () => {
         {/* Settings Tab */}
         {activeTab === 'settings' && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">System Settings</h2>
+            <h2 className="text-2xl font-bold text-brandDeep dark:text-white mb-6">System Settings</h2>
             <div className="max-w-md">
-              <div className="rounded-xl border border-emerald-200 dark:border-emerald-700 bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20">
-                <div className="h-1 w-full bg-gradient-to-r from-emerald-400 to-blue-400 rounded-t-xl" />
+              <div className="rounded-xl border border-brandGreen/30 dark:border-brandGreen/40 bg-gradient-to-br from-brandGreen/10 to-brandYellow/10 dark:from-brandGreen/20 dark:to-brandYellow/10">
+                <div className="h-1 w-full bg-gradient-to-r from-brandYellow to-brandDeep rounded-t-xl" />
                 <div className="p-6 space-y-4">
-                  <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100 flex items-center">
+                  <h3 className="text-lg font-semibold text-brandDeep dark:text-brandYellow flex items-center">
                     <Sun className="h-5 w-5 mr-2" /> Theme
                   </h3>
                   <select
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     value={settingsForm.theme}
                     onChange={(e) => setSettingsForm({ ...settingsForm, theme: e.target.value as any })}
                   >
@@ -1809,7 +1809,7 @@ export const AdminDashboard: React.FC = () => {
 const BellBadge: React.FC<{ count: number }> = ({ count }) => {
   return (
     <div className="relative">
-      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brandGreen/10 text-brandDeep border border-brandGreen/30">
         <Bell className="w-5 h-5" />
       </div>
       {count > 0 && (

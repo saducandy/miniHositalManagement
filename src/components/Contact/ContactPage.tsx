@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -29,6 +29,17 @@ async function getSwal() {
 
 export const ContactPage: React.FC = () => {
   const { t } = useContext(I18nContext);
+
+  // Smooth-scroll to the contact form if navigated with #contact-form
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#contact-form") {
+      const el = document.getElementById("contact-form");
+      if (el) {
+        // slight timeout to ensure layout is painted
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+      }
+    }
+  }, []);
 
   const schema = yup.object({
     name: yup.string().required(t("contact.validation.nameRequired")),
@@ -119,12 +130,12 @@ export const ContactPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-emerald-600 to-blue-600 text-white py-16">
+      <section className="bg-gradient-to-r from-brandGreen to-brandDeep text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">
             {t("contact.hero.title")}
           </h1>
-          <p className="text-xl lg:text-2xl text-emerald-100 max-w-3xl mx-auto">
+          <p className="text-xl lg:text-2xl text-brandYellow max-w-3xl mx-auto">
             {t("contact.hero.subtitle")}
           </p>
         </div>
@@ -139,10 +150,8 @@ export const ContactPage: React.FC = () => {
                 key={index}
                 className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow"
               >
-                <div
-                  className={`w-16 h-16 bg-${info.color}-100 rounded-full flex items-center justify-center mx-auto mb-4`}
-                >
-                  <info.icon className={`h-8 w-8 text-${info.color}-600`} />
+                <div className="w-16 h-16 bg-brandYellow rounded-full flex items-center justify-center mx-auto mb-4">
+                  <info.icon className="h-8 w-8 text-brandDeep" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">
                   {info.title}
@@ -163,7 +172,7 @@ export const ContactPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div className="bg-white p-8 rounded-xl shadow-lg">
+            <div id="contact-form" className="bg-white p-8 rounded-xl shadow-lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 {t("contact.form.title")}
               </h2>
@@ -180,7 +189,7 @@ export const ContactPage: React.FC = () => {
                       {...register("name")}
                       type="text"
                       id="name"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                         errors.name ? "border-red-500" : "border-gray-300"
                       }`}
                       placeholder={t("contact.form.name.placeholder")}
@@ -203,7 +212,7 @@ export const ContactPage: React.FC = () => {
                       {...register("email")}
                       type="email"
                       id="email"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                         errors.email ? "border-red-500" : "border-gray-300"
                       }`}
                       placeholder={t("contact.form.email.placeholder")}
@@ -228,7 +237,7 @@ export const ContactPage: React.FC = () => {
                       {...register("phone")}
                       type="tel"
                       id="phone"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                         errors.phone ? "border-red-500" : "border-gray-300"
                       }`}
                       placeholder={t("contact.form.phone.placeholder")}
@@ -250,7 +259,7 @@ export const ContactPage: React.FC = () => {
                     <select
                       {...register("subject")}
                       id="subject"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                         errors.subject ? "border-red-500" : "border-gray-300"
                       }`}
                     >
@@ -295,7 +304,7 @@ export const ContactPage: React.FC = () => {
                     {...register("message")}
                     id="message"
                     rows={6}
-                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                    className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                       errors.message ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder={t("contact.form.message.placeholder")}
@@ -309,7 +318,7 @@ export const ContactPage: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 flex items-center justify-center space-x-2"
+                  className="w-full bg-brandYellow text-brandDeep py-3 px-6 rounded-lg font-semibold hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2 flex items-center justify-center space-x-2"
                 >
                   <Send className="h-5 w-5" />
                   <span>{t("contact.form.submit")}</span>

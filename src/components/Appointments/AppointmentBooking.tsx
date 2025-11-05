@@ -1,17 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useLocation } from 'react-router-dom';
-import { Calendar, Clock, User, FileText, ChevronRight, ChevronLeft } from 'lucide-react';
-import { formatDate, formatTime, getNextWeekDays, generateTimeSlots } from '../../utils/dateUtils';
-import { useAccessibility } from '../../hooks/useAccessibility';
-import { I18nContext } from '../../context/I18nContext';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useLocation } from "react-router-dom";
+import {
+  Calendar,
+  Clock,
+  User,
+  FileText,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-react";
+import {
+  formatDate,
+  formatTime,
+  getNextWeekDays,
+  generateTimeSlots,
+} from "../../utils/dateUtils";
+import { useAccessibility } from "../../hooks/useAccessibility";
+import { I18nContext } from "../../context/I18nContext";
 let SwalRef: any = null;
 async function getSwal() {
   if (SwalRef) return SwalRef;
   try {
-    const mod = await import('sweetalert2');
+    const mod = await import("sweetalert2");
     SwalRef = mod.default || mod;
   } catch {
     SwalRef = {
@@ -22,10 +34,13 @@ async function getSwal() {
 }
 
 const schema = yup.object({
-  patientName: yup.string().required('Full name is required'),
-  patientEmail: yup.string().email('Invalid email').required('Email is required'),
-  patientPhone: yup.string().required('Phone number is required'),
-  reason: yup.string().required('Reason for visit is required'),
+  patientName: yup.string().required("Full name is required"),
+  patientEmail: yup
+    .string()
+    .email("Invalid email")
+    .required("Email is required"),
+  patientPhone: yup.string().required("Phone number is required"),
+  reason: yup.string().required("Reason for visit is required"),
   notes: yup.string().optional(),
 });
 
@@ -43,20 +58,23 @@ export const AppointmentBooking: React.FC = () => {
   const patientData = location.state?.patientData;
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedDoctor, setSelectedDoctor] = useState<number | null>(null);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { announceToScreenReader } = useAccessibility();
-  const [doctors, setDoctors] = useState<{
-    id: number;
-    name: string;
-    speciality: string;
-    exprience: string | number;
-    imageUrl: string;
-  }[]>([]);
+  const [doctors, setDoctors] = useState<
+    {
+      id: number;
+      name: string;
+      speciality: string;
+      exprience: string | number;
+      imageUrl: string;
+    }[]
+  >([]);
   const [loadingDoctors, setLoadingDoctors] = useState(false);
   const [doctorsError, setDoctorsError] = useState<string | null>(null);
-  const [savedUserData, setSavedUserData] = useState<AppointmentFormData | null>(null);
+  const [savedUserData, setSavedUserData] =
+    useState<AppointmentFormData | null>(null);
 
   const {
     register,
@@ -67,11 +85,11 @@ export const AppointmentBooking: React.FC = () => {
   } = useForm<AppointmentFormData>({
     resolver: yupResolver(schema) as any,
     defaultValues: {
-      patientName: patientData?.fullName || '',
-      patientEmail: patientData?.email || '',
-      patientPhone: patientData?.phoneNumber || '',
-      reason: '',
-      notes: '',
+      patientName: patientData?.fullName || "",
+      patientEmail: patientData?.email || "",
+      patientPhone: patientData?.phoneNumber || "",
+      reason: "",
+      notes: "",
     },
   });
 
@@ -81,17 +99,17 @@ export const AppointmentBooking: React.FC = () => {
   // Set form values when patient data is available
   useEffect(() => {
     if (patientData) {
-      setValue('patientName', patientData.fullName);
-      setValue('patientEmail', patientData.email);
-      setValue('patientPhone', patientData.phoneNumber);
+      setValue("patientName", patientData.fullName);
+      setValue("patientEmail", patientData.email);
+      setValue("patientPhone", patientData.phoneNumber);
     }
   }, [patientData, setValue]);
 
   const steps = [
-    { number: 1, title: t('appt.step1'), icon: User },
-    { number: 2, title: t('appt.step2'), icon: Calendar },
-    { number: 3, title: t('appt.step3'), icon: FileText },
-    { number: 4, title: t('appt.step4'), icon: ChevronRight },
+    { number: 1, title: t("appt.step1"), icon: User },
+    { number: 2, title: t("appt.step2"), icon: Calendar },
+    { number: 3, title: t("appt.step3"), icon: FileText },
+    { number: 4, title: t("appt.step4"), icon: ChevronRight },
   ];
 
   const nextStep = () => {
@@ -108,17 +126,19 @@ export const AppointmentBooking: React.FC = () => {
     }
   };
 
-  const onSubmit: import('react-hook-form').SubmitHandler<AppointmentFormData> = (data) => {
+  const onSubmit: import("react-hook-form").SubmitHandler<
+    AppointmentFormData
+  > = (data) => {
     setSavedUserData(data);
     setCurrentStep(4);
-    announceToScreenReader('Review your appointment details');
+    announceToScreenReader("Review your appointment details");
   };
 
   const resetForm = () => {
     setCurrentStep(1);
     setSelectedDoctor(null);
-    setSelectedDate('');
-    setSelectedTime('');
+    setSelectedDate("");
+    setSelectedTime("");
     setIsSubmitted(false);
     reset();
     setSavedUserData(null);
@@ -131,9 +151,12 @@ export const AppointmentBooking: React.FC = () => {
       try {
         setLoadingDoctors(true);
         setDoctorsError(null);
-        const res = await fetch('https://strapi.hielav.com/api/ec-doctors?populate=*', {
-          signal: controller.signal,
-        });
+        const res = await fetch(
+          "https://strapi.hielav.com/api/ec-doctors?populate=*",
+          {
+            signal: controller.signal,
+          }
+        );
         if (!res.ok) throw new Error(`Failed to load doctors: ${res.status}`);
         const json: {
           data: Array<{
@@ -144,18 +167,21 @@ export const AppointmentBooking: React.FC = () => {
             doctorsImage?: { url?: string } | null;
           }>;
         } = await res.json();
-        const mapped = (json.data || []).map(d => ({
+        const mapped = (json.data || []).map((d) => ({
           id: d.id,
           name: d.name,
           speciality: d.speciality,
           exprience: d.exprience,
           imageUrl: d?.doctorsImage?.url
-            ? (d.doctorsImage.url.startsWith('http') ? d.doctorsImage.url : `https://strapi.hielav.com${d.doctorsImage.url}`)
-            : '/logo.png',
+            ? d.doctorsImage.url.startsWith("http")
+              ? d.doctorsImage.url
+              : `https://strapi.hielav.com${d.doctorsImage.url}`
+            : "/logo.png",
         }));
         setDoctors(mapped);
       } catch (err: any) {
-        if (err?.name !== 'AbortError') setDoctorsError(err?.message || 'Failed to load doctors');
+        if (err?.name !== "AbortError")
+          setDoctorsError(err?.message || "Failed to load doctors");
       } finally {
         setLoadingDoctors(false);
       }
@@ -177,41 +203,52 @@ export const AppointmentBooking: React.FC = () => {
 
   const confirmAppointment = async () => {
     if (!selectedDoctor || !selectedDate || !selectedTime || !savedUserData) {
-      (await getSwal()).fire('Missing information', 'Please complete all steps before confirming.', 'warning');
+      (await getSwal()).fire(
+        "Missing information",
+        "Please complete all steps before confirming.",
+        "warning"
+      );
       return;
     }
     const dateAndTime = buildISODateTime();
     if (!dateAndTime) {
-      (await getSwal()).fire('Invalid date/time', 'Please reselect date and time.', 'error');
+      (await getSwal()).fire(
+        "Invalid date/time",
+        "Please reselect date and time.",
+        "error"
+      );
       return;
     }
     try {
-      const response = await fetch('https://strapi.hielav.com/api/ec-appointments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: {
-            dateAndTime,
-            fullName: savedUserData.patientName,
-            email: savedUserData.patientEmail,
-            phoneNumber: savedUserData.patientPhone,
-            resonForVisit: savedUserData.reason,
-            additionalNotes: savedUserData.notes || '',
-            ec_doctor: selectedDoctor,
+      const response = await fetch(
+        "https://strapi.hielav.com/api/ec-appointments",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            data: {
+              dateAndTime,
+              fullName: savedUserData.patientName,
+              email: savedUserData.patientEmail,
+              phoneNumber: savedUserData.patientPhone,
+              resonForVisit: savedUserData.reason,
+              additionalNotes: savedUserData.notes || "",
+              ec_doctor: selectedDoctor,
+            },
+          }),
+        }
+      );
       if (!response.ok) {
         const text = await response.text();
         throw new Error(text || `Failed with status ${response.status}`);
       }
       try {
         // Notify other tabs (e.g., Admin Dashboard) in real-time on same origin
-        const bc = new BroadcastChannel('appointments');
+        const bc = new BroadcastChannel("appointments");
         bc.postMessage({
-          type: 'appointment_created',
+          type: "appointment_created",
           payload: {
             fullName: savedUserData.patientName,
             email: savedUserData.patientEmail,
@@ -224,10 +261,18 @@ export const AppointmentBooking: React.FC = () => {
         // Close channel shortly after
         setTimeout(() => bc.close(), 1000);
       } catch {}
-      (await getSwal()).fire('Success', 'Your appointment has been booked!', 'success');
+      (await getSwal()).fire(
+        "Success",
+        "Your appointment has been booked!",
+        "success"
+      );
       setIsSubmitted(true);
     } catch (e: any) {
-      (await getSwal()).fire('Error', e?.message || 'Failed to submit appointment.', 'error');
+      (await getSwal()).fire(
+        "Error",
+        e?.message || "Failed to submit appointment.",
+        "error"
+      );
     }
   };
 
@@ -236,27 +281,56 @@ export const AppointmentBooking: React.FC = () => {
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <ChevronRight className="h-8 w-8 text-green-600" />
+            <div className="w-16 h-16 bg-brandGreen/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ChevronRight className="h-8 w-8 text-brandDeep" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Appointment Booked!</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Appointment Booked!
+            </h2>
             <p className="text-gray-600 mb-8">
-              Your appointment has been successfully scheduled. You will receive a confirmation email shortly.
+              Your appointment has been successfully scheduled. You will receive
+              a confirmation email shortly.
             </p>
             <div className="bg-gray-50 rounded-lg p-6 mb-8">
-              <h3 className="font-semibold text-gray-900 mb-4">Appointment Details</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">
+                Appointment Details
+              </h3>
               <div className="space-y-2 text-left">
-                <p><span className="font-medium">Doctor:</span> {doctors.find(d => d.id === selectedDoctor)?.name}</p>
-                <p><span className="font-medium">Date:</span> {formatDate(selectedDate)}</p>
-                <p><span className="font-medium">Time:</span> {formatTime(selectedTime)}</p>
+                <p>
+                  <span className="font-medium">Doctor:</span>{" "}
+                  {doctors.find((d) => d.id === selectedDoctor)?.name}
+                </p>
+                <p>
+                  <span className="font-medium">Date:</span>{" "}
+                  {formatDate(selectedDate)}
+                </p>
+                <p>
+                  <span className="font-medium">Time:</span>{" "}
+                  {formatTime(selectedTime)}
+                </p>
                 {savedUserData && (
                   <>
-                    <p><span className="font-medium">Full Name:</span> {savedUserData.patientName}</p>
-                    <p><span className="font-medium">Email:</span> {savedUserData.patientEmail}</p>
-                    <p><span className="font-medium">Phone:</span> {savedUserData.patientPhone}</p>
-                    <p><span className="font-medium">Reason:</span> {savedUserData.reason}</p>
+                    <p>
+                      <span className="font-medium">Full Name:</span>{" "}
+                      {savedUserData.patientName}
+                    </p>
+                    <p>
+                      <span className="font-medium">Email:</span>{" "}
+                      {savedUserData.patientEmail}
+                    </p>
+                    <p>
+                      <span className="font-medium">Phone:</span>{" "}
+                      {savedUserData.patientPhone}
+                    </p>
+                    <p>
+                      <span className="font-medium">Reason:</span>{" "}
+                      {savedUserData.reason}
+                    </p>
                     {savedUserData.notes && (
-                      <p><span className="font-medium">Notes:</span> {savedUserData.notes}</p>
+                      <p>
+                        <span className="font-medium">Notes:</span>{" "}
+                        {savedUserData.notes}
+                      </p>
                     )}
                   </>
                 )}
@@ -264,7 +338,7 @@ export const AppointmentBooking: React.FC = () => {
             </div>
             <button
               onClick={resetForm}
-              className="bg-emerald-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+              className="bg-brandDeep text-white px-8 py-3 rounded-lg font-semibold hover:brightness-110 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2"
             >
               Book Another Appointment
             </button>
@@ -278,8 +352,10 @@ export const AppointmentBooking: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('appt.title')}</h1>
-          <p className="text-xl text-gray-600">{t('appt.subtitle')}</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            {t("appt.title")}
+          </h1>
+          <p className="text-xl text-gray-600">{t("appt.subtitle")}</p>
         </div>
 
         {/* Progress Steps */}
@@ -287,26 +363,34 @@ export const AppointmentBooking: React.FC = () => {
           <div className="flex items-center justify-center space-x-8">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center space-x-2">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
-                  currentStep >= step.number
-                    ? 'bg-emerald-600 border-emerald-600 text-white'
-                    : 'border-gray-300 text-gray-500'
-                }`}>
+                <div
+                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
+                    currentStep >= step.number
+                      ? "bg-brandDeep border-brandDeep text-white"
+                      : "border-gray-300 text-gray-500"
+                  }`}
+                >
                   {currentStep > step.number ? (
                     <ChevronRight className="h-5 w-5" />
                   ) : (
                     <step.icon className="h-5 w-5" />
                   )}
                 </div>
-                <span className={`text-sm font-medium hidden sm:block ${
-                  currentStep >= step.number ? 'text-emerald-600' : 'text-gray-500'
-                }`}>
+                <span
+                  className={`text-sm font-medium hidden sm:block ${
+                    currentStep >= step.number
+                      ? "text-brandDeep"
+                      : "text-gray-500"
+                  }`}
+                >
                   {step.title}
                 </span>
                 {index < steps.length - 1 && (
-                  <div className={`w-12 h-0.5 hidden md:block ${
-                    currentStep > step.number ? 'bg-emerald-600' : 'bg-gray-300'
-                  }`} />
+                  <div
+                    className={`w-12 h-0.5 hidden md:block ${
+                      currentStep > step.number ? "bg-brandDeep" : "bg-gray-300"
+                    }`}
+                  />
                 )}
               </div>
             ))}
@@ -318,44 +402,58 @@ export const AppointmentBooking: React.FC = () => {
             {/* Step 1: Select Doctor */}
             {currentStep === 1 && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('appt.selectDoctorHeading')}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {t("appt.selectDoctorHeading")}
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {loadingDoctors && (
-                    <div className="col-span-full text-center text-gray-600">Loading doctors...</div>
+                    <div className="col-span-full text-center text-gray-600">
+                      Loading doctors...
+                    </div>
                   )}
                   {doctorsError && (
-                    <div className="col-span-full text-center text-red-600">{doctorsError}</div>
-                  )}
-                  {!loadingDoctors && !doctorsError && doctors.map((doctor) => (
-                    <div
-                      key={doctor.id}
-                      className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
-                        selectedDoctor === doctor.id
-                          ? 'border-emerald-500 bg-emerald-50'
-                          : 'border-gray-200 hover:border-emerald-300 hover:bg-gray-50'
-                      }`}
-                      onClick={() => setSelectedDoctor(doctor.id)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setSelectedDoctor(doctor.id);
-                        }
-                      }}
-                      aria-pressed={selectedDoctor === doctor.id}
-                    >
-                      <img
-                        src={doctor.imageUrl}
-                        alt={doctor.name}
-                        className="w-16 h-16 rounded-full object-cover mx-auto mb-4"
-                      />
-                      <div className="text-center">
-                        <h3 className="font-semibold text-gray-900 mb-1">{doctor.name}</h3>
-                        <p className="text-emerald-600 text-sm font-medium mb-2">{doctor.speciality}</p>
-                        <p className="text-gray-600 text-xs">{doctor.exprience} Years of Experience</p>
-                      </div>
+                    <div className="col-span-full text-center text-red-600">
+                      {doctorsError}
                     </div>
-                  ))}
+                  )}
+                  {!loadingDoctors &&
+                    !doctorsError &&
+                    doctors.map((doctor) => (
+                      <div
+                        key={doctor.id}
+                        className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
+                          selectedDoctor === doctor.id
+                            ? "border-brandDeep bg-brandGreen/10"
+                            : "border-gray-200 hover:border-brandDeep hover:bg-brandGreen/5"
+                        }`}
+                        onClick={() => setSelectedDoctor(doctor.id)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            setSelectedDoctor(doctor.id);
+                          }
+                        }}
+                        aria-pressed={selectedDoctor === doctor.id}
+                      >
+                        <img
+                          src={doctor.imageUrl}
+                          alt={doctor.name}
+                          className="w-16 h-16 rounded-full object-cover mx-auto mb-4"
+                        />
+                        <div className="text-center">
+                          <h3 className="font-semibold text-gray-900 mb-1">
+                            {doctor.name}
+                          </h3>
+                          <p className="text-brandDeep text-sm font-medium mb-2">
+                            {doctor.speciality}
+                          </p>
+                          <p className="text-gray-600 text-xs">
+                            {doctor.exprience} Years of Experience
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
             )}
@@ -363,30 +461,40 @@ export const AppointmentBooking: React.FC = () => {
             {/* Step 2: Select Date & Time */}
             {currentStep === 2 && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-bold text-gray-900">{t('appt.chooseDateTimeHeading')}</h2>
-                
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {t("appt.chooseDateTimeHeading")}
+                </h2>
+
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('appt.selectDate')}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    {t("appt.selectDate")}
+                  </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                     {availableDates.slice(0, 14).map((date, index) => (
                       <button
                         key={index}
-                        onClick={() => setSelectedDate(date.toISOString().split('T')[0])}
-                        className={`p-3 text-center rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                          selectedDate === date.toISOString().split('T')[0]
-                            ? 'bg-emerald-600 text-white border-emerald-600'
-                            : 'border-gray-300 hover:border-emerald-500 hover:bg-emerald-50'
+                        onClick={() =>
+                          setSelectedDate(date.toISOString().split("T")[0])
+                        }
+                        className={`p-3 text-center rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-brandDeep ${
+                          selectedDate === date.toISOString().split("T")[0]
+                            ? "bg-brandDeep text-white border-brandDeep"
+                            : "border-gray-300 hover:border-brandDeep hover:bg-brandGreen/10"
                         }`}
-                        aria-pressed={selectedDate === date.toISOString().split('T')[0]}
+                        aria-pressed={
+                          selectedDate === date.toISOString().split("T")[0]
+                        }
                       >
                         <div className="text-xs font-medium">
-                          {date.toLocaleDateString('en-US', { weekday: 'short' })}
+                          {date.toLocaleDateString("en-US", {
+                            weekday: "short",
+                          })}
                         </div>
                         <div className="text-lg font-bold">
                           {date.getDate()}
                         </div>
                         <div className="text-xs">
-                          {date.toLocaleDateString('en-US', { month: 'short' })}
+                          {date.toLocaleDateString("en-US", { month: "short" })}
                         </div>
                       </button>
                     ))}
@@ -395,16 +503,18 @@ export const AppointmentBooking: React.FC = () => {
 
                 {selectedDate && (
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('appt.selectTime')}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      {t("appt.selectTime")}
+                    </h3>
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                       {timeSlots.map((time) => (
                         <button
                           key={time}
                           onClick={() => setSelectedTime(time)}
-                          className={`p-3 text-center rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                          className={`p-3 text-center rounded-lg border transition-all focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                             selectedTime === time
-                              ? 'bg-emerald-600 text-white border-emerald-600'
-                              : 'border-gray-300 hover:border-emerald-500 hover:bg-emerald-50'
+                              ? "bg-brandDeep text-white border-brandDeep"
+                              : "border-gray-300 hover:border-brandDeep hover:bg-brandGreen/10"
                           }`}
                           aria-pressed={selectedTime === time}
                         >
@@ -421,83 +531,109 @@ export const AppointmentBooking: React.FC = () => {
             {currentStep === 3 && (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">{t('appt.personalDetails')}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {t("appt.personalDetails")}
+                  </h2>
                   {patientData && (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
-                      <p className="text-sm text-emerald-700 font-medium">
+                    <div className="bg-brandGreen/10 border border-brandGreen/30 rounded-lg px-3 py-2">
+                      <p className="text-sm text-brandDeep font-medium">
                         ✓ Patient data pre-filled from admin panel
                       </p>
                     </div>
                   )}
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="patientName" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('appt.fullName')} *
+                    <label
+                      htmlFor="patientName"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t("appt.fullName")} *
                     </label>
                     <input
-                      {...register('patientName')}
+                      {...register("patientName")}
                       type="text"
                       id="patientName"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                        errors.patientName ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
+                        errors.patientName
+                          ? "border-red-500"
+                          : "border-gray-300"
                       }`}
                       placeholder="Enter your full name"
                     />
                     {errors.patientName && (
-                      <p className="text-red-600 text-sm mt-1">{errors.patientName.message}</p>
+                      <p className="text-red-600 text-sm mt-1">
+                        {errors.patientName.message}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="patientEmail" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('appt.email')} *
+                    <label
+                      htmlFor="patientEmail"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t("appt.email")} *
                     </label>
                     <input
-                      {...register('patientEmail')}
+                      {...register("patientEmail")}
                       type="email"
                       id="patientEmail"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                        errors.patientEmail ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
+                        errors.patientEmail
+                          ? "border-red-500"
+                          : "border-gray-300"
                       }`}
                       placeholder="Enter your email address"
                     />
                     {errors.patientEmail && (
-                      <p className="text-red-600 text-sm mt-1">{errors.patientEmail.message}</p>
+                      <p className="text-red-600 text-sm mt-1">
+                        {errors.patientEmail.message}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="patientPhone" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('appt.phone')} *
+                    <label
+                      htmlFor="patientPhone"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t("appt.phone")} *
                     </label>
                     <input
-                      {...register('patientPhone')}
+                      {...register("patientPhone")}
                       type="tel"
                       id="patientPhone"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                        errors.patientPhone ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
+                        errors.patientPhone
+                          ? "border-red-500"
+                          : "border-gray-300"
                       }`}
                       placeholder="Enter your phone number"
                     />
                     {errors.patientPhone && (
-                      <p className="text-red-600 text-sm mt-1">{errors.patientPhone.message}</p>
+                      <p className="text-red-600 text-sm mt-1">
+                        {errors.patientPhone.message}
+                      </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('appt.reason')} *
+                    <label
+                      htmlFor="reason"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      {t("appt.reason")} *
                     </label>
                     <select
-                      {...register('reason')}
+                      {...register("reason")}
                       id="reason"
-                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                        errors.reason ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep ${
+                        errors.reason ? "border-red-500" : "border-gray-300"
                       }`}
                     >
-                      <option value="">{t('appt.selectReason')}</option>
+                      <option value="">{t("appt.selectReason")}</option>
                       <option value="routine-checkup">Routine Checkup</option>
                       <option value="consultation">Vision Consultation</option>
                       <option value="lasik">LASIK Consultation</option>
@@ -507,20 +643,25 @@ export const AppointmentBooking: React.FC = () => {
                       <option value="other">Other</option>
                     </select>
                     {errors.reason && (
-                      <p className="text-red-600 text-sm mt-1">{errors.reason.message}</p>
+                      <p className="text-red-600 text-sm mt-1">
+                        {errors.reason.message}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('appt.notes')}
+                  <label
+                    htmlFor="notes"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    {t("appt.notes")}
                   </label>
                   <textarea
-                    {...register('notes')}
+                    {...register("notes")}
                     id="notes"
                     rows={4}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brandDeep"
                     placeholder="Any vision concerns or additional information you'd like to share..."
                   />
                 </div>
@@ -530,38 +671,49 @@ export const AppointmentBooking: React.FC = () => {
             {/* Step 4: Confirmation */}
             {currentStep === 4 && (
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Confirm Your Appointment</h2>
-                
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Confirm Your Appointment
+                </h2>
+
                 <div className="bg-gray-50 rounded-lg p-6 space-y-4">
                   <div className="flex items-start space-x-4">
                     <img
-                      src={doctors.find(d => d.id === selectedDoctor)?.imageUrl}
+                      src={
+                        doctors.find((d) => d.id === selectedDoctor)?.imageUrl
+                      }
                       alt="Doctor"
                       className="w-16 h-16 rounded-full object-cover"
                     />
                     <div>
                       <h3 className="font-semibold text-gray-900">
-                        {doctors.find(d => d.id === selectedDoctor)?.name}
+                        {doctors.find((d) => d.id === selectedDoctor)?.name}
                       </h3>
-                      <p className="text-emerald-600 font-medium">
-                        {doctors.find(d => d.id === selectedDoctor)?.speciality}
+                      <p className="text-brandDeep font-medium">
+                        {
+                          doctors.find((d) => d.id === selectedDoctor)
+                            ?.speciality
+                        }
                       </p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                     <div className="flex items-center space-x-3">
-                      <Calendar className="h-5 w-5 text-emerald-600" />
+                      <Calendar className="h-5 w-5 text-brandDeep" />
                       <div>
                         <p className="text-sm text-gray-600">Date</p>
-                        <p className="font-semibold">{formatDate(selectedDate)}</p>
+                        <p className="font-semibold">
+                          {formatDate(selectedDate)}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <Clock className="h-5 w-5 text-emerald-600" />
+                      <Clock className="h-5 w-5 text-brandDeep" />
                       <div>
                         <p className="text-sm text-gray-600">Time</p>
-                        <p className="font-semibold">{formatTime(selectedTime)}</p>
+                        <p className="font-semibold">
+                          {formatTime(selectedTime)}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -571,18 +723,18 @@ export const AppointmentBooking: React.FC = () => {
 
             {/* Navigation Buttons */}
             <div className="flex justify-between pt-8 border-t border-gray-200">
-                <button
+              <button
                 onClick={prevStep}
                 disabled={currentStep === 1}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                   currentStep === 1
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-emerald-600 hover:bg-emerald-50'
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-brandDeep hover:bg-brandGreen/10"
                 }`}
                 aria-disabled={currentStep === 1}
               >
                 <ChevronLeft className="h-5 w-5" />
-                <span>{t('appt.prev')}</span>
+                <span>{t("appt.prev")}</span>
               </button>
 
               {currentStep < 3 ? (
@@ -592,32 +744,32 @@ export const AppointmentBooking: React.FC = () => {
                     (currentStep === 1 && !selectedDoctor) ||
                     (currentStep === 2 && (!selectedDate || !selectedTime))
                   }
-                  className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                  className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep ${
                     (currentStep === 1 && !selectedDoctor) ||
                     (currentStep === 2 && (!selectedDate || !selectedTime))
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-brandDeep text-white hover:brightness-110"
                   }`}
                 >
-                  <span>{t('appt.next')}</span>
+                  <span>{t("appt.next")}</span>
                   <ChevronRight className="h-5 w-5" />
                 </button>
               ) : currentStep === 3 ? (
                 <button
                   onClick={handleSubmit(onSubmit)}
                   type="button"
-                  className="flex items-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="flex items-center space-x-2 px-6 py-3 bg-brandDeep text-white rounded-lg font-semibold hover:brightness-110 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep"
                 >
-                  <span>{t('appt.review')}</span>
+                  <span>{t("appt.review")}</span>
                   <ChevronRight className="h-5 w-5" />
                 </button>
               ) : (
                 <button
                   onClick={confirmAppointment}
                   type="button"
-                  className="flex items-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="flex items-center space-x-2 px-6 py-3 bg-brandDeep text-white rounded-lg font-semibold hover:brightness-110 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep"
                 >
-                  <span>{t('appt.confirm')}</span>
+                  <span>{t("appt.confirm")}</span>
                   <ChevronRight className="h-5 w-5" />
                 </button>
               )}
