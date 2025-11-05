@@ -54,21 +54,21 @@ const OurStory: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2 aspect-[16/10] rounded-2xl overflow-hidden shadow-lg ring-1 ring-white/50">
                   <img
-                    src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=800&auto=format&fit=crop"
+                    src="https://cdn.pixabay.com/photo/2013/03/09/04/09/optometrist-91750_1280.jpg"
                     alt="Eye examination"
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-lg ring-1 ring-white/50">
                   <img
-                    src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=800&auto=format&fit=crop"
+                    src="https://cdn.pixabay.com/photo/2025/06/26/09/51/doctor-9681592_1280.png"
                     alt="Ophthalmology equipment"
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-lg ring-1 ring-white/50">
                   <img
-                    src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800&auto=format&fit=crop"
+                    src="https://cdn.pixabay.com/photo/2020/04/08/07/23/eye-care-5016078_1280.jpg"
                     alt="Care for patients"
                     className="w-full h-full object-cover"
                   />
