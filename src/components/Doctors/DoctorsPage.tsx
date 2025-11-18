@@ -2,6 +2,7 @@ import React from "react";
 import { Calendar, Award, Clock, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { I18nContext } from "../../context/I18nContext";
+import { getApiUrl, getImageUrl } from "../../config/api";
 
 type ApiDoctor = {
   id: number;
@@ -40,7 +41,7 @@ export const DoctorsPage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         const res = await fetch(
-          "https://strapi.hielav.com/api/ec-doctors?populate=*",
+          getApiUrl("api/ec-doctors?populate=*"),
           {
             signal: controller.signal,
           }
@@ -50,11 +51,7 @@ export const DoctorsPage: React.FC = () => {
 
         const mapped: Doctor[] = (json.data || []).map((d) => {
           const imagePath = d?.doctorsImage?.url || "";
-          const absoluteUrl = imagePath
-            ? imagePath.startsWith("http")
-              ? imagePath
-              : `https://strapi.hielav.com${imagePath}`
-            : "";
+          const absoluteUrl = getImageUrl(imagePath);
           return {
             id: d.id,
             name: d.name,

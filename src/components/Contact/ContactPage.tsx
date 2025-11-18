@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { I18nContext } from "../../context/I18nContext";
+import { getApiUrl } from "../../config/api";
 
 interface ContactFormData {
   name: string;
@@ -63,7 +64,7 @@ export const ContactPage: React.FC = () => {
   const onSubmit = async (data: ContactFormData) => {
     try {
       const res = await fetch(
-        "https://strapi.hielav.com/api/ec-message-from-customers",
+        getApiUrl("api/ec-message-from-customers"),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

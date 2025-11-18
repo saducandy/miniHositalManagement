@@ -19,6 +19,7 @@ import {
 } from "../../utils/dateUtils";
 import { useAccessibility } from "../../hooks/useAccessibility";
 import { I18nContext } from "../../context/I18nContext";
+import { getApiUrl, getImageUrl } from "../../config/api";
 let SwalRef: any = null;
 async function getSwal() {
   if (SwalRef) return SwalRef;
@@ -152,7 +153,7 @@ export const AppointmentBooking: React.FC = () => {
         setLoadingDoctors(true);
         setDoctorsError(null);
         const res = await fetch(
-          "https://strapi.hielav.com/api/ec-doctors?populate=*",
+          getApiUrl("api/ec-doctors?populate=*"),
           {
             signal: controller.signal,
           }
@@ -172,11 +173,7 @@ export const AppointmentBooking: React.FC = () => {
           name: d.name,
           speciality: d.speciality,
           exprience: d.exprience,
-          imageUrl: d?.doctorsImage?.url
-            ? d.doctorsImage.url.startsWith("http")
-              ? d.doctorsImage.url
-              : `https://strapi.hielav.com${d.doctorsImage.url}`
-            : "/logo.png",
+          imageUrl: d?.doctorsImage?.url ? getImageUrl(d.doctorsImage.url) : "/logo.png",
         }));
         setDoctors(mapped);
       } catch (err: any) {
@@ -221,7 +218,7 @@ export const AppointmentBooking: React.FC = () => {
     }
     try {
       const response = await fetch(
-        "https://strapi.hielav.com/api/ec-appointments",
+        getApiUrl("api/ec-appointments"),
         {
           method: "POST",
           headers: {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { getApiUrl, getImageUrl } from '../../config/api';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Users, Settings, Activity, Clock, CheckCircle, Mail, Search, Edit, Sun, Plus, Upload, X, Bell } from 'lucide-react';
@@ -220,7 +221,7 @@ export const AdminDashboard: React.FC = () => {
       try {
         setLoadingAppointments(true);
         setAppointmentsError(null);
-        const res = await fetch('https://strapi.hielav.com/api/ec-appointments?populate=*', {
+        const res = await fetch(getApiUrl('api/ec-appointments?populate=*'), {
           signal: controller.signal,
         });
         if (!res.ok) throw new Error(`Failed to load appointments: ${res.status}`);
@@ -288,7 +289,7 @@ export const AdminDashboard: React.FC = () => {
       try {
         setLoadingMessages(true);
         setMessagesError(null);
-        const res = await fetch('https://strapi.hielav.com/api/ec-message-from-customers', {
+        const res = await fetch(getApiUrl('api/ec-message-from-customers'), {
           signal: controller.signal,
         });
         if (!res.ok) throw new Error(`Failed to load messages: ${res.status}`);
@@ -320,7 +321,7 @@ export const AdminDashboard: React.FC = () => {
       try {
         setLoadingEvents(true);
         setEventsError(null);
-        const res = await fetch('https://strapi.hielav.com/api/ec-events?populate=*', {
+        const res = await fetch(getApiUrl('api/ec-events?populate=*'), {
           signal: controller.signal,
         });
         if (!res.ok) throw new Error(`Failed to load events: ${res.status}`);
@@ -355,7 +356,7 @@ export const AdminDashboard: React.FC = () => {
       try {
         setLoadingPatients(true);
         setPatientsError(null);
-        const res = await fetch('https://strapi.hielav.com/api/ec-patients', {
+        const res = await fetch(getApiUrl('api/ec-patients'), {
           signal: controller.signal,
         });
         if (!res.ok) throw new Error(`Failed to load patients: ${res.status}`);
@@ -386,7 +387,7 @@ export const AdminDashboard: React.FC = () => {
   // Authenticate admin user
   const authenticateAdmin = async () => {
     try {
-      const response = await fetch('https://strapi.hielav.com/api/auth/local/', {
+      const response = await fetch(getApiUrl('api/auth/local/'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -413,7 +414,7 @@ export const AdminDashboard: React.FC = () => {
     const formData = new FormData();
     formData.append('files', file);
 
-    const response = await fetch('https://strapi.hielav.com/api/upload/', {
+    const response = await fetch(getApiUrl('api/upload/'), {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -429,7 +430,7 @@ export const AdminDashboard: React.FC = () => {
 
   // Create new event
   const createEvent = async (eventData: any, imageId: number) => {
-    const response = await fetch('https://strapi.hielav.com/api/ec-events', {
+    const response = await fetch(getApiUrl('api/ec-events'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -518,7 +519,7 @@ export const AdminDashboard: React.FC = () => {
   const checkServerHealth = async () => {
     try {
       setIsCheckingStatus(true);
-      const response = await fetch('https://strapi.hielav.com/_health', {
+      const response = await fetch(getApiUrl('_health'), {
         method: 'GET',
         signal: AbortSignal.timeout(5000) // 5 second timeout
       });
@@ -564,7 +565,7 @@ export const AdminDashboard: React.FC = () => {
   // Update appointment state
   const updateAppointmentState = async (documentId: string, newState: string) => {
     try {
-      const response = await fetch(`https://strapi.hielav.com/api/ec-appointments/${documentId}`, {
+      const response = await fetch(getApiUrl(`api/ec-appointments/${documentId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -608,7 +609,7 @@ export const AdminDashboard: React.FC = () => {
 
   // Create new patient
   const createPatient = async (patientData: any) => {
-    const response = await fetch('https://strapi.hielav.com/api/ec-patients', {
+    const response = await fetch(getApiUrl('api/ec-patients'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -627,7 +628,7 @@ export const AdminDashboard: React.FC = () => {
 
   // Update patient
   const updatePatient = async (documentId: string, patientData: any) => {
-    const response = await fetch(`https://strapi.hielav.com/api/ec-patients/${documentId}`, {
+    const response = await fetch(getApiUrl(`api/ec-patients/${documentId}`), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -1172,7 +1173,7 @@ export const AdminDashboard: React.FC = () => {
                         {event.image && (
                           <div className="w-full h-32 rounded-lg overflow-hidden">
                             <img
-                              src={event.image.url.startsWith('http') ? event.image.url : `https://strapi.hielav.com${event.image.url}`}
+                              src={getImageUrl(event.image.url)}
                               alt={event.title}
                               className="w-full h-full object-cover"
                             />

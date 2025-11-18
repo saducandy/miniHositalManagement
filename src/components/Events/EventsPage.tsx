@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Calendar, Clock, MapPin, Users, Heart, Activity } from "lucide-react";
 import { formatDate, formatTime } from "../../utils/dateUtils";
 import { I18nContext } from "../../context/I18nContext";
+import { getApiUrl, getImageUrl } from "../../config/api";
 
 type ApiEvent = {
   id: number;
@@ -84,22 +85,15 @@ export const EventsPage: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const res = await fetch(
-          "https://strapi.hielav.com/api/ec-events?populate=*",
-          {
-            signal: controller.signal,
-          }
-        );
+        const res = await fetch(getApiUrl("api/ec-events?populate=*"), {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error(`${t("events.error")}: ${res.status}`);
         const json: { data: ApiEvent[] } = await res.json();
 
         const mapped: Event[] = (json.data || []).map((event) => {
           const imagePath = event?.image?.url || "";
-          const absoluteUrl = imagePath
-            ? imagePath.startsWith("http")
-              ? imagePath
-              : `https://strapi.hielav.com${imagePath}`
-            : "";
+          const absoluteUrl = getImageUrl(imagePath);
           return {
             id: event.id,
             category: event.category.toLowerCase(),
@@ -146,7 +140,7 @@ export const EventsPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://strapi.hielav.com/api/ec-event-registered-customers",
+        getApiUrl("api/ec-event-registered-customers"),
         {
           method: "POST",
           headers: {
@@ -216,20 +210,17 @@ export const EventsPage: React.FC = () => {
     setSubscriptionError(null);
 
     try {
-      const response = await fetch(
-        "https://strapi.hielav.com/api/ec-email-subscriptions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      const response = await fetch(getApiUrl("api/ec-email-subscriptions"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: {
+            email: newsletterEmail.trim(),
           },
-          body: JSON.stringify({
-            data: {
-              email: newsletterEmail.trim(),
-            },
-          }),
-        }
-      );
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
