@@ -3,7 +3,7 @@
  * Centralized base URL for all API requests
  */
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://strapi.hielav.com";
+  import.meta.env.VITE_API_BASE_URL || "https://back.bdsec.org";
 
 /**
  * Helper function to get the full API URL
@@ -33,6 +33,3 @@ export const getImageUrl = (imagePath: string | null | undefined): string => {
   const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
   return `${API_BASE_URL}${cleanPath}`;
 };
-
-
-
