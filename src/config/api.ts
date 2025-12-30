@@ -33,3 +33,6 @@ export const getImageUrl = (imagePath: string | null | undefined): string => {
   const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
   return `${API_BASE_URL}${cleanPath}`;
 };
+
+
+

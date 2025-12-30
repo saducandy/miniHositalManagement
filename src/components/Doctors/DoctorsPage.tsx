@@ -40,12 +40,9 @@ export const DoctorsPage: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const res = await fetch(
-          getApiUrl("api/ec-doctors?populate=*"),
-          {
-            signal: controller.signal,
-          }
-        );
+        const res = await fetch(getApiUrl("api/ec-doctors?populate=*"), {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error(`Failed to load doctors: ${res.status}`);
         const json: { data: ApiDoctor[] } = await res.json();
 
