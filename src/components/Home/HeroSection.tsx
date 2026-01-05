@@ -22,13 +22,13 @@ export const HeroSection: React.FC = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link
+              {/* <Link
                 to="/appointments"
                 className="inline-flex items-center justify-center px-8 py-4 bg-brandYellow text-brandDeep font-semibold rounded-full text-lg hover:bg-brandDeep hover:text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2"
               >
                 <Calendar className="h-5 w-5 mr-2" />
                 {t("header.bookAppointment")}
-              </Link>
+              </Link> */}
               <Link
                 to="/services"
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-brandDeep text-brandDeep font-semibold rounded-full text-lg hover:bg-brandDeep hover:text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2"
@@ -38,7 +38,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+            {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
               {[
                 {
                   icon: Users,
@@ -69,7 +69,7 @@ export const HeroSection: React.FC = () => {
                   <div className="text-sm text-gray-600">{stat.label}</div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Image */}

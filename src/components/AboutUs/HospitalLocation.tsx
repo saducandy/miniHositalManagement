@@ -99,7 +99,7 @@ const HospitalLocation: React.FC = () => {
                     href="mailto:mtarekegn@bdsec.org"
                     className="mt-1 inline-flex text-sm text-gray-700 hover:text-[#FBCE6E]"
                   >
-                    mtarekegn@bdsec.org
+                    info@bdsec.org
                   </a>
                 </div>
               </div>

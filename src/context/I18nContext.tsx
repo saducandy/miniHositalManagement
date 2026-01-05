@@ -75,10 +75,10 @@ const translations: Translations = {
     am: "የእይታዎን ጥራት ለመሻሻል ዝግጁ ነዎት?",
   },
   "home.cta.subtitle": {
-    en: "Schedule your eye exam today and experience the difference quality eye care makes",
-    am: "ዛሬ የዓይን ምርመራዎን ያስይዙ እና የጥራት የዓይን እንክብካቤ ልዩነትን ያስሙ",
+    en: "Please contact us using the contact form from the contact page.",
+    am: "እኛን ለማግኘት እባካችሁ የግንኙነት ገፁን ተጠቀሙ!",
   },
-  "home.cta.button": { en: "Book Your Appointment Now", am: "አሁን ቀጠሮ ይያዙ" },
+  "home.cta.button": { en: "To Contact Page", am: "ወደ የግንኙነት ገፅ" },
   // Doctors page
   "doctors.hero.heading": {
     en: "Meet Our Expert Ophthalmologists",
@@ -178,7 +178,7 @@ const translations: Translations = {
   "appt.qualifications": { en: "Qualifications:", am: "ብቃት ማረጋገጫዎች:" },
   "appt.selectReason": { en: "Select reason", am: "ምክንያት ይምረጡ" },
   // Services
-  "services.bookConsult": { en: "Book Consultation", am: "ኮንሰልቴሽን ይያዙ" },
+  "services.bookConsult": { en: "contact us", am: "ያግኙን" },
   // Services page
   "services.hero.heading": {
     en: "Our Eye Care Services",
@@ -354,8 +354,8 @@ const translations: Translations = {
   },
   "contact.info.email.title": { en: "Email", am: "ኢሜይል" },
   "contact.info.email.main": {
-    en: "mtarekegn@bdsec.org",
-    am: "mtarekegn@bdsec.org",
+    en: "info@bdsec.org",
+    am: "info@bdsec.org",
   },
   "contact.info.email.appt": {
     en: "tgashaw@bdsec.org",

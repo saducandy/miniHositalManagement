@@ -307,7 +307,7 @@ export const Header: React.FC<HeaderProps> = ({
             </nav>
 
             {/* CTA Button */}
-            <div className="hidden md:flex items-center space-x-4">
+            {/* <div className="hidden md:flex items-center space-x-4">
               <Link
                 to="/appointments"
                 className="bg-brandYellow text-brandDeep px-6 py-2 rounded-full text-sm font-medium hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2 whitespace-nowrap"
@@ -320,7 +320,7 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 {t("header.admin")}
               </Link>
-            </div>
+            </div> */}
 
             {/* Mobile menu button on right */}
             <button

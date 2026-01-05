@@ -9,7 +9,7 @@ export const ServicesPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBookAppointment = () => {
-    navigate("/appointments");
+    navigate("/contact");
   };
 
   const handleContactUs = () => {
@@ -102,7 +102,7 @@ export const ServicesPage: React.FC = () => {
                         </span>
                       </div>
                       <Link
-                        to="/appointments"
+                        to="/contact"
                         className="w-full inline-block text-center bg-brandYellow text-brandDeep py-3 px-6 rounded-lg font-semibold hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2"
                       >
                         {t("services.bookConsult")}
@@ -187,12 +187,12 @@ export const ServicesPage: React.FC = () => {
             {t("services.cta.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
+            {/* <button
               onClick={handleBookAppointment}
               className="bg-white text-brandDeep px-8 py-4 rounded-lg font-semibold text-lg hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2 focus:ring-offset-brandYellow"
             >
               {t("services.cta.bookAppt")}
-            </button>
+            </button> */}
             <button
               onClick={handleContactUs}
               className="border-2 border-brandDeep text-brandDeep px-8 py-4 rounded-lg font-semibold text-lg hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2 focus:ring-offset-brandYellow"

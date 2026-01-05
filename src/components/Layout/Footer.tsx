@@ -42,10 +42,10 @@ export const Footer: React.FC = () => {
                   name: t("footer.quickLinks.doctors"),
                   href: "/about/doctors",
                 },
-                {
-                  name: t("footer.quickLinks.appointments"),
-                  href: "/appointments",
-                },
+                // {
+                //   name: t("footer.quickLinks.appointments"),
+                //   href: "/appointments",
+                // },
                 { name: t("footer.quickLinks.events"), href: "/events" },
                 { name: t("footer.quickLinks.contact"), href: "/contact" },
               ].map((link) => (
@@ -68,8 +68,8 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-sm">
               <li className="text-gray-300">{t("footer.services.exam")}</li>
-              <li className="text-gray-300">{t("footer.services.lasik")}</li>
-              <li className="text-gray-300">{t("footer.services.retinal")}</li>
+              {/* <li className="text-gray-300">{t("footer.services.lasik")}</li>
+              <li className="text-gray-300">{t("footer.services.retinal")}</li> */}
               <li className="text-gray-300">
                 {t("footer.services.pediatric")}
               </li>
@@ -102,7 +102,7 @@ export const Footer: React.FC = () => {
               <li className="flex items-start space-x-3">
                 <Mail className="h-4 w-4 text-brandYellow flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300 text-sm">
-                  mtarekegn@bdsec.org
+                  info@bdsec.org
                   <br />
                   tgashaw@bdsec.org
                 </span>

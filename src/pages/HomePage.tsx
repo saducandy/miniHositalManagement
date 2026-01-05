@@ -85,7 +85,7 @@ export const HomePage: React.FC = () => {
             {React.useContext(I18nContext).t("home.cta.subtitle")}
           </p>
           <Link
-            to="/appointments"
+            to="/contact"
             className="inline-block bg-brandYellow text-brandDeep px-8 py-4 rounded-full text-lg font-semibold hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brandDeep transform hover:scale-105"
           >
             {React.useContext(I18nContext).t("home.cta.button")}

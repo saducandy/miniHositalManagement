@@ -13,20 +13,20 @@ export const ServicesPreview: React.FC = () => {
       image:
         "https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=400",
     },
-    {
-      icon: Zap,
-      title: t("home.services.item.lasik.title"),
-      description: t("home.services.item.lasik.desc"),
-      image:
-        "https://images.pexels.com/photos/5752270/pexels-photo-5752270.jpeg?auto=compress&cs=tinysrgb&w=400",
-    },
-    {
-      icon: Shield,
-      title: t("home.services.item.retina.title"),
-      description: t("home.services.item.retina.desc"),
-      image:
-        "https://images.pexels.com/photos/5752251/pexels-photo-5752251.jpeg?auto=compress&cs=tinysrgb&w=400",
-    },
+    // {
+    //   icon: Zap,
+    //   title: t("home.services.item.lasik.title"),
+    //   description: t("home.services.item.lasik.desc"),
+    //   image:
+    //     "https://images.pexels.com/photos/5752270/pexels-photo-5752270.jpeg?auto=compress&cs=tinysrgb&w=400",
+    // },
+    // {
+    //   icon: Shield,
+    //   title: t("home.services.item.retina.title"),
+    //   description: t("home.services.item.retina.desc"),
+    //   image:
+    //     "https://images.pexels.com/photos/5752251/pexels-photo-5752251.jpeg?auto=compress&cs=tinysrgb&w=400",
+    // },
     {
       icon: Baby,
       title: t("home.services.item.pediatric.title"),
@@ -48,7 +48,7 @@ export const ServicesPreview: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {services.map((service, index) => (
             <div
               key={index}

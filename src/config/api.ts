@@ -3,7 +3,7 @@
  * Centralized base URL for all API requests
  */
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://back.bdsec.org";
+  import.meta.env.VITE_API_BASE_URL || "https://strapi.hielav.com";
 
 /**
  * Helper function to get the full API URL
