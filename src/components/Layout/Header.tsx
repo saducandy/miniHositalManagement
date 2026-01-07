@@ -80,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
       children: [
         { name: "Eye Care center", href: "/services/eye-care" },
         { name: "Outreach", href: "/services/outreach" },
-        { name: "Tele-Ophthalmology", href: "/services/tele-ophthalmology" },
+        // { name: "Tele-Ophthalmology", href: "/services/tele-ophthalmology" },
         { name: "Education & Training", href: "/services/education" },
         { name: "Research", href: "/services/research" },
       ],
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
     {
       name: "Get Involved",
       children: [
-        { name: "Donate", href: "/get-involved/donate" },
+        // { name: "Donate", href: "/get-involved/donate" },
         {
           name: "Organize an outreach",
           href: "/get-involved/organize-outreach",
@@ -440,19 +440,19 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
                 <div className="pt-4 border-t border-gray-200 space-y-2">
                   <Link
-                    to="/appointments"
+                    to="/contact"
                     onClick={() => setIsMenuOpen(false)}
                     className="block bg-brandYellow text-brandDeep px-3 py-2 rounded text-base font-medium text-center hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep"
                   >
-                    Book Appointment
+                    Contact Us
                   </Link>
-                  <Link
+                  {/* <Link
                     to="/admin"
                     onClick={() => setIsMenuOpen(false)}
                     className="block text-brandDeep border border-brandDeep px-3 py-2 rounded text-base font-medium text-center hover:bg-brandGreen/10 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep"
                   >
                     Admin Panel
-                  </Link>
+                  </Link> */}
                 </div>
               </nav>
             </div>

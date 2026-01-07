@@ -101,20 +101,15 @@ export const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-3">
                 <Mail className="h-4 w-4 text-brandYellow flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">
-                  info@bdsec.org
-                  <br />
-                  tgashaw@bdsec.org
-                </span>
+                <span className="text-gray-300 text-sm">info@bdsec.org</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-4 w-4 text-brandYellow flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300 text-sm">
                   Monday to Friday
                   <br />
-                  8:00 AM to 12:30 AM
-                  <br />
-                  1:30 PM to 5:00 PM
+                  24 hours a day
+                  <br />7 days a week
                 </span>
               </li>
               <li className="flex items-center space-x-3">

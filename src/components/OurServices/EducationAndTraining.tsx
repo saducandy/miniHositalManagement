@@ -1,50 +1,190 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { getApiUrl, getImageUrl } from "../../config/api";
+import { I18nContext } from "../../context/I18nContext";
+
+interface ApiProgram {
+  id: number;
+  documentId: string;
+  title: string;
+  title_AM: string;
+  desc: string;
+  desc_AM: string;
+  duration: string;
+  duration_AM: string;
+  repeatation: string;
+  repeatation_AM: string;
+  button: string;
+  button_AM: string;
+  longDescription: string;
+  longDescription_AM: string;
+  details?: string;
+  details_AM?: string;
+  image: {
+    url: string;
+  } | null;
+}
+
+interface ApiCourseStructure {
+  id: number;
+  documentId: string;
+  title: string;
+  title_AM: string;
+  starSeparatedStep: string;
+  starSeparatedStep_AM: string;
+}
 
 type Program = {
-  id: string;
+  id: number;
   title: string;
   desc: string;
   duration: string;
+  repeatation: string;
+  button: string;
+  longDescription: string;
   image?: string;
   details?: string;
 };
 
-const programs: Program[] = [
-  {
-    id: "et1",
-    title: "Ophthalmology Residents Workshop",
-    desc: "Hands‑on sessions in diagnostics (OCT, VF), cataract surgery principles, and peri‑op safety.",
-    duration: "2 days • Quarterly",
-    image:
-      "https://cdn.pixabay.com/photo/2020/04/08/07/19/eye-care-5016057_640.jpg",
-    details:
-      "Interactive modules with case discussions, simulation practice, and outcome audits to build clinical judgment and efficiency.",
-  },
-  {
-    id: "et2",
-    title: "Nursing & Patient Experience Training",
-    desc: "Communication, triage protocols, infection prevention, and compassionate bedside care standards.",
-    duration: "1 day • Monthly",
-    image:
-      "https://cdn.pixabay.com/photo/2018/08/17/20/01/eyes-3613710_640.jpg",
-    details:
-      "Role‑specific drills and scenario walk‑throughs to strengthen teamwork, safety, and patient satisfaction across units.",
-  },
-  {
-    id: "et3",
-    title: "Community Educators Program",
-    desc: "Train‑the‑trainer series for teachers and health workers on early signs and prevention.",
-    duration: "4 weeks • Hybrid",
-    image:
-      "https://cdn.pixabay.com/photo/2020/04/10/23/10/visual-5028083_640.jpg",
-    details:
-      "Guides, checklists, and basic screening methods to promote early detection and eye health awareness.",
-  },
-];
+interface CourseStep {
+  number: number;
+  text: string;
+}
+
+const parseSteps = (stepsString: string): CourseStep[] => {
+  if (!stepsString) return [];
+
+  return stepsString
+    .split("*")
+    .map((step, index) => {
+      const trimmed = step.trim();
+      // Extract number if present (e.g., "1.Registration" or "1. Registration")
+      const match = trimmed.match(/^(\d+)\.?\s*(.+)$/);
+      if (match) {
+        return {
+          number: parseInt(match[1], 10),
+          text: match[2].trim(),
+        };
+      }
+      // If no number found, use index + 1
+      return {
+        number: index + 1,
+        text: trimmed,
+      };
+    })
+    .filter((step) => step.text.length > 0);
+};
 
 const EducationAndTraining: React.FC = () => {
+  const { language } = useContext(I18nContext);
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [courseStructure, setCourseStructure] = useState<{
+    title: string;
+    steps: CourseStep[];
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Program | null>(null);
   const close = () => setSelected(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Fetch programs
+        const programsRes = await fetch(
+          getApiUrl("api/ec-our-service-education-and-trainings?populate=*"),
+          { signal: controller.signal }
+        );
+        if (!programsRes.ok)
+          throw new Error(`Failed to load programs: ${programsRes.status}`);
+        const programsJson: { data: ApiProgram[] } = await programsRes.json();
+
+        // Fetch course structure
+        const structureRes = await fetch(
+          getApiUrl(
+            "api/ec-our-service-education-and-training-course-structures"
+          ),
+          { signal: controller.signal }
+        );
+        if (!structureRes.ok)
+          throw new Error(`Failed to load structure: ${structureRes.status}`);
+        const structureJson: { data: ApiCourseStructure[] } =
+          await structureRes.json();
+
+        // Map programs
+        const mappedPrograms: Program[] = (programsJson.data || []).map(
+          (item) => {
+            const imagePath = item?.image?.url || "";
+            const absoluteUrl = getImageUrl(imagePath);
+            return {
+              id: item.id,
+              title: language === "am" ? item.title_AM : item.title,
+              desc: language === "am" ? item.desc_AM : item.desc,
+              duration: language === "am" ? item.duration_AM : item.duration,
+              repeatation:
+                language === "am" ? item.repeatation_AM : item.repeatation,
+              button: language === "am" ? item.button_AM : item.button,
+              longDescription:
+                language === "am"
+                  ? item.longDescription_AM
+                  : item.longDescription,
+              image: absoluteUrl || undefined,
+              details:
+                language === "am" ? item.details_AM : item.details || undefined,
+            };
+          }
+        );
+
+        // Map course structure
+        if (structureJson.data && structureJson.data.length > 0) {
+          const structure = structureJson.data[0];
+          const stepsString =
+            language === "am"
+              ? structure.starSeparatedStep_AM
+              : structure.starSeparatedStep;
+          setCourseStructure({
+            title: language === "am" ? structure.title_AM : structure.title,
+            steps: parseSteps(stepsString),
+          });
+        }
+
+        setPrograms(mappedPrograms);
+      } catch (err: any) {
+        if (err?.name !== "AbortError")
+          setError(err?.message || "Failed to load data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+    return () => controller.abort();
+  }, [language]);
+
+  if (isLoading) {
+    return (
+      <section className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading programs...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">Error: {error}</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="min-h-screen">
@@ -93,7 +233,7 @@ const EducationAndTraining: React.FC = () => {
               )}
               <div className="p-6">
                 <div className="text-xs font-medium text-[#77A867]">
-                  {p.duration}
+                  {p.duration} {p.repeatation && `• ${p.repeatation}`}
                 </div>
                 <h3 className="mt-1 text-lg font-bold text-[#32705A] leading-snug">
                   {p.title}
@@ -106,7 +246,7 @@ const EducationAndTraining: React.FC = () => {
                     onClick={() => setSelected(p)}
                     className="inline-flex items-center justify-center px-4 py-2 rounded-full text-sm font-semibold bg-[#FBCE6E] text-[#1f2937] hover:bg-[#fbce6e]/90 hover:text-[#32705A] transition-colors"
                   >
-                    Learn More
+                    {p.button}
                   </button>
                 </div>
               </div>
@@ -116,28 +256,26 @@ const EducationAndTraining: React.FC = () => {
       </div>
 
       {/* Highlights Steps */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <h2 className="text-xl font-extrabold text-[#32705A] text-center">
-          How programs are structured
-        </h2>
-        <div className="mt-6 grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            { n: 1, t: "Registration" },
-            { n: 2, t: "Workshop / Course participation" },
-            { n: 3, t: "Certification / Assessment" },
-          ].map((s) => (
-            <div
-              key={s.n}
-              className="rounded-xl bg-white shadow-sm border border-gray-100 p-6"
-            >
-              <div className="h-8 w-8 rounded-full bg-[#FBCE6E] text-[#1f2937] font-bold flex items-center justify-center">
-                {s.n}
+      {courseStructure && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+          <h2 className="text-xl font-extrabold text-[#32705A] text-center">
+            {courseStructure.title}
+          </h2>
+          <div className="mt-6 grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {courseStructure.steps.map((step) => (
+              <div
+                key={step.number}
+                className="rounded-xl bg-white shadow-sm border border-gray-100 p-6"
+              >
+                <div className="h-8 w-8 rounded-full bg-[#FBCE6E] text-[#1f2937] font-bold flex items-center justify-center">
+                  {step.number}
+                </div>
+                <div className="mt-2 text-sm text-gray-800">{step.text}</div>
               </div>
-              <div className="mt-2 text-sm text-gray-800">{s.t}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* CTA */}
       <div className="bg-gradient-to-r from-[#77A867] to-[#32705A]">
@@ -178,7 +316,8 @@ const EducationAndTraining: React.FC = () => {
                     {selected.title}
                   </h3>
                   <div className="mt-1 text-xs font-medium text-[#77A867]">
-                    {selected.duration}
+                    {selected.duration}{" "}
+                    {selected.repeatation && `• ${selected.repeatation}`}
                   </div>
                 </div>
                 <button
@@ -191,7 +330,11 @@ const EducationAndTraining: React.FC = () => {
                 </button>
               </div>
               <div className="mt-4 max-h-[50vh] overflow-y-auto text-sm leading-relaxed text-gray-700">
-                <p>{selected.details || selected.desc}</p>
+                <p>
+                  {selected.longDescription ||
+                    selected.details ||
+                    selected.desc}
+                </p>
               </div>
             </div>
           </div>

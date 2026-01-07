@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Briefcase,
   MapPin,
@@ -7,45 +7,36 @@ import {
   FileText,
   CheckCircle,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { getApiUrl } from "../../config/api";
+import { I18nContext } from "../../context/I18nContext";
+
+interface ApiVacancy {
+  id: number;
+  documentId: string;
+  title: string;
+  title_AM: string;
+  position: string;
+  position_AM: string;
+  location: string;
+  location_AM: string;
+  type: string;
+  type_AM: string;
+  descreption: string;
+  descreption_AM: string;
+  button: string;
+  button_AM: string;
+}
 
 type Job = {
-  id: string;
+  id: number;
   title: string;
   department: string;
   location: string;
-  type: "Full-time" | "Part-time" | "Contract";
+  type: string;
   summary: string;
+  button: string;
 };
-
-const jobs: Job[] = [
-  {
-    id: "j1",
-    title: "Ophthalmologist (Cataract Surgeon)",
-    department: "Surgery",
-    location: "Bahir Dar",
-    type: "Full-time",
-    summary:
-      "Lead cataract services, participate in surgical camps, and mentor residents in MSICS/phaco techniques.",
-  },
-  {
-    id: "j2",
-    title: "Optometrist",
-    department: "OPD",
-    location: "Bahir Dar",
-    type: "Full-time",
-    summary:
-      "Provide comprehensive refraction, low vision assessment, and pre/post‑operative care.",
-  },
-  {
-    id: "j3",
-    title: "Nurse (Theatre)",
-    department: "Operating Theatre",
-    location: "Bahir Dar",
-    type: "Contract",
-    summary:
-      "Support peri‑operative workflows, infection prevention, and patient experience in theatre.",
-  },
-];
 
 type ApplicationForm = {
   fullName: string;
@@ -56,6 +47,10 @@ type ApplicationForm = {
 };
 
 const Vacancy: React.FC = () => {
+  const { language } = useContext(I18nContext);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [form, setForm] = useState<ApplicationForm>({
     fullName: "",
@@ -67,6 +62,42 @@ const Vacancy: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchVacancies = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const res = await fetch(getApiUrl("api/ec-noitice-vacancies"), {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`Failed to load vacancies: ${res.status}`);
+        const json: { data: ApiVacancy[] } = await res.json();
+
+        const mappedJobs: Job[] = (json.data || []).map((item) => ({
+          id: item.id,
+          title: language === "am" ? item.title_AM : item.title,
+          department: language === "am" ? item.position_AM : item.position,
+          location: language === "am" ? item.location_AM : item.location,
+          type: language === "am" ? item.type_AM : item.type,
+          summary: language === "am" ? item.descreption_AM : item.descreption,
+          button: language === "am" ? item.button_AM : item.button,
+        }));
+
+        setJobs(mappedJobs);
+      } catch (err: any) {
+        if (err?.name !== "AbortError")
+          setError(err?.message || "Failed to load vacancies");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVacancies();
+    return () => controller.abort();
+  }, [language]);
 
   const openApply = (job: Job) => {
     setSelectedJob(job);
@@ -109,6 +140,27 @@ const Vacancy: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <section className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading vacancies...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">Error: {error}</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="min-h-screen">
@@ -172,12 +224,12 @@ const Vacancy: React.FC = () => {
                     {job.summary}
                   </p>
                   <div className="mt-5">
-                    <button
-                      onClick={() => openApply(job)}
+                    <Link
+                      to="/contact"
                       className="inline-flex items-center justify-center px-5 py-2 rounded-full text-sm font-semibold bg-[#FBCE6E] text-[#1f2937] hover:bg-[#32705A] hover:text-white transition-colors"
                     >
-                      Apply Now
-                    </button>
+                      {job.button}
+                    </Link>
                   </div>
                 </article>
               ))}

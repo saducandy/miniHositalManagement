@@ -372,12 +372,12 @@ const translations: Translations = {
   },
   "contact.info.hours.title": { en: "Hours", am: "ሰዓታት" },
   "contact.info.hours.weekday": {
-    en: "Mon-Fri: 8:00 AM - 12:30 PM",
-    am: "ሰኞ-አርብ: 2:00 - 06:30 (LT)",
+    en: "24 hours a day",
+    am: "24 ሰዓት",
   },
   "contact.info.hours.sat": {
-    en: "---: 01:30 PM - 05:00 PM",
-    am: "---: 07:30 - 11:00 (LT)",
+    en: "7 days a week",
+    am: "7 ቀናት በሳምንት",
   },
   "contact.form.title": { en: "Send Us a Message", am: "መልዕክት ይላኩልን" },
   "contact.form.name": { en: "Full Name *", am: "ሙሉ ስም *" },

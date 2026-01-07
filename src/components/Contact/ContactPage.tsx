@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -12,6 +12,19 @@ interface ContactFormData {
   phone: string;
   subject: string;
   message: string;
+}
+
+interface ApiContactData {
+  id: number;
+  documentId: string;
+  phoneNumber: string;
+  phoneNumber_AM: string;
+  email: string;
+  email_AM: string;
+  address: string;
+  address_AM: string;
+  hours: string;
+  hours_AM: string;
 }
 
 let SwalRef: any = null;
@@ -29,15 +42,49 @@ async function getSwal() {
 }
 
 export const ContactPage: React.FC = () => {
-  const { t } = useContext(I18nContext);
+  const { t, language } = useContext(I18nContext);
+  const [contactData, setContactData] = useState<ApiContactData | null>(null);
+
+  // Fetch contact data from API
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchContactData = async () => {
+      try {
+        const res = await fetch(getApiUrl("api/ec-contact-uses"), {
+          signal: controller.signal,
+        });
+        if (!res.ok)
+          throw new Error(`Failed to load contact data: ${res.status}`);
+        const json: { data: ApiContactData[] } = await res.json();
+
+        if (json.data && json.data.length > 0) {
+          setContactData(json.data[0]);
+        }
+      } catch (err: any) {
+        if (err?.name !== "AbortError") {
+          console.error("Failed to load contact data:", err);
+        }
+      }
+    };
+
+    fetchContactData();
+    return () => controller.abort();
+  }, []);
 
   // Smooth-scroll to the contact form if navigated with #contact-form
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash === "#contact-form") {
+    if (
+      typeof window !== "undefined" &&
+      window.location.hash === "#contact-form"
+    ) {
       const el = document.getElementById("contact-form");
       if (el) {
         // slight timeout to ensure layout is painted
-        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+        setTimeout(
+          () => el.scrollIntoView({ behavior: "smooth", block: "start" }),
+          50
+        );
       }
     }
   }, []);
@@ -63,22 +110,19 @@ export const ContactPage: React.FC = () => {
 
   const onSubmit = async (data: ContactFormData) => {
     try {
-      const res = await fetch(
-        getApiUrl("api/ec-message-from-customers"),
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            data: {
-              fullName: data.name,
-              email: data.email,
-              phoneNumber: data.phone,
-              subject: data.subject,
-              message: data.message,
-            },
-          }),
-        }
-      );
+      const res = await fetch(getApiUrl("api/ec-message-from-customers"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: {
+            fullName: data.name,
+            email: data.email,
+            phoneNumber: data.phone,
+            subject: data.subject,
+            message: data.message,
+          },
+        }),
+      });
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || `Failed with status ${res.status}`);
@@ -98,35 +142,75 @@ export const ContactPage: React.FC = () => {
     }
   };
 
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: t("contact.info.phone.title"),
-      details: [t("contact.info.phone.main")],
-      color: "emerald",
-    },
-    {
-      icon: Mail,
-      title: t("contact.info.email.title"),
-      details: [t("contact.info.email.main"), t("contact.info.email.appt")],
-      color: "blue",
-    },
-    {
-      icon: MapPin,
-      title: t("contact.info.address.title"),
-      details: [
-        t("contact.info.address.line1"),
-        t("contact.info.address.line2"),
-      ],
-      color: "purple",
-    },
-    {
-      icon: Clock,
-      title: t("contact.info.hours.title"),
-      details: [t("contact.info.hours.weekday"), t("contact.info.hours.sat")],
-      color: "orange",
-    },
-  ];
+  const contactInfo = contactData
+    ? [
+        {
+          icon: Phone,
+          title: t("contact.info.phone.title"),
+          details: [
+            language === "am"
+              ? contactData.phoneNumber_AM
+              : contactData.phoneNumber,
+          ],
+          color: "emerald",
+        },
+        {
+          icon: Mail,
+          title: t("contact.info.email.title"),
+          details: [
+            language === "am" ? contactData.email_AM : contactData.email,
+          ],
+          color: "blue",
+        },
+        {
+          icon: MapPin,
+          title: t("contact.info.address.title"),
+          details: [
+            language === "am" ? contactData.address_AM : contactData.address,
+          ],
+          color: "purple",
+        },
+        {
+          icon: Clock,
+          title: t("contact.info.hours.title"),
+          details: [
+            language === "am" ? contactData.hours_AM : contactData.hours,
+          ],
+          color: "orange",
+        },
+      ]
+    : [
+        {
+          icon: Phone,
+          title: t("contact.info.phone.title"),
+          details: [t("contact.info.phone.main")],
+          color: "emerald",
+        },
+        {
+          icon: Mail,
+          title: t("contact.info.email.title"),
+          details: [t("contact.info.email.main"), t("contact.info.email.appt")],
+          color: "blue",
+        },
+        {
+          icon: MapPin,
+          title: t("contact.info.address.title"),
+          details: [
+            t("contact.info.address.line1"),
+            t("contact.info.address.line2"),
+          ],
+          color: "purple",
+        },
+        {
+          icon: Clock,
+          title: t("contact.info.hours.title"),
+          details: [
+            t("contact.info.hours.weekday"),
+            t("contact.info.hours.sat"),
+          ],
+          color: "orange",
+        },
+      ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -173,7 +257,10 @@ export const ContactPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div id="contact-form" className="bg-white p-8 rounded-xl shadow-lg">
+            <div
+              id="contact-form"
+              className="bg-white p-8 rounded-xl shadow-lg"
+            >
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 {t("contact.form.title")}
               </h2>

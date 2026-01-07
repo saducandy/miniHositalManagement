@@ -1,51 +1,80 @@
-import React from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { I18nContext } from "../../context/I18nContext";
+import { getApiUrl, getImageUrl } from "../../config/api";
+
+type ApiAward = {
+  id: number;
+  title: string;
+  title_AM?: string | null;
+  yearAndName: string;
+  yearAndName_AM?: string | null;
+  descreption: string;
+  descreption_AM?: string | null;
+  image?: {
+    url?: string | null;
+    formats?: { small?: { url?: string | null } | null } | null;
+  } | null;
+};
 
 type Award = {
+  id: number;
   title: string;
   meta: string; // year or issuer
   description: string;
+  image?: string;
 };
 
-const awards: Award[] = [
-  {
-    title: "Excellence in Community Eye Care",
-    meta: "2024 · Amhara Regional Health Bureau",
-    description:
-      "Recognized for expanding access to vision screening and treatment in rural communities.",
-  },
-  {
-    title: "Patient Safety & Quality Award",
-    meta: "2023 · Ethiopian Ophthalmological Society",
-    description:
-      "Honored for clinical quality standards and outcomes across subspecialty services.",
-  },
-  {
-    title: "Innovation in Tele‑Ophthalmology",
-    meta: "2023 · Global Vision Partners",
-    description:
-      "Awarded for introducing remote triage and referral pathways for rural patients.",
-  },
-  {
-    title: "Centers of Excellence – Cataract Care",
-    meta: "2022 · National Health Alliance",
-    description:
-      "Distinction for safe, high‑volume cataract surgery and comprehensive post‑op care.",
-  },
-  {
-    title: "Training & Education Leadership",
-    meta: "2022 · University Collaboration Network",
-    description:
-      "Recognized for continuous skill‑building programs and clinical mentorships.",
-  },
-  {
-    title: "Compassionate Care Recognition",
-    meta: "2021 · Community Health Coalition",
-    description:
-      "Celebrated for patient‑centered care, dignity, and outstanding experience.",
-  },
-];
-
 const AwardsAndRecognitions: React.FC = () => {
+  const { language } = useContext(I18nContext);
+  const [awards, setAwards] = useState<ApiAward[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchAwards = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const res = await fetch(
+          getApiUrl("api/ec-about-us-award-cards?populate=*"),
+          { signal: controller.signal }
+        );
+        if (!res.ok)
+          throw new Error(`Failed to load awards: ${res.status || ""}`);
+
+        const json: { data: ApiAward[] } = await res.json();
+        setAwards(json.data || []);
+      } catch (err: any) {
+        if (err?.name !== "AbortError") {
+          setError(err?.message || "Failed to load awards");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAwards();
+    return () => controller.abort();
+  }, []);
+
+  const localizedAwards: Award[] = useMemo(() => {
+    const pick = (en: string, am?: string | null) =>
+      language === "am" && am ? am : en;
+
+    return (awards || []).map((award) => {
+      const preferredImage =
+        award.image?.formats?.small?.url || award.image?.url || "";
+      return {
+        id: award.id,
+        title: pick(award.title, award.title_AM),
+        meta: pick(award.yearAndName, award.yearAndName_AM),
+        description: pick(award.descreption, award.descreption_AM),
+        image: getImageUrl(preferredImage) || undefined,
+      };
+    });
+  }, [awards, language]);
+
   return (
     <section className="min-h-screen">
       {/* Header Section */}
@@ -84,36 +113,61 @@ const AwardsAndRecognitions: React.FC = () => {
       {/* Awards Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {awards.map((award) => (
-            <div
-              key={award.title}
-              className="group rounded-xl bg-white shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#FBCE6E]"
-            >
-              <div className="flex flex-col items-center text-center">
-                {/* Gold trophy circle */}
-                <div className="h-16 w-16 rounded-full flex items-center justify-center mb-4 bg-[#FBCE6E]/20 ring-2 ring-[#FBCE6E]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="#FBCE6E"
-                    className="h-7 w-7"
-                    aria-hidden
-                  >
-                    <path d="M17 3h-2V2a1 1 0 10-2 0v1H7a1 1 0 00-1 1v2a4 4 0 004 4h.06A5.01 5.01 0 0011 14.9V17H9a1 1 0 000 2h6a1 1 0 100-2h-2v-2.1A5.01 5.01 0 0013.94 10H14a4 4 0 004-4V4a1 1 0 00-1-1zm-8 5a2 2 0 01-2-2V5h4v1a2 2 0 01-2 2zm8 0a2 2 0 01-2-2V5h4v1a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-[#32705A]">
-                  {award.title}
-                </h3>
-                <p className="text-sm italic text-[#77A867] mt-0.5">
-                  {award.meta}
-                </p>
-                <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-                  {award.description}
-                </p>
-              </div>
+          {isLoading && (
+            <div className="col-span-full text-center text-gray-600">
+              Loading awards...
             </div>
-          ))}
+          )}
+          {error && (
+            <div className="col-span-full text-center text-red-600">
+              {error}
+            </div>
+          )}
+          {!isLoading && !error && localizedAwards.length === 0 && (
+            <div className="col-span-full text-center text-gray-600">
+              No awards found.
+            </div>
+          )}
+          {!isLoading &&
+            !error &&
+            localizedAwards.map((award) => (
+              <div
+                key={award.id || award.title}
+                className="group rounded-xl bg-white shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#FBCE6E]"
+              >
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-16 w-16 rounded-full flex items-center justify-center mb-4 bg-[#FBCE6E]/20 ring-2 ring-[#FBCE6E] overflow-hidden">
+                    {award.image ? (
+                      <img
+                        src={award.image}
+                        alt={award.title}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="#FBCE6E"
+                        className="h-7 w-7"
+                        aria-hidden
+                      >
+                        <path d="M17 3h-2V2a1 1 0 10-2 0v1H7a1 1 0 00-1 1v2a4 4 0 004 4h.06A5.01 5.01 0 0011 14.9V17H9a1 1 0 000 2h6a1 1 0 100-2h-2v-2.1A5.01 5.01 0 0013.94 10H14a4 4 0 004-4V4a1 1 0 00-1-1zm-8 5a2 2 0 01-2-2V5h4v1a2 2 0 01-2 2zm8 0a2 2 0 01-2-2V5h4v1a2 2 0 01-2 2z" />
+                      </svg>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-bold text-[#32705A]">
+                    {award.title}
+                  </h3>
+                  <p className="text-sm italic text-[#77A867] mt-0.5">
+                    {award.meta}
+                  </p>
+                  <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+                    {award.description}
+                  </p>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
 
