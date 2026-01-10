@@ -1,88 +1,127 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useContext } from "react";
+import { getApiUrl, getImageUrl } from "../../config/api";
+import { I18nContext } from "../../context/I18nContext";
+
+type ApiPublication = {
+  id: number;
+  title: string;
+  title_AM: string;
+  writer: string;
+  writer_AM: string;
+  date: string;
+  miniDescription: string;
+  miniDescription_AM: string;
+  abstract: string;
+  abstract_AM: string;
+  button: string;
+  button_AM: string;
+  linkName: string;
+  linkName_AM: string;
+  pdf_file?: {
+    url?: string;
+  } | null;
+};
 
 type Publication = {
   id: string;
   title: string;
   authors: string;
   date: string; // ISO date
+  miniDescription?: string;
   abstract?: string;
   link: string;
-  type?: string;
+  buttonText: string;
+  linkName: string;
+  hasPdf: boolean;
 };
-
-const samplePublications: Publication[] = [
-  {
-    id: "p1",
-    title: "AI‑Assisted Screening for Diabetic Retinopathy in Primary Care",
-    authors: "A. Kebede, S. Mitchell, T. Lemma",
-    date: "2025-03-11",
-    abstract:
-      "Prospective evaluation of a lightweight CNN deployed at point‑of‑care to support rapid triage in low‑resource settings.",
-    link: "#",
-    type: "Screening",
-  },
-  {
-    id: "p2",
-    title: "Outcomes of Community‑Based Cataract Surgery Camps",
-    authors: "S. Bekele, G. Abebe",
-    date: "2024-09-02",
-    abstract:
-      "Comparative outcomes and quality‑of‑life improvements following high‑volume outreach MSICS with standardized protocols.",
-    link: "#",
-    type: "Surgery",
-  },
-  {
-    id: "p3",
-    title: "Adherence in Chronic Glaucoma Therapy: A Mixed‑Methods Study",
-    authors: "Y. Solomon, M. Getachew",
-    date: "2023-06-18",
-    abstract:
-      "Barriers and facilitators to treatment adherence with implications for community education and follow‑up design.",
-    link: "#",
-    type: "Glaucoma",
-  },
-  {
-    id: "p4",
-    title: "Tele‑Ophthalmology Triage Using Smartphone Adapters",
-    authors: "S. Mitchell, T. Lemma",
-    date: "2022-11-05",
-    abstract:
-      "Diagnostic concordance and feasibility for remote anterior/posterior segment triage leveraging low‑cost adapters.",
-    link: "#",
-    type: "Telemedicine",
-  },
-];
 
 const PAGE_SIZE = 6;
 
 const Publications: React.FC = () => {
+  const { language } = useContext(I18nContext);
   const [queryYear, setQueryYear] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selected, setSelected] = useState<Publication | null>(null);
+  const [publications, setPublications] = useState<Publication[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchPublications = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const res = await fetch(getApiUrl("api/ec-resources-publications?populate=*"), {
+          signal: controller.signal,
+        });
+        if (!res.ok)
+          throw new Error(`Failed to load publications: ${res.status}`);
+        const json: { data: ApiPublication[] } = await res.json();
+
+        const mapped: Publication[] = (json.data || []).map((item) => {
+          const pdfUrl = item?.pdf_file?.url || "";
+          const hasPdf = !!pdfUrl;
+          const absoluteUrl = pdfUrl ? getImageUrl(pdfUrl) : "";
+          return {
+            id: item.id.toString(),
+            title: language === "am" ? item.title_AM : item.title,
+            authors: language === "am" ? item.writer_AM : item.writer,
+            date: item.date,
+            miniDescription:
+              language === "am"
+                ? item.miniDescription_AM
+                : item.miniDescription,
+            abstract: language === "am" ? item.abstract_AM : item.abstract,
+            link: absoluteUrl,
+            buttonText: language === "am" ? item.button_AM : item.button,
+            linkName: language === "am" ? item.linkName_AM : item.linkName,
+            hasPdf: hasPdf,
+          };
+        });
+
+        setPublications(mapped);
+      } catch (err: any) {
+        if (err?.name !== "AbortError")
+          setError(err?.message || "Failed to load publications");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPublications();
+    return () => controller.abort();
+  }, [language]);
 
   const years = useMemo(() => {
     const set = new Set<string>();
-    samplePublications.forEach((p) =>
+    publications.forEach((p) =>
       set.add(new Date(p.date).getFullYear().toString())
     );
     return Array.from(set).sort((a, b) => Number(b) - Number(a));
-  }, []);
+  }, [publications]);
 
   const filtered = useMemo(() => {
     const list =
       queryYear === "all"
-        ? samplePublications
-        : samplePublications.filter(
+        ? publications
+        : publications.filter(
             (p) => new Date(p.date).getFullYear().toString() === queryYear
           );
     return list.sort((a, b) => +new Date(b.date) - +new Date(a.date));
-  }, [queryYear]);
+  }, [queryYear, publications]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const totalPages = filtered.length > 0 ? Math.ceil(filtered.length / PAGE_SIZE) : 0;
   const pageItems = filtered.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
   );
+
+  // Reset to page 1 when filtered list changes (e.g., after filtering or language change)
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(1);
+    }
+  }, [filtered.length, totalPages, currentPage]);
 
   const goto = (p: number) => {
     if (p < 1 || p > totalPages) return;
@@ -139,88 +178,111 @@ const Publications: React.FC = () => {
 
       {/* List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {pageItems.map((pub) => {
-            const date = new Date(pub.date).toLocaleDateString(undefined, {
-              year: "numeric",
-              month: "short",
-              day: "2-digit",
-            });
-            return (
-              <article
-                key={pub.id}
-                className="group bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
-              >
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-[#32705A] leading-snug">
-                    {pub.title}
-                  </h3>
-                  <p className="mt-1 italic text-[#77A867] text-sm">
-                    {pub.authors}
-                  </p>
-                  <p className="mt-1 text-xs text-gray-500">{date}</p>
-                  {pub.abstract && (
-                    <p className="mt-3 text-sm text-gray-700 line-clamp-3">
-                      {pub.abstract}
-                    </p>
-                  )}
-                  <div className="mt-5 flex items-center gap-3">
-                    <a
-                      href={pub.link}
-                      className="inline-flex items-center justify-center px-4 py-2 rounded-full text-sm font-semibold bg-[#FBCE6E] text-[#1f2937] hover:bg-[#32705A] hover:text-white transition-colors"
-                    >
-                      View / Download
-                    </a>
-                    {pub.abstract && (
-                      <button
-                        onClick={() => setSelected(pub)}
-                        className="text-sm font-semibold text-[#32705A] hover:underline"
-                      >
-                        Read abstract
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-2">
-            <button
-              onClick={() => goto(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-[#32705A] disabled:opacity-40"
-            >
-              Prev
-            </button>
-            {Array.from({ length: totalPages }).map((_, i) => {
-              const page = i + 1;
-              const active = page === currentPage;
-              return (
-                <button
-                  key={page}
-                  onClick={() => goto(page)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-semibold ${
-                    active
-                      ? "bg-[#FBCE6E] text-[#1f2937]"
-                      : "border border-gray-200 text-[#32705A] hover:bg-gray-50"
-                  }`}
-                >
-                  {page}
-                </button>
-              );
-            })}
-            <button
-              onClick={() => goto(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-[#32705A] disabled:opacity-40"
-            >
-              Next
-            </button>
+        {isLoading && (
+          <div className="text-center text-gray-600 py-12">
+            Loading publications...
           </div>
+        )}
+        {error && (
+          <div className="text-center text-red-600 py-12">
+            Error: {error}
+          </div>
+        )}
+        {!isLoading && !error && publications.length === 0 && (
+          <div className="text-center text-gray-600 py-12">
+            No publications available.
+          </div>
+        )}
+        {!isLoading && !error && publications.length > 0 && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {pageItems.map((pub) => {
+                const date = new Date(pub.date).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "2-digit",
+                });
+                return (
+                  <article
+                    key={pub.id}
+                    className="group bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                  >
+                    <div className="p-6">
+                      <h3 className="text-lg font-bold text-[#32705A] leading-snug">
+                        {pub.title}
+                      </h3>
+                      <p className="mt-1 italic text-[#77A867] text-sm">
+                        {pub.authors}
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">{date}</p>
+                      {pub.miniDescription && (
+                        <p className="mt-3 text-sm text-gray-700 line-clamp-3">
+                          {pub.miniDescription}
+                        </p>
+                      )}
+                      <div className="mt-5 flex items-center gap-3">
+                        {pub.hasPdf && pub.link && (
+                          <a
+                            href={pub.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center px-4 py-2 rounded-full text-sm font-semibold bg-[#FBCE6E] text-[#1f2937] hover:bg-[#32705A] hover:text-white transition-colors"
+                          >
+                            {pub.buttonText}
+                          </a>
+                        )}
+                        {pub.abstract && (
+                          <button
+                            onClick={() => setSelected(pub)}
+                            className="text-sm font-semibold text-[#32705A] hover:underline"
+                          >
+                            {pub.linkName}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && filtered.length > 0 && (
+              <div className="mt-8 flex items-center justify-center gap-2">
+                <button
+                  onClick={() => goto(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-[#32705A] disabled:opacity-40"
+                >
+                  Prev
+                </button>
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  const page = i + 1;
+                  const active = page === currentPage;
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => goto(page)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-semibold ${
+                        active
+                          ? "bg-[#FBCE6E] text-[#1f2937]"
+                          : "border border-gray-200 text-[#32705A] hover:bg-gray-50"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+                <button
+                  onClick={() => goto(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-[#32705A] disabled:opacity-40"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -260,14 +322,18 @@ const Publications: React.FC = () => {
               <div className="mt-4 text-sm leading-relaxed text-gray-700">
                 <p>{selected.abstract}</p>
               </div>
-              <div className="mt-6">
-                <a
-                  href={selected.link}
-                  className="inline-flex items-center justify-center px-5 py-2 rounded-full text-sm font-semibold bg-[#FBCE6E] text-[#1f2937] hover:bg-[#32705A] hover:text-white transition-colors"
-                >
-                  View / Download
-                </a>
-              </div>
+              {selected.hasPdf && selected.link && (
+                <div className="mt-6">
+                  <a
+                    href={selected.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-5 py-2 rounded-full text-sm font-semibold bg-[#FBCE6E] text-[#1f2937] hover:bg-[#32705A] hover:text-white transition-colors"
+                  >
+                    {selected.buttonText}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>

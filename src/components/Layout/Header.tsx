@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
       name: "Resources",
       children: [
         { name: "Publications", href: "/resources/publications" },
-        { name: "For Staffs: SOPS and Guidelines", href: "/resources/sops" },
+        // { name: "For Staffs: SOPS and Guidelines", href: "/resources/sops" },
       ],
     },
     {
