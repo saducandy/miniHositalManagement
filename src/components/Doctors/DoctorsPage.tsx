@@ -1,6 +1,7 @@
 import React from "react";
 import { Calendar, Award, Clock, Star } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { I18nContext } from "../../context/I18nContext";
 import { getApiUrl, getImageUrl } from "../../config/api";
 
@@ -30,6 +31,7 @@ type Doctor = {
 
 export const DoctorsPage: React.FC = () => {
   const { t } = React.useContext(I18nContext);
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -210,6 +212,7 @@ export const DoctorsPage: React.FC = () => {
                             "--tw-ring-color": string;
                           }
                         }
+                        onClick={() => navigate("/contact")}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.backgroundColor = "#32705a")
                         }
