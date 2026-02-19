@@ -39,8 +39,8 @@ export const VisionAndMission: React.FC = () => {
                 </h2>
               </div>
               <p className="text-lg text-gray-700 leading-relaxed">
-                To provide affordable, high-quality, and compassionate eye care
-                service to all in the region.
+                To provide the highest standard of affordable, compassionate,
+                and specialized eye care services to all our patients.
               </p>
             </div>
             <div className="order-1 lg:order-2 flex justify-center lg:justify-start">
@@ -73,8 +73,10 @@ export const VisionAndMission: React.FC = () => {
                 </h2>
               </div>
               <p className="text-lg text-gray-700 leading-relaxed">
-                To be Sub-Saharan Africa's leader in specialty eye care, making
-                high-quality eye care accessible to all.
+                To be the definitive leader in specialty eye care across
+                Sub-Saharan Africa, ensuring that life-changing, high-quality
+                eye care is accessible to every individual, regardless of their
+                circumstances.
               </p>
             </div>
           </div>
@@ -86,7 +88,7 @@ export const VisionAndMission: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Our Values
+              Our Core Values
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               The principles that guide our commitment to excellence in eye care
@@ -108,11 +110,12 @@ export const VisionAndMission: React.FC = () => {
                 <Heart className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                Service
+                Service Excellence
               </h3>
               <p className="text-gray-700 leading-relaxed text-center flex-grow">
-                We provide comprehensive eye care service with compassion,
-                seeking to deliver the highest quality at the lowest cost.
+                We are committed to comprehensive care delivered with empathy.
+                Our goal is to provide the highest quality medical outcomes at
+                the lowest possible cost to the patient.
               </p>
               <div className="mt-auto pt-6">
                 <img
@@ -137,12 +140,12 @@ export const VisionAndMission: React.FC = () => {
                 <Lightbulb className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                Innovation
+                Pioneering Innovation
               </h3>
               <p className="text-gray-700 leading-relaxed text-center flex-grow">
-                We leverage state-of-the-art approaches and equipment to treat
-                patients at the highest standards and serve as a center of
-                excellence to elevate eye care across Ethiopia.
+                By leveraging state-of-the-art medical equipment and modern
+                clinical approaches, we serve as a national model of excellence,
+                elevating the standard of eye care across Ethiopia.
               </p>
               <div className="mt-auto pt-6">
                 <img
@@ -167,12 +170,12 @@ export const VisionAndMission: React.FC = () => {
                 <GraduationCap className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                Training
+                Empowerment through Training
               </h3>
               <p className="text-gray-700 leading-relaxed text-center flex-grow">
-                We offer training to ophthalmic personnel to expand access to
-                quality eye care and improve outcomes across Ethiopia and
-                beyond.
+                We believe in the power of education. By offering world-class
+                training to ophthalmic staff, we expand the reach of quality
+                eye care and improve patient outcomes far beyond our own doors.
               </p>
               <div className="mt-auto pt-6">
                 <img

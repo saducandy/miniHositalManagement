@@ -66,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
       name: "About Us",
       children: [
         { name: "Our Story", href: "/about/story" },
-        { name: "Vision & Mission", href: "/about/vision-mission" },
+        { name: "Our Foundation", href: "/about/vision-mission" },
         { name: "Management Team", href: "/about/management" },
         { name: "Our Ophthalmologists", href: "/about/doctors" },
         { name: "Our Staff", href: "/about/staff" },

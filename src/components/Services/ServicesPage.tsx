@@ -53,10 +53,9 @@ export const ServicesPage: React.FC = () => {
       },
       "services.features.hours.items": {
         en: [
-          "Working Hours: Monday to Friday | (8:00 AM – 5:00 PM)",
-          "For emergencies 7 days / 24 hours",
+          "Service available at extended hours including evenings and weekends for your convenience.",
         ],
-        am: ["የስራ ሰዓት: ከሰኞ እስከ ዓርብ ከ2፡00 እስከ 11፡00", "ለድንገተኛ 7 ቀን 24 ሰዓት"],
+        am: ["ለእርስዎ ምቾት ሲባል አገልግሎቱ ለረጅም ሰዓታት ምሽት እና ቅዳሜና እሁድን ጨምሮ ይገኛል።"],
       },
       "services.features.location.items": {
         en: [
@@ -206,12 +205,12 @@ export const ServicesPage: React.FC = () => {
                           {t("services.seeMore")}
                         </button>
                       )}
-                      <div className="flex items-center text-sm text-gray-600 mt-4">
+                      {/* <div className="flex items-center text-sm text-gray-600 mt-4">
                         <Users className="h-4 w-4 mr-2 text-brandDeep shrink-0" />
                         <span>
                           {t("services.headLabel")} {head}
                         </span>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -228,63 +227,9 @@ export const ServicesPage: React.FC = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               {t("services.features.heading")}
             </h2>
-            <h3 className="text-2xl font-semibold text-brandDeep mb-8">
+            <h4 className="text-2xl font-semibold text-brandDeep mb-8">
               {t("services.features.subheading")}
-            </h3>
-          </div>
-
-          <div className="max-w-4xl mx-auto space-y-6">
-            {/* Advanced Technology */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">
-                {t("services.features.tech.title")}
-              </h4>
-              <ul className="space-y-2 ml-4">
-                {getArrayTranslation("services.features.tech.items").map(
-                  (item: string, index: number) => (
-                    <li key={index} className="flex items-start text-gray-700">
-                      <span className="text-brandYellow mr-2">✓</span>
-                      <span>{item}</span>
-                    </li>
-                  ),
-                )}
-              </ul>
-            </div>
-
-            {/* Optical Shop */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="flex items-start">
-                <span className="text-brandYellow mr-2 mt-1">○</span>
-                <p className="text-gray-700">
-                  {t("services.features.optical")}
-                </p>
-              </div>
-            </div>
-
-            {/* Environment */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="flex items-start">
-                <span className="text-brandYellow mr-2 mt-1">○</span>
-                <p className="text-gray-700">
-                  {t("services.features.environment")}
-                </p>
-              </div>
-            </div>
-
-            {/* VIP Rooms */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="flex items-start">
-                <span className="text-brandYellow mr-2 mt-1">○</span>
-                <p className="text-gray-700">{t("services.features.vip")}</p>
-              </div>
-            </div>
-
-            {/* Professionals */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <p className="text-gray-700">
-                {t("services.features.professionals")}
-              </p>
-            </div>
+            </h4>
           </div>
 
           {/* Three Feature Cards */}
@@ -355,7 +300,7 @@ export const ServicesPage: React.FC = () => {
               <p className="text-gray-600 mb-4">
                 {t("services.features.location.desc")}
               </p>
-              <ul className="text-left space-y-2 text-sm text-gray-600">
+              {/* <ul className="text-left space-y-2 text-sm text-gray-600">
                 {getArrayTranslation("services.features.location.items").map(
                   (item: string, index: number) => (
                     <li key={index} className="flex items-start">
@@ -364,14 +309,14 @@ export const ServicesPage: React.FC = () => {
                     </li>
                   ),
                 )}
-              </ul>
+              </ul> */}
             </div>
           </div>
         </div>
       </section>
 
       {/* Who Can Benefit Section */}
-      <section className="py-16 bg-gray-50">
+      {/* <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900">
@@ -391,7 +336,7 @@ export const ServicesPage: React.FC = () => {
             </ul>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-brandGreen to-brandYellow">

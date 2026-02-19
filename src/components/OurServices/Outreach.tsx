@@ -12,10 +12,9 @@ type Program = {
 const programs: Program[] = [
   {
     id: "p1",
-    title: "Rural Vision Screening Week",
+    title: "Community Screening",
     period: "Oct 2025",
-    description:
-      "Mobile teams visited rural kebeles for free eye screening, referrals, and on‑site refraction.",
+    description: "Regular community eye screening for avoidable cataract.",
     image:
       "https://cdn.pixabay.com/photo/2020/04/08/07/19/eye-care-5016057_640.jpg",
     details:
@@ -23,10 +22,9 @@ const programs: Program[] = [
   },
   {
     id: "p2",
-    title: "School Children Eye Health Campaign",
+    title: "School Children Eye Health",
     period: "Sep–Nov 2025",
-    description:
-      "Age‑appropriate vision tests, amblyopia and strabismus checks, and parent counseling across city schools.",
+    description: "Regular school children screening for refractive error.",
     image:
       "https://cdn.pixabay.com/photo/2018/08/17/20/01/eyes-3613710_640.jpg",
     details:
@@ -34,10 +32,10 @@ const programs: Program[] = [
   },
   {
     id: "p3",
-    title: "Glaucoma Awareness Month",
+    title: "Workplace screening",
     period: "May 2025",
     description:
-      "Talks, radio spots, and risk screening for early detection of the ‘silent thief of sight’.",
+      "Regular screening for presbyopia and reading glass provision.",
     image:
       "https://cdn.pixabay.com/photo/2020/04/10/23/10/visual-5028083_640.jpg",
     details:
@@ -95,9 +93,9 @@ const Outreach: React.FC = () => {
                 </div>
               )}
               <div className="p-6">
-                <div className="text-xs font-medium text-[#77A867] italic">
+                {/* <div className="text-xs font-medium text-[#77A867] italic">
                   {p.period}
-                </div>
+                </div> */}
                 <h3 className="mt-1 text-lg font-bold text-[#32705A] leading-snug">
                   {p.title}
                 </h3>
@@ -105,12 +103,12 @@ const Outreach: React.FC = () => {
                   {p.description}
                 </p>
                 <div className="mt-4">
-                  <button
+                  {/* <button
                     onClick={() => setSelected(p)}
                     className="inline-flex items-center justify-center px-4 py-2 rounded-full text-sm font-semibold bg-[#FBCE6E] text-[#1f2937] hover:bg-[#fbce6e]/90 hover:text-[#32705A] transition-colors"
                   >
                     Read More
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </article>

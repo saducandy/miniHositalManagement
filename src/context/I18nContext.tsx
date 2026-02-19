@@ -28,10 +28,13 @@ const translations: Translations = {
   "accessibility.fontSize": { en: "Font Size:", am: "የፊደል መጠን:" },
   "accessibility.contrast": { en: "Contrast", am: "ኮንትራስት" },
   // About Us - Our Story
-  "story.intro.title": { en: "About BDSEC", am: "ስለ BDSEC" },
+  "story.intro.title": {
+    en: "About Bahir Dar Specialty Eye Care Center (BDSEC)",
+    am: "ስለ ባህር ዳር ልዩ የአይን እንክብካቤ ማዕከል (BDSEC)",
+  },
   "story.intro.body": {
-    en: "BDSEC is a newly opened, state-of-the-art specialty eye hospital located in Bahir Dar. We offer a full range of advanced and affordable eye care services for all age groups, from children to seniors, delivered by a team of expert ophthalmologists, optometrists, ophthalmic nurses, and trained eye care professionals.",
-    am: "BDSEC በባህር ዳር የሚገኝ አዲስ የተከፈተ እና ዘመናዊ የሆነ የልዩ የአይን ህክምና ሆስፒታል ነው። ከልጆች እስከ አረጋውያን ድረስ ለሁሉም የዕድሜ ክልሎች የተሟላ እና ተመጣጣኝ የአይን ህክምና አገልግሎቶችን እናቀርባለን፤ ይህም በባለሙያ የዓይን ህክምና ባለሙያዎች፣ ኦፕቶሜትሪስቶች፣ የዓይን ነርሶች እና የሰለጠኑ የአይን እንክብካቤ ባለሙያዎች ቡድን ይሰጣል።",
+    en: "Bahir Dar Specialty Eye Care Center (BDSEC), located in Bahir Dar City, is a semi-autonomous, self-sustaining, and replicable model designed to transform the landscape of ophthalmic care in the region and beyond.",
+    am: "በባህር ዳር ከተማ የሚገኘው የባህር ዳር ልዩ የአይን እንክብካቤ ማዕከል (BDSEC) በክልሉ እና ከዚያም በላይ ያለውን የዓይን ህክምና ገጽታ ለመለወጥ የተነደፈ ከፊል ራሱን የቻለ፣ ራሱን የቻለ እና ሊባዛ የሚችል ሞዴል ነው።",
   },
   // About Us - Staff
   "staff.hero.heading": { en: "Our Staff", am: "ሰራተኞቻችን" },
@@ -41,7 +44,10 @@ const translations: Translations = {
   },
   "staff.loading": { en: "Loading staff...", am: "ሰራተኞችን በመጫን ላይ..." },
   "staff.error": { en: "Failed to load staff", am: "ሰራተኞችን መጫን አልተሳካም" },
-  "staff.empty": { en: "No staff information found.", am: "የሰራተኞች መረጃ አልተገኘም።" },
+  "staff.empty": {
+    en: "No staff information found.",
+    am: "የሰራተኞች መረጃ አልተገኘም።",
+  },
   "staff.category.staffCount": { en: "Staff", am: "ሰራተኞች" },
   "staff.category.untitled": { en: "Staff Category", am: "የሰራተኞች ምድብ" },
   "staff.member.unknown": { en: "Unknown", am: "ያልታወቀ" },
@@ -49,8 +55,8 @@ const translations: Translations = {
   "hero.title1": { en: "Your Vision, Our", am: "ለእርስዎ እይታ ፣ የእኛ" },
   "hero.title2": { en: "Excellence", am: "ከፍተኛ ብቃት" },
   "hero.subtitle": {
-    en: "Experience exceptional eye care with our team of specialized ophthalmologists. Book appointments online, access your vision records, and get the expert care your eyes deserve.",
-    am: "በልምድ ያለ የዓይን ሐኪሞች ቡድን ጋር ልዩ የዓይን እንክብካቤን ያግኙ። ቀጠሮ በመጀመር እና የእይታ መዝገቦትን በመዳሰስ ባለሙያ እንክብካቤ ይቀበሉ።",
+    en: "Experience exceptional eye care with our team of specialized eye care professionals.",
+    am: "ከልዩ የአይን እንክብካቤ ባለሙያዎች ቡድናችን ጋር ልዩ የሆነ የአይን እንክብካቤ ያግኙ።",
   },
   "hero.learnMore": { en: "Learn More", am: "ተጨማሪ ይመልከቱ" },
   "hero.stats.patientsServed": { en: "Patients Served", am: "የተስተናገዱ ታካሚዎች" },
@@ -100,19 +106,19 @@ const translations: Translations = {
   "home.cta.button": { en: "To Contact Page", am: "ወደ የግንኙነት ገፅ" },
   // Doctors page
   "doctors.hero.heading": {
-    en: "Meet Our Expert Ophthalmologists",
+    en: "Meet Our Ophthalmologists",
     am: "ከባለሙያ የዓይን ሐኪሞቻችን ጋር ይገናኙ",
   },
   "doctors.hero.subtitle": {
-    en: "Our team of board-certified ophthalmologists and eye care specialists are dedicated to providing exceptional vision care with compassion and expertise",
-    am: "የቦርድ የተረጋገጡ የዓይን ሐኪሞች እና የዓይን እንክብካቤ ባለሙያዎች ቡድናችን በሩህነት እና በብልጥነት ልዩ የእይታ እንክብካቤ ለመስጠት ተሰናክሏል",
+    en: "Our team of experienced ophthalmologists and eye care specialists provide exceptional vision care with compassion and expertise",
+    am: "ልምድ ያላቸው የዓይን ሐኪሞች እና የአይን እንክብካቤ ባለሙያዎች ቡድናችን በርህራሄ እና በሙያ ልዩ የሆነ የእይታ እንክብካቤን ይሰጣል",
   },
   "doctors.loading": { en: "Loading doctors...", am: "ዶክተሮችን በመጫን ላይ..." },
   "doctors.error": { en: "Failed to load doctors", am: "ዶክተሮችን መጫን አልተሳካም" },
   "doctors.available": { en: "Available for appointments", am: "ለቀጠሮ ይገኛሉ" },
   "doctors.unavailable": { en: "Currently unavailable", am: "በአሁኑ ጊዜ አይገኙም" },
   "doctors.qualifications": { en: "Qualifications:", am: "ብቃት ማረጋገጫዎች፦" },
-  "doctors.book": { en: "Book Appointment", am: "ቀጠሮ ይያዙ" },
+  "doctors.book": { en: "Contact Us", am: "ያግኙን" },
   "doctors.years": { en: "Years of Experience", am: "የሥራ ልምድ ዓመታት" },
   "doctors.why.heading": {
     en: "Why Choose Our Ophthalmologists?",
@@ -140,8 +146,8 @@ const translations: Translations = {
   },
   // Home services items
   "home.services.item.exam.title": {
-    en: "Comprehensive Eye Exams",
-    am: "በሙሉ የዓይን ምርመራ",
+    en: "Eye Exams",
+    am: "የዓይን ምርመራ",
   },
   "home.services.item.exam.desc": {
     en: "Complete eye health evaluations with advanced diagnostic technology.",
@@ -204,10 +210,10 @@ const translations: Translations = {
     am: "የእኛ የዓይን እንክብካቤ አገልግሎቶች",
   },
   "services.hero.subtitle": {
-    en: "Comprehensive eye care services delivered by our expert ophthalmologists using state-of-the-art technology",
-    am: "በዘመናዊ ቴክኖሎጂ እና በባለሙያ የዓይን ሐኪሞች የሚሰጡ ሙሉ የዓይን እንክብካቤ አገልግሎቶች",
+    en: "Comprehensive eye care services delivered by our expert eye care professionals using state-of-the-art technology.",
+    am: "ዘመናዊ ቴክኖሎጂን በመጠቀም በባለሙያ የአይን እንክብካቤ ባለሙያዎቻችን የሚሰጡ አጠቃላይ የአይን እንክብካቤ አገልግሎቶች።",
   },
-  "services.include": { en: "Services Include:", am: "አገልግሎቶች የሚካተቱት፦" },
+  "services.include": { en: "Services Include:", am: "የሚካተቱት አገልግሎቶች፦" },
   "services.seeMore": { en: "See more", am: "ተጨማሪ ይመልከቱ" },
   "services.seeLess": { en: "See less", am: "ያስደብሩ" },
   "services.headLabel": { en: "Department Head:", am: "የክፍሉ ሃላፊ፦" },
@@ -227,8 +233,8 @@ const translations: Translations = {
     am: "አገልግሎቶቻችንን ለምን መምረጥ አለብዎት?",
   },
   "services.features.subheading": {
-    en: "Why Choose BDSEC?",
-    am: "BDSECን ለምን መምረጥ አለብዎት?",
+    en: "Experienced professionals and advanced technology at affordable prices with a clean and welcoming environment",
+    am: "ልምድ ያላቸው ባለሙያዎች እና የላቀ ቴክኖሎጂ በተመጣጣኝ ዋጋ ንፁህ እና ደስ የሚል አካባቢ",
   },
   "services.features.tech.title": {
     en: "Advanced technology at affordable prices;",
@@ -274,25 +280,25 @@ const translations: Translations = {
   },
   "services.features.expert.title": { en: "Expert Care", am: "ባለሙያ እንክብካቤ" },
   "services.features.expert.desc": {
-    en: "Experienced eye care professionals with years of experience in specialized eye care",
-    am: "በልዩ የዓይን እንክብካቤ ልምድ ያላቸው የቦርድ የተረጋገጡ የዓይን ሐኪሞች",
+    en: "Experienced eye care professionals፡",
+    am: "ልምድ ያላቸው የአይን እንክብካቤ ባለሙያዎች፡",
   },
   "services.features.expert.items": {
     en: [
-      "Skilled ophthalmologists with years of clinical and surgical experience",
-      "Dedicated optometrists for accurate refraction and follow-up",
+      "Skilled ophthalmologists",
+      "Dedicated optometrists",
       "Compassionate nursing and support staff",
     ],
     am: [
-      "በክሊኒካል እና በቀዶ ጥገና ልምድ ያላቸው ባለሙያ የዓይን ሐኪሞች",
-      "ለትክክለኛ ሪፍራክሽን እና ክትትል የተመደቡ ኦፕቶሜትሪስቶች",
+      "ክህሎት ያላቸው የዓይን ሐኪሞች",
+      "ለተመደቡበት ስራ ብቻ የሚሰሩ የዓይን ሐኪሞች",
       "ርኅራኄ ያላቸው ነርስ እና የድጋፍ ሰራተኞች",
     ],
   },
   "services.features.hours.title": { en: "Extended Hours", am: "የተራዘመ ሰዓት" },
   "services.features.hours.desc": {
-    en: "Extended hours including evenings and weekends for your convenience",
-    am: "ለእርስዎ ምቹነት የሚያመቻች ከማታና ከሳምንት መጨረሻዎች ጨምሮ የተራዘመ ሰዓት",
+    en: "-",
+    am: "-",
   },
   "services.features.hours.items": {
     en: [

@@ -44,33 +44,40 @@ const OurStory: React.FC = () => {
                 </h1>
                 <div className="mt-5 space-y-5 text-gray-700 leading-relaxed">
                   <p>
-                    At Bahir Dar Specialty Eye Care Center, our story is one of
-                    vision, dedication, and care. Founded in the heart of Bahir
-                    Dar, we began with a clear purpose — to bring world-class
-                    eye care closer to our community and help every patient
-                    experience the beauty of clear sight.
+                    It is established by strong partnership between the
+                    Himalayan Cataract Project (HCP), the Federal Ministry of
+                    Health (FMoH), and the Amhara National Regional State Health
+                    Bureau.
                   </p>
                   <p>
-                    What started as a small, passionate team of eye care
-                    professionals has grown into one of the region’s most
-                    trusted centers for comprehensive ophthalmic services. From
-                    routine eye check-ups to advanced surgical treatments, we
-                    are committed to delivering accurate diagnoses, modern
-                    solutions, and compassionate care to every individual who
-                    walks through our doors.
+                    At BDSEC, we believe that high-quality eye care should not be
+                    a luxury. Our strategic objective is:
                   </p>
                   <p>
-                    Our specialists combine years of experience with the latest
-                    diagnostic and treatment technologies to ensure your eyes
-                    receive the care they truly deserve. But beyond technology
-                    and expertise, what truly defines us is our commitment to
-                    people — to restoring vision, renewing confidence, and
-                    improving lives.
+                    <strong>Clinical Impact:</strong> Eradicating avoidable
+                    blindness across the Amhara region by providing affordable,
+                    high-standard surgical and clinical services to those in
+                    need.
                   </p>
                   <p>
-                    At Bahir Dar Specialty Eye Care Center, we believe that
-                    clear vision opens the door to endless possibilities — and
-                    we’re honored to help you see them all.
+                    <strong>Professional Growth:</strong> Strengthening the
+                    national healthcare system through structured, high-tier
+                    training programs for the next generation of ophthalmic
+                    personnel.
+                  </p>
+                  <p>
+                    Beyond the walls of our clinic, BDSEC is envisioned as a
+                    Sub-Saharan center of excellence. We don't just treat
+                    patients; we set the benchmark for best practices. By serving
+                    as a premier site for professional development and ophthalmic
+                    training, we empower healthcare providers from across the
+                    continent to replicate our success in their own communities.
+                  </p>
+                  <p>
+                    Our specialized services do more than restore sight—they
+                    ensure the center's long-term sustainability, allowing us to
+                    reinvest in the latest technology and continue our mission
+                    of providing compassionate, low-cost care for all.
                   </p>
                 </div>
               </div>

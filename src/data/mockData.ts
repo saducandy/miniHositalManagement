@@ -66,10 +66,10 @@ export const doctors: Doctor[] = [
 export const departments: Department[] = [
   {
     id: "1",
-    name: { en: "Comprehensive services", am: "አጠቃላይ አገልግሎቶች" } as any,
+    name: { en: "Services", am: "አገልግሎቶች" } as any,
     description: {
-      en: "Complete eye health evaluations including vision testing, eye pressure checks, and retinal examinations.",
-      am: "የእይታ ምርመራ፣ የአይን ግፊት ምርመራዎች እና የሬቲና ምርመራዎችን ጨምሮ የተሟላ የአይን ጤና ግምገማዎች።",
+      en: "We provide complete eye care services including",
+      am: "ሙሉ የአይን እንክብካቤ አገልግሎቶችን እንሰጣለን፤ ከእነዚህም ውስጥ",
     } as any,
     image:
       "https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -124,19 +124,19 @@ export const departments: Department[] = [
         en: "Postoperative Follow-Up & Referral Services",
         am: "ከቀዶ ጥገና በኋላ የክትትል እና የሪፈራል አገልግሎቶች",
       },
-      { en: "Oculoplastic surgery service", am: "የአይን ፕላስቲክ የቀዶ ጥገና አገልግሎት" },
+      // { en: "Oculoplastic surgery service", am: "የአይን ፕላስቲክ የቀዶ ጥገና አገልግሎት" },
     ] as any,
     head: { en: "Dr. Sarah Mitchell", am: "ዶ/ር ሳራ ሚቺል" } as any,
   },
   {
     id: "2",
     name: {
-      en: "General Ophthalmology OPD services",
-      am: "ጠቅላላ የተመላላሽ የዓይን ሕክምና",
+      en: "OPD services",
+      am: "የተመላላሽ የዓይን ሕክምና",
     } as any,
     description: {
-      en: "Outpatient diagnosis and management of common eye conditions including cataract, blepharitis, dry eyes, computer vision syndrome, allergies, refractive errors, and ocular infections; optical shop and driving license eye evaluation.",
-      am: "የዓይን ሞራ፣ የዓይን ቆብ መቆጣት፣ የዓይን ድርቀት፣ ከኮምፒውተር ጋር ተያይዘው የሚመጡ የዓይን ችግሮች፣ የዓይን አለርጂ፣ የመነጽር ችግሮች፣ የዓይን ኢንፌክሺኖች ምርመራ እና ሕክምና፤ የመነጽር ሽያጭ እና ለመንጃ ፈቃድ የዓይን ምርመራ።",
+      en: "We provide diagnosis and management of common eye conditions including",
+      am: "የተለመዱ የአይን በሽታዎችን ምርመራ እና አያያዝ እናቀርባለን፤ ከእነዚህም ውስጥ",
     } as any,
     image:
       "https://images.pexels.com/photos/5752270/pexels-photo-5752270.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -184,8 +184,8 @@ export const departments: Department[] = [
       am: "የዓይን ቆብ እና አካባቢ አገልግሎቶች",
     } as any,
     description: {
-      en: "Diagnosis and management of eyelid and ocular adnexa conditions including blepharoptosis, entropion, ectropion, nasolacrimal duct obstruction, dacryocystitis, and adnexal tumors.",
-      am: "የዓይን ቆብ መዛል፣ ወደ ውስጥ መታጠፍ እና ወደ ውጭ መገልበጥ፣ የእንባ ቧንቧ መዘጋት፣ የእንባ ከረጢት ኢንፌክሺን እና የቆብ እባጮች ምርመራ እና ሕክምና።",
+      en: "We provide diagnosis and management of eyelid and ocular adnexa conditions including:",
+      am: "የአይን እና የአይን አድኔክሳ በሽታዎችን ምርመራ እና አያያዝ እናቀርባለን፤ ከእነዚህም ውስጥ የሚከተሉት ይገኙበታል፡",
     } as any,
     image:
       "https://images.pexels.com/photos/5752251/pexels-photo-5752251.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -238,22 +238,25 @@ export const departments: Department[] = [
     id: "5",
     name: { en: "Glaucoma Treatment", am: "የግላኮማ ምርመራ እና ሕክምና" } as any,
     description: {
-      en: "Comprehensive glaucoma diagnosis and treatment including IOP measurement, medical management, and surgical options.",
-      am: "የዓይን ግፊት መለካት፣ የግላኮማ ምርመራ፣ የመድኃኒት ሕክምና እና ክትትል፣ እና የቀዶ ጥገና ሕክምና ጨምሮ ሙሉ የግላኮማ ምርመራ እና ሕክምና።",
+      en: "Comprehensive glaucoma diagnosis and treatment including፡",
+      am: "አጠቃላይ የግላኮማ ምርመራ እና ሕክምናን ጨምሮ፡",
     } as any,
     image:
       "https://images.pexels.com/photos/5752265/pexels-photo-5752265.jpeg?auto=compress&cs=tinysrgb&w=600",
     services: [
       { en: "IOP measurement", am: "የዓይን ግፊት መለካት" },
       { en: "Diagnosis of glaucoma", am: "የግላኮማ ምርመራ" },
-      { en: "Medical management and follow up of glaucoma", am: "የመድኃኒት የግላኮማ ሕክምና እና ክትትል" },
+      {
+        en: "Medical management and follow up of glaucoma",
+        am: "የመድኃኒት የግላኮማ ሕክምና እና ክትትል",
+      },
       { en: "Surgical management of glaucoma", am: "የግላኮማ የቀዶ ጥገና ሕክምና" },
     ] as any,
     head: { en: "Dr. James Thompson", am: "ዶ/ር ጄምስ ቶምፕሰን" } as any,
   },
   {
     id: "6",
-    name: { en: "Comprehensive Eye Exams", am: "በሙሉ የዓይን ምርመራ" } as any,
+    name: { en: "Eye Exams", am: "የዓይን ምርመራ" } as any,
     description: {
       en: "Complete eye health evaluations including vision testing, eye pressure checks, and retinal examinations.",
       am: "የእይታ መርማሪያ፣ የዓይን ጫና ምርመራ እና የሬቲና ምርመራ ጨምሮ ሙሉ የዓይን ጤና ግምገማዎች።",
@@ -295,7 +298,7 @@ export const departments: Department[] = [
     } as any,
     description: {
       en: "We have VIP rooms for your private safety and comfort.",
-      am: "VIP ደረጃቸውን የጠበ቉ ከነቤተሰብዎ ሁነው የሚታከሙበት አልጋ ያለው ክፍል።",
+      am: "VIP ደረጃቸውን የጠበቁ ከነቤተሰብዎ ሁነው የሚታከሙበት አልጋ ያለው ክፍል።",
     } as any,
     image:
       "https://images.pexels.com/photos/7659567/pexels-photo-7659567.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -313,8 +316,8 @@ export const departments: Department[] = [
       am: "የዓይን ሞራ ግርዶሽ ሕክምና",
     } as any,
     description: {
-      en: "This includes SICS, Phacoemulsification, and OCT (Optical Coherence Tomography).",
-      am: "ይህም የሚከተሉትን ያካትታል፡ SICS፣ ፋኮኢሙልሲፊኬሽን እና OCT (የኦፕቲካል ኮሄረንስ ቶሞግራፊ)።",
+      en: "This includes፡",
+      am: "ይህም የሚከተሉትን ያካትታል፡",
     } as any,
     image:
       "https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -335,8 +338,8 @@ export const departments: Department[] = [
       am: "የሕፃናት የዓይን ሕክምና",
     } as any,
     description: {
-      en: "Comprehensive diagnosis and management of pediatric eye conditions including congenital disorders, refractive errors, strabismus, glaucoma, cataract, retinopathy of prematurity, and retinoblastoma.",
-      am: "አብሮ የተወለዱ ችግሮች፣ የእይታ ችግር፣ የዓይን አለርጂ፣ የዓይን መንሸዋረር፣ ግላኮማ፣ የዓይን ሞራ፣ የሬቲና ችግር እና ሬቲኖ ብላስቶማ ጨምሮ የሕፃናት የዓይን ምርመራ እና ሕክምና።",
+      en: "Comprehensive diagnosis and management of pediatric eye conditions including፡",
+      am: "የሕፃናት የዓይን ሕመሞችን አጠቃላይ ምርመራ እና አያያዝን ጨምሮ፡",
     } as any,
     image:
       "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600",
@@ -377,19 +380,37 @@ export const departments: Department[] = [
       am: "የረቲና ምርመራ እና ሕክምና",
     } as any,
     description: {
-      en: "Comprehensive diagnosis and management of retinal conditions including diabetic retinopathy, hypertensive retinopathy, optic neuritis, retinitis, retinal detachment, macular problems, and retinal vascular occlusions.",
-      am: "ከስኳር ሕመም እና ከደም ግፊት ሕመም ጋር ተያይዞ የሚመጣ የሬቲና ችግር፣ የእይታይ ነርቭ መቆጣት፣ የሬቲና እና የሬቲና የደም ስሮች መቆጣት፣ የሬቲና መላቀቅ፣ የሰገነተ እይታ ችግሮች እና የሬቲና የደም ስሮች መዘጋት ምርመራ እና ሕክምና።",
+      en: "Comprehensive diagnosis and management of retinal conditions including፡",
+      am: "የሬቲና በሽታዎችን አጠቃላይ ምርመራ እና አያያዝን ጨምሮ፡",
     } as any,
     image:
       "https://images.pexels.com/photos/5752251/pexels-photo-5752251.jpeg?auto=compress&cs=tinysrgb&w=600",
     services: [
-      { en: "Diagnosis, follow up and management of diabetic retinopathy", am: "ከስኳር ሕመም ጋር ተያይዞ ለሚመጣ ችግር ምርመራ፣ ክትትል እና ሕክምና" },
-      { en: "Diagnosis, management, and follow-up of hypertensive retinopathy", am: "ከደም ግፊት ሕመም ጋር ተያይዞ ለሚመጣ ችግር ምርመራ እና ሕክምና" },
-      { en: "Diagnosis and management of optic neuritis", am: "የእይታይ ነርቭ መቆጣት ምርመራ እና ሕክምና" },
-      { en: "Diagnosis and management of retinitis and retinal vasculitis", am: "ማንኛውም የሬቲና እና የሬቲና የደም ስሮች መቆጣት ምርመራ እና ሕክምና" },
+      {
+        en: "Diagnosis, follow up and management of diabetic retinopathy",
+        am: "ከስኳር ሕመም ጋር ተያይዞ ለሚመጣ ችግር ምርመራ፣ ክትትል እና ሕክምና",
+      },
+      {
+        en: "Diagnosis, management, and follow-up of hypertensive retinopathy",
+        am: "ከደም ግፊት ሕመም ጋር ተያይዞ ለሚመጣ ችግር ምርመራ እና ሕክምና",
+      },
+      {
+        en: "Diagnosis and management of optic neuritis",
+        am: "የእይታይ ነርቭ መቆጣት ምርመራ እና ሕክምና",
+      },
+      {
+        en: "Diagnosis and management of retinitis and retinal vasculitis",
+        am: "ማንኛውም የሬቲና እና የሬቲና የደም ስሮች መቆጣት ምርመራ እና ሕክምና",
+      },
       { en: "Diagnosis of retinal detachment", am: "የረቲና መላቀቅ ምርመራ" },
-      { en: "Diagnosis and follow up of macular problems", am: "የሰገነተ እይታ ችግሮች ምርመራ እና ክትትል" },
-      { en: "Diagnosis, management and follow up of retinal vascular occlusions", am: "የረቲና የደም ስሮች መዘጋት ምርመራ፣ ሕክምና እና ክትትል" },
+      {
+        en: "Diagnosis and follow up of macular problems",
+        am: "የሰገነተ እይታ ችግሮች ምርመራ እና ክትትል",
+      },
+      {
+        en: "Diagnosis, management and follow up of retinal vascular occlusions",
+        am: "የረቲና የደም ስሮች መዘጋት ምርመራ፣ ሕክምና እና ክትትል",
+      },
     ] as any,
     head: { en: "Dr. Sarah Mitchell", am: "ዶ/ር ሳራ ሚቺል" } as any,
   },
@@ -400,15 +421,21 @@ export const departments: Department[] = [
       am: "የላቀ የምርመራ አገልግሎቶች",
     } as any,
     description: {
-      en: "This includes OCT, OCT Angiography, Fundus Fluorescein Angiography, Visual Field Testing, A-Scan Ultrasound, and Optical Biometry.",
-      am: "ይህ የሚከተሉትን ያካትታል፡ OCT፣ OCT Angiography፣ Fundus Fluorescein Angiography፣ የእይታ መስክ ምርመራ፣ A-Scan Ultrasound እና ኦፕቲካል ባዮሜትሪ።",
+      en: "This includes፡",
+      am: "ይህ የሚከተሉትን ያካትታል፡",
     } as any,
     image:
       "https://images.pexels.com/photos/5752242/pexels-photo-5752242.jpeg?auto=compress&cs=tinysrgb&w=600",
     services: [
-      { en: "OCT (Optical Coherence Tomography)", am: "OCT (የኦፕቲካል ኮሄረንስ ቶሞግራፊ)" },
+      {
+        en: "OCT (Optical Coherence Tomography)",
+        am: "OCT (የኦፕቲካል ኮሄረንስ ቶሞግራፊ)",
+      },
       { en: "OCT Angiography (OCTA)", am: "OCT Angiography (OCTA)" },
-      { en: "Fundus Fluorescein Angiography (FFA)", am: "Fundus Fluorescein Angiography (FFA)" },
+      {
+        en: "Fundus Fluorescein Angiography (FFA)",
+        am: "Fundus Fluorescein Angiography (FFA)",
+      },
       { en: "Visual Field Testing", am: "የእይታ መስክ ምርመራ" },
       { en: "A-Scan Ultrasound", am: "A-Scan Ultrasound" },
       { en: "Optical Biometry", am: "ኦፕቲካል ባዮሜትሪ" },
