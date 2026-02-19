@@ -8,7 +8,8 @@ import React, {
 
 type Language = "en" | "am";
 
-type Translations = Record<string, Record<Language, string>>;
+type TranslationValue = string | string[];
+type Translations = Record<string, Record<Language, TranslationValue>>;
 
 const translations: Translations = {
   "brand.name": {
@@ -26,6 +27,24 @@ const translations: Translations = {
   "cta.book": { en: "Book Appointment", am: "ቀጠሮ ይያዙ" },
   "accessibility.fontSize": { en: "Font Size:", am: "የፊደል መጠን:" },
   "accessibility.contrast": { en: "Contrast", am: "ኮንትራስት" },
+  // About Us - Our Story
+  "story.intro.title": { en: "About BDSEC", am: "ስለ BDSEC" },
+  "story.intro.body": {
+    en: "BDSEC is a newly opened, state-of-the-art specialty eye hospital located in Bahir Dar. We offer a full range of advanced and affordable eye care services for all age groups, from children to seniors, delivered by a team of expert ophthalmologists, optometrists, ophthalmic nurses, and trained eye care professionals.",
+    am: "BDSEC በባህር ዳር የሚገኝ አዲስ የተከፈተ እና ዘመናዊ የሆነ የልዩ የአይን ህክምና ሆስፒታል ነው። ከልጆች እስከ አረጋውያን ድረስ ለሁሉም የዕድሜ ክልሎች የተሟላ እና ተመጣጣኝ የአይን ህክምና አገልግሎቶችን እናቀርባለን፤ ይህም በባለሙያ የዓይን ህክምና ባለሙያዎች፣ ኦፕቶሜትሪስቶች፣ የዓይን ነርሶች እና የሰለጠኑ የአይን እንክብካቤ ባለሙያዎች ቡድን ይሰጣል።",
+  },
+  // About Us - Staff
+  "staff.hero.heading": { en: "Our Staff", am: "ሰራተኞቻችን" },
+  "staff.hero.subtitle": {
+    en: "Meet the dedicated team behind BDSEC — committed to quality eye care.",
+    am: "በBDSEC የጥራት የዓይን እንክብካቤ አገልግሎት ለመስጠት የተሰማሩ ባለሙያዎችን ይወቁ።",
+  },
+  "staff.loading": { en: "Loading staff...", am: "ሰራተኞችን በመጫን ላይ..." },
+  "staff.error": { en: "Failed to load staff", am: "ሰራተኞችን መጫን አልተሳካም" },
+  "staff.empty": { en: "No staff information found.", am: "የሰራተኞች መረጃ አልተገኘም።" },
+  "staff.category.staffCount": { en: "Staff", am: "ሰራተኞች" },
+  "staff.category.untitled": { en: "Staff Category", am: "የሰራተኞች ምድብ" },
+  "staff.member.unknown": { en: "Unknown", am: "ያልታወቀ" },
   // Hero
   "hero.title1": { en: "Your Vision, Our", am: "ለእርስዎ እይታ ፣ የእኛ" },
   "hero.title2": { en: "Excellence", am: "ከፍተኛ ብቃት" },
@@ -189,10 +208,12 @@ const translations: Translations = {
     am: "በዘመናዊ ቴክኖሎጂ እና በባለሙያ የዓይን ሐኪሞች የሚሰጡ ሙሉ የዓይን እንክብካቤ አገልግሎቶች",
   },
   "services.include": { en: "Services Include:", am: "አገልግሎቶች የሚካተቱት፦" },
+  "services.seeMore": { en: "See more", am: "ተጨማሪ ይመልከቱ" },
+  "services.seeLess": { en: "See less", am: "ያስደብሩ" },
   "services.headLabel": { en: "Department Head:", am: "የክፍሉ ሃላፊ፦" },
   "services.cta.heading": {
-    en: "Ready to Experience Quality Eye Care?",
-    am: "ጥራትማ የዓይን እንክብካቤን ለመለማመድ ዝግጁ ነዎት?",
+    en: "Come and experience the difference in quality eye care at BDSEC!",
+    am: "በBDSEC የአይን እንክብካቤ ጥራት ያለውን ልዩነት ይምጡና ይመልከቱ!",
   },
   "services.cta.subtitle": {
     en: "Book your eye exam today and take the first step towards better vision",
@@ -203,17 +224,82 @@ const translations: Translations = {
   // Services additional features
   "services.features.heading": {
     en: "Why Choose Our Services?",
-    am: "ለምን አገልግሎታችንን ይምረጡ?",
+    am: "አገልግሎቶቻችንን ለምን መምረጥ አለብዎት?",
+  },
+  "services.features.subheading": {
+    en: "Why Choose BDSEC?",
+    am: "BDSECን ለምን መምረጥ አለብዎት?",
+  },
+  "services.features.tech.title": {
+    en: "Advanced technology at affordable prices;",
+    am: "በተመጣጣኝ ዋጋ የላቀ ቴክኖሎጂ፤",
+  },
+  "services.features.tech.items": {
+    en: [
+      "Advanced operating microscope",
+      "OCT",
+      "Laser",
+      "Ocular ultrasound (A-B scan ultrasound)",
+      "Humphrey Visual field analyzer",
+      "Autorefractor",
+      "IOL Master, and",
+      "phacoemulsification machine.",
+    ],
+    am: [
+      "የላቀ የአሠራር ማይክሮስኮፕ",
+      "ኦክቶበር፣",
+      "ሌዘር፣",
+      "የአይን አልትራሳውንድ (ኤ-ቢ ስካን አልትራሳውንድ)፣",
+      "ሃምፍሬይ ቪዥዋል ፊልድ ተንታኝ፣",
+      "አውቶሪፍራክተር",
+      "IOL ማስተር፣ እና",
+      "ፋኮኢሙልሲፊኬሽን ማሽን።",
+    ],
+  },
+  "services.features.optical": {
+    en: "Optical shop with high-quality and affordable glasses",
+    am: "ከፍተኛ ጥራት ያለው እና ተመጣጣኝ መነጽር ያለው የኦፕቲካል ሱቅ",
+  },
+  "services.features.environment": {
+    en: "A clean, welcoming, and safe environment, and Patient-centered care with dignity and respect",
+    am: "ንጹህ፣ እንግዳ ተቀባይ እና ደህንነቱ የተጠበቀ አካባቢ፣ እና በታካሚ ላይ ያተኮረ እንክብካቤ በክብር እና በአክብሮት",
+  },
+  "services.features.vip": {
+    en: "VIP rooms with your families",
+    am: "ከቤተሰቦችዎ ጋር የቪአይፒ ክፍሎች",
+  },
+  "services.features.professionals": {
+    en: "Experienced eye care professionals and advanced diagnostic techniques",
+    am: "ልምድ ያላቸው የአይን እንክብካቤ ባለሙያዎች እና የላቁ የምርመራ ቴክኒኮች",
   },
   "services.features.expert.title": { en: "Expert Care", am: "ባለሙያ እንክብካቤ" },
   "services.features.expert.desc": {
-    en: "Board-certified ophthalmologists with years of experience in specialized eye care",
+    en: "Experienced eye care professionals with years of experience in specialized eye care",
     am: "በልዩ የዓይን እንክብካቤ ልምድ ያላቸው የቦርድ የተረጋገጡ የዓይን ሐኪሞች",
+  },
+  "services.features.expert.items": {
+    en: [
+      "Skilled ophthalmologists with years of clinical and surgical experience",
+      "Dedicated optometrists for accurate refraction and follow-up",
+      "Compassionate nursing and support staff",
+    ],
+    am: [
+      "በክሊኒካል እና በቀዶ ጥገና ልምድ ያላቸው ባለሙያ የዓይን ሐኪሞች",
+      "ለትክክለኛ ሪፍራክሽን እና ክትትል የተመደቡ ኦፕቶሜትሪስቶች",
+      "ርኅራኄ ያላቸው ነርስ እና የድጋፍ ሰራተኞች",
+    ],
   },
   "services.features.hours.title": { en: "Extended Hours", am: "የተራዘመ ሰዓት" },
   "services.features.hours.desc": {
     en: "Extended hours including evenings and weekends for your convenience",
     am: "ለእርስዎ ምቹነት የሚያመቻች ከማታና ከሳምንት መጨረሻዎች ጨምሮ የተራዘመ ሰዓት",
+  },
+  "services.features.hours.items": {
+    en: [
+      "Working Hours: Monday to Friday | (8:00 AM – 5:00 PM)",
+      "For emergencies 7 days / 24 hours",
+    ],
+    am: ["የስራ ሰዓት: ከሰኞ እስከ ዓርብ ከ2፡00 እስከ 11፡00", "ለድንገተኛ 7 ቀን 24 ሰዓት"],
   },
   "services.features.location.title": {
     en: "Convenient Location",
@@ -221,7 +307,26 @@ const translations: Translations = {
   },
   "services.features.location.desc": {
     en: "Easily accessible location with ample parking and public transportation options",
-    am: "በቂ ማቆሚያ ቦታ እና የህዝብ ጓጓዣ አማራጮች ያሉት ቀላል የሚደረስበት ቦታ",
+    am: "በቀላሉ ሊደረስ የሚችል ቦታ በበቂ የመኪና ማቆሚያ እና የመንገድ አገልግሎት አማራጮች",
+  },
+  "services.features.location.items": {
+    en: [
+      "Visit Us at: Bahir Dar Specialty Eye Center",
+      'Located in between Bahir Dar airline station and "Geter Menged"',
+      "Call: Insert Phone Number",
+      "Email: Insert Email Address",
+    ],
+    am: [
+      "ይጎብኙን: ባሕር ዳር ልዩ የዓይን ህክምና ማዕከል",
+      "በባሕር ዳር አየር ማረፊያ እና በገጠር መንገድ መካከል እንገኛለን",
+      "ይደውሉ: Insert Phone Number",
+      "ኢሜል: Insert Email Address",
+    ],
+  },
+  // Services: who can benefit
+  "services.benefit.heading": {
+    en: "Who Can Benefit Our Services?",
+    am: "አገልግሎታችንን ማን ሊጠቅም ይችላል?",
   },
   // Events page
   "events.hero.title": {
@@ -786,14 +891,16 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({
     (key: string) => {
       const entry = translations[key];
       if (!entry) return key;
-      return entry[language] ?? entry["en"] ?? key;
+      const value = entry[language] ?? entry["en"] ?? key;
+      if (Array.isArray(value)) return value.join("\n");
+      return value;
     },
-    [language]
+    [language],
   );
 
   const value = useMemo(
     () => ({ language, setLanguage, toggleLanguage, t }),
-    [language, setLanguage, toggleLanguage, t]
+    [language, setLanguage, toggleLanguage, t],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

@@ -1,6 +1,9 @@
 import React from "react";
+import { I18nContext } from "../../context/I18nContext";
 
 const OurStory: React.FC = () => {
+  const { t } = React.useContext(I18nContext) as any;
+
   return (
     <section className="min-h-screen">
       <div className="relative bg-gradient-to-br from-[#77a867]/25 via-[#fbce6e]/25 to-[#32705a]/25">
@@ -11,6 +14,28 @@ const OurStory: React.FC = () => {
         </div>
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          {/* BDSEC intro (EN/AM) */}
+          <div className="mb-10">
+            <div className="rounded-2xl bg-white/95 shadow-xl ring-1 ring-white/40 p-6 sm:p-8">
+              <div className="flex items-start gap-4">
+                <div
+                  className="h-12 w-12 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ backgroundColor: "rgba(251, 206, 110, 0.25)" }}
+                >
+                  <span className="text-[#32705a] font-extrabold">BD</span>
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-xl sm:text-2xl font-bold text-[#32705a]">
+                    {t("story.intro.title")}
+                  </h2>
+                  <p className="mt-2 text-gray-700 leading-relaxed">
+                    {t("story.intro.body")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="grid lg:grid-cols-5 gap-10 items-center">
             <div className="lg:col-span-3">
               <div className="rounded-2xl bg-white/95 shadow-xl ring-1 ring-white/40 p-6 sm:p-8">

@@ -17,6 +17,7 @@ import { VisionAndMission } from "./components/AboutUs/VisionAndMission";
 import { OurEyeCareCenterServices } from "./components/AboutUs/OurEyeCareCenterServices";
 import OurStory from "./components/AboutUs/OurStory";
 import ManagementTeam from "./components/AboutUs/ManagementTeam";
+import OurStaff from "./components/AboutUs/OurStaff.tsx";
 import AwardsAndRecognitions from "./components/AboutUs/AwardsAndRecognitions";
 import AnualActivityReports from "./components/AboutUs/AnualActivityReports";
 import News from "./components/AboutUs/News";
@@ -27,7 +28,6 @@ import TeleOphtalmology from "./components/OurServices/TeleOphtalmology";
 import EducationAndTraining from "./components/OurServices/EducationAndTraining";
 import Research from "./components/OurServices/Research";
 import Publications from "./components/Resources/Publication";
-import StaffSOPs from "./components/Resources/ForStaff";
 import AboutTheEye from "./components/ForPatients/AboutTheEye";
 import EyeDiseaseTreatment from "./components/ForPatients/EyeDeseaseAndTratment";
 import WhatToExpect from "./components/ForPatients/WhatToExpect";
@@ -55,6 +55,7 @@ function App() {
             />
             <Route path="/about/story" element={<OurStory />} />
             <Route path="/about/management" element={<ManagementTeam />} />
+            <Route path="/about/staff" element={<OurStaff />} />
             <Route path="/about/awards" element={<AwardsAndRecognitions />} />
             <Route path="/about/reports" element={<AnualActivityReports />} />
             <Route path="/about/news" element={<News />} />

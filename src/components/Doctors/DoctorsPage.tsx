@@ -169,7 +169,7 @@ export const DoctorsPage: React.FC = () => {
                         <span>
                           {doctor.experienceYears.replace(
                             "Years of Experience",
-                            t("doctors.years")
+                            t("doctors.years"),
                           )}
                         </span>
                       </div>
@@ -246,8 +246,8 @@ export const DoctorsPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-6 bg-gray-50 rounded-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+            {/* <div className="text-center p-6 bg-gray-50 rounded-xl">
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
                 style={{ backgroundColor: "#f0f8f4" }}
@@ -260,7 +260,7 @@ export const DoctorsPage: React.FC = () => {
               <p className="text-gray-600 text-sm">
                 {t("doctors.why.card1.desc")}
               </p>
-            </div>
+            </div> */}
 
             <div className="text-center p-6 bg-gray-50 rounded-xl">
               <div
@@ -292,7 +292,7 @@ export const DoctorsPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="text-center p-6 bg-gray-50 rounded-xl">
+            {/* <div className="text-center p-6 bg-gray-50 rounded-xl">
               <div
                 className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
                 style={{ backgroundColor: "#fef7e8" }}
@@ -305,7 +305,7 @@ export const DoctorsPage: React.FC = () => {
               <p className="text-gray-600 text-sm">
                 {t("doctors.why.card4.desc")}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

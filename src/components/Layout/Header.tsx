@@ -31,7 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(
-    null
+    null,
   );
   const hoverTimeout = useRef<number | null>(null);
 
@@ -68,7 +68,8 @@ export const Header: React.FC<HeaderProps> = ({
         { name: "Our Story", href: "/about/story" },
         { name: "Vision & Mission", href: "/about/vision-mission" },
         { name: "Management Team", href: "/about/management" },
-        { name: "Our Doctors", href: "/about/doctors" },
+        { name: "Our Ophthalmologists", href: "/about/doctors" },
+        { name: "Our Staff", href: "/about/staff" },
         { name: "Awards & Recognitions", href: "/about/awards" },
         { name: "Annual Activity Reports", href: "/about/reports" },
         { name: "BDSEC News", href: "/about/news" },
@@ -98,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({
         { name: "About the eye", href: "/patients/about-eye" },
         { name: "Eye Diseases & Treatment", href: "/patients/diseases" },
         { name: "What to expect at BDSEC?", href: "/patients/what-to-expect" },
-        { name: "Insurance", href: "/patients/insurance" },
+        // { name: "Insurance", href: "/patients/insurance" },
         { name: "Give us your Feedback", href: "/contact#contact-form" },
       ],
     },
@@ -177,16 +178,6 @@ export const Header: React.FC<HeaderProps> = ({
                   <Plus className="h-3 w-3" />
                 </button>
               </div>
-              {/* Language toggle */}
-              <div className="hidden md:flex items-center ml-2">
-                <button
-                  onClick={toggleLanguage}
-                  className="px-2 py-0.5 rounded text-xs border border-gray-300 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brandDeep"
-                  aria-label="Toggle language"
-                >
-                  {language === "en" ? "EN" : "አማ"}
-                </button>
-              </div>
               <button
                 onClick={toggleHighContrast}
                 className={`hidden md:flex items-center space-x-1 px-2 py-0.5 rounded text-xs transition-colors ${
@@ -212,7 +203,7 @@ export const Header: React.FC<HeaderProps> = ({
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            {/* Mobile: branding on left; burger on right */}
+            {/* Mobile: branding on left */}
             <div className="flex items-center gap-3 md:hidden">
               <Link
                 to="/"
@@ -256,7 +247,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }`}
                         onClick={() =>
                           setOpenDropdown(
-                            openDropdown === item.name ? null : item.name
+                            openDropdown === item.name ? null : item.name,
                           )
                         }
                       >
@@ -306,34 +297,39 @@ export const Header: React.FC<HeaderProps> = ({
               ))}
             </nav>
 
-            {/* CTA Button */}
-            {/* <div className="hidden md:flex items-center space-x-4">
-              <Link
-                to="/appointments"
-                className="bg-brandYellow text-brandDeep px-6 py-2 rounded-full text-sm font-medium hover:bg-brandDeep hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2 whitespace-nowrap"
+            {/* Right side: Language toggle (desktop) and Language + Menu (mobile) */}
+            <div className="flex items-center gap-2">
+              {/* Desktop: Language toggle */}
+              <button
+                onClick={toggleLanguage}
+                className="hidden md:flex px-3 py-1.5 rounded text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-brandDeep focus:outline-none focus:ring-2 focus:ring-brandDeep transition-colors"
+                aria-label="Toggle language"
               >
-                {t("header.bookAppointment")}
-              </Link>
-              <Link
-                to="/admin"
-                className="text-brandDeep border border-brandDeep px-6 py-2 rounded-full text-sm font-medium hover:bg-brandGreen/10 transition-colors focus:outline-none focus:ring-2 focus:ring-brandDeep focus:ring-offset-2"
-              >
-                {t("header.admin")}
-              </Link>
-            </div> */}
+                {language === "en" ? "EN" : "አማ"}
+              </button>
 
-            {/* Mobile menu button on right */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-gray-700 hover:text-brandDeep focus:outline-none focus:ring-2 focus:ring-brandDeep rounded"
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
+              {/* Mobile: Language toggle and menu button */}
+              <div className="md:hidden flex items-center gap-2">
+                <button
+                  onClick={toggleLanguage}
+                  className="px-2 py-1 rounded text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-brandDeep focus:outline-none focus:ring-2 focus:ring-brandDeep transition-colors"
+                  aria-label="Toggle language"
+                >
+                  {language === "en" ? "EN" : "አማ"}
+                </button>
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="p-2 text-gray-700 hover:text-brandDeep focus:outline-none focus:ring-2 focus:ring-brandDeep rounded"
+                  aria-label="Toggle menu"
+                >
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Mobile Navigation */}
@@ -349,7 +345,7 @@ export const Header: React.FC<HeaderProps> = ({
                             setOpenMobileDropdown(
                               openMobileDropdown === item.name
                                 ? null
-                                : item.name
+                                : item.name,
                             )
                           }
                           className={`w-full flex items-center justify-between px-3 py-2 text-base font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-brandDeep ${
