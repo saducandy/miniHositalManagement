@@ -14,35 +14,14 @@ const OurStory: React.FC = () => {
         </div>
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          {/* BDSEC intro (EN/AM) */}
-          <div className="mb-10">
-            <div className="rounded-2xl bg-white/95 shadow-xl ring-1 ring-white/40 p-6 sm:p-8">
-              <div className="flex items-start gap-4">
-                <div
-                  className="h-12 w-12 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: "rgba(251, 206, 110, 0.25)" }}
-                >
-                  <span className="text-[#32705a] font-extrabold">BD</span>
-                </div>
-                <div className="min-w-0">
-                  <h2 className="text-xl sm:text-2xl font-bold text-[#32705a]">
-                    {t("story.intro.title")}
-                  </h2>
-                  <p className="mt-2 text-gray-700 leading-relaxed">
-                    {t("story.intro.body")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid lg:grid-cols-5 gap-10 items-center">
+          <div className="grid lg:grid-cols-5 gap-10 items-start">
             <div className="lg:col-span-3">
               <div className="rounded-2xl bg-white/95 shadow-xl ring-1 ring-white/40 p-6 sm:p-8">
-                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#32705a]">
-                  👁️ Our Story
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#32705a]">
+                  {t("story.intro.title")}
                 </h1>
                 <div className="mt-5 space-y-5 text-gray-700 leading-relaxed">
+                  <p>{t("story.intro.body")}</p>
                   <p>
                     It is established by strong partnership between the
                     Himalayan Cataract Project (HCP), the Federal Ministry of
