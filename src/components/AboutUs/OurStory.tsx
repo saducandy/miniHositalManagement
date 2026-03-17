@@ -24,7 +24,7 @@ const OurStory: React.FC = () => {
                   <p>{t("story.intro.body")}</p>
                   <p>
                     It is established by strong partnership between the
-                    Himalayan Cataract Project (HCP), the Federal Ministry of
+                    Cure Blindness Project, the Federal Ministry of
                     Health (FMoH), and the Amhara National Regional State Health
                     Bureau.
                   </p>

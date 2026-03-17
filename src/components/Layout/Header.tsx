@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
         { name: "Management Team", href: "/about/management" },
         { name: "Our Ophthalmologists", href: "/about/doctors" },
         { name: "Our Staff", href: "/about/staff" },
-        { name: "Awards & Recognitions", href: "/about/awards" },
+        // { name: "Awards & Recognitions", href: "/about/awards" },
         { name: "Annual Activity Reports", href: "/about/reports" },
         { name: "BDSEC News", href: "/about/news" },
         { name: "Hospital Location", href: "/about/location" },
@@ -80,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
       name: "Our Services",
       children: [
         { name: "Eye Care center", href: "/services/eye-care" },
-        { name: "Outreach", href: "/services/outreach" },
+        { name: "Enhanced Referals", href: "/services/outreach" },
         // { name: "Tele-Ophthalmology", href: "/services/tele-ophthalmology" },
         { name: "Education & Training", href: "/services/education" },
         { name: "Research", href: "/services/research" },
@@ -103,20 +103,20 @@ export const Header: React.FC<HeaderProps> = ({
         { name: "Give us your Feedback", href: "/contact#contact-form" },
       ],
     },
-    {
-      name: "Get Involved",
-      children: [
-        // { name: "Donate", href: "/get-involved/donate" },
-        {
-          name: "Organize an outreach",
-          href: "/get-involved/organize-outreach",
-        },
-      ],
-    },
-    { name: "Education & Training", href: "/services/education" },
+    // {
+    //   name: "Get Involved",
+    //   children: [
+    //     // { name: "Donate", href: "/get-involved/donate" },
+    //     {
+    //       name: "Organize an outreach",
+    //       href: "/get-involved/organize-outreach",
+    //     },
+    //   ],
+    // },
+    // { name: "Education & Training", href: "/services/education" },
     {
       name: "Notice",
-      children: [{ name: "Vacancy", href: "/notice/vacancy" }],
+      children: [{ name: "Vacancy", href: "/notice/vacancy" },{ name: "Bid", href: "/notice/bid" }],
     },
     { name: "Contact Us", href: "/contact" },
   ];

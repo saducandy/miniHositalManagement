@@ -54,7 +54,7 @@ const Outreach: React.FC = () => {
         <div className="bg-gradient-to-br from-[#77A867] to-[#FBCE6E]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#32705A] tracking-tight">
-              Community Outreach Programs
+              Enhanced Referals
             </h1>
             <p className="mt-3 text-base sm:text-lg text-[#32705A]/90">
               Bringing eye care closer to our community

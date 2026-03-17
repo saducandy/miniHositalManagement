@@ -33,8 +33,8 @@ const translations: Translations = {
     am: "ስለ ባህር ዳር ልዩ የአይን እንክብካቤ ማዕከል (BDSEC)",
   },
   "story.intro.body": {
-    en: "Bahir Dar Specialty Eye Care Center (BDSEC), located in Bahir Dar City, is a semi-autonomous, self-sustaining, and replicable model designed to transform the landscape of ophthalmic care in the region and beyond.",
-    am: "በባህር ዳር ከተማ የሚገኘው የባህር ዳር ልዩ የአይን እንክብካቤ ማዕከል (BDSEC) በክልሉ እና ከዚያም በላይ ያለውን የዓይን ህክምና ገጽታ ለመለወጥ የተነደፈ ከፊል ራሱን የቻለ፣ ራሱን የቻለ እና ሊባዛ የሚችል ሞዴል ነው።",
+    en: "Bahir Dar Specialty Eye Care Center (BDSEC), located in Bahir Dar City, is a  self-sustaining, and replicable model designed to transform the landscape of ophthalmic care in the region and beyond.",
+    am: "በባህር ዳር ከተማ የሚገኘው የባህር ዳር ልዩ የአይን እንክብካቤ ማዕከል (BDSEC) በክልሉ እና ከዚያም በላይ ያለውን የዓይን ህክምና ገጽታ ለመለወጥ የተነደፈ፣ ራሱን የቻለ እና ሊባዛ የሚችል ሞዴል ነው።",
   },
   // About Us - Staff
   "staff.hero.heading": { en: "Our Staff", am: "ሰራተኞቻችን" },
@@ -52,11 +52,11 @@ const translations: Translations = {
   "staff.category.untitled": { en: "Staff Category", am: "የሰራተኞች ምድብ" },
   "staff.member.unknown": { en: "Unknown", am: "ያልታወቀ" },
   // Hero
-  "hero.title1": { en: "Your Vision, Our", am: "ለእርስዎ እይታ ፣ የእኛ" },
-  "hero.title2": { en: "Excellence", am: "ከፍተኛ ብቃት" },
+  "hero.title1": { en: "Welcome to", am: "ወደ ባህር ዳር ልዩ የዓይን ህክምና ማዕከል" },
+  "hero.title2": { en: "Bahir Dar Specialty Eye Care Center", am: "እንኳን በደህና መጡ!" },
   "hero.subtitle": {
-    en: "Experience exceptional eye care with our team of specialized eye care professionals.",
-    am: "ከልዩ የአይን እንክብካቤ ባለሙያዎች ቡድናችን ጋር ልዩ የሆነ የአይን እንክብካቤ ያግኙ።",
+    en: "Bahir Dar Specialty Eye Care Center is a center of excellence for East Africa, with the goal of advancing eye care services in Ethiopia and beyond.",
+    am: "የባህር ዳር ልዩ የአይን እንክብካቤ ማዕከል ለምስራቅ አፍሪካ ልዩ የአይን ማዕከል ሲሆን በኢትዮጵያ እና ከዚያም በላይ የአይን እንክብካቤ አገልግሎቶችን ለማስፋፋት ግብ አለው።",
   },
   "hero.learnMore": { en: "Learn More", am: "ተጨማሪ ይመልከቱ" },
   "hero.stats.patientsServed": { en: "Patients Served", am: "የተስተናገዱ ታካሚዎች" },
@@ -164,12 +164,12 @@ const translations: Translations = {
     am: "ለድድብ ስኳር ሬቲኖፓቲ እና ማኩላር እንጥረት ልዩ ሕክምና።",
   },
   "home.services.item.pediatric.title": {
-    en: "Pediatric Eye Care",
-    am: "የህፃናት የዓይን እንክብካቤ",
+    en: "Glaucoma Treatment",
+    am: "የግላኮማ ሕክምና",
   },
   "home.services.item.pediatric.desc": {
-    en: "Specialized eye care for children from infancy through adolescence.",
-    am: "ከሕፃናትነት እስከ ወጣትነት ልጆች ልዩ የዓይን እንክብካቤ።",
+    en: "Comprehensive glaucoma diagnosis and treatment",
+    am: "አጠቃላይ የግላኮማ ምርመራ እና ሕክምና",
   },
   // Appointment booking
   "appt.title": { en: "Book an Appointment", am: "ቀጠሮ ይያዙ" },
@@ -302,7 +302,7 @@ const translations: Translations = {
   },
   "services.features.hours.items": {
     en: [
-      "Working Hours: Monday to Friday | (8:00 AM – 5:00 PM)",
+      "Working Hours: Monday to Sunday | (8:00 AM – 5:00 PM)",
       "For emergencies 7 days / 24 hours",
     ],
     am: ["የስራ ሰዓት: ከሰኞ እስከ ዓርብ ከ2፡00 እስከ 11፡00", "ለድንገተኛ 7 ቀን 24 ሰዓት"],
@@ -803,8 +803,8 @@ const translations: Translations = {
   "header.admin": { en: "Admin", am: "አስተዳዳሪ" },
   // Footer
   "footer.brand.name": {
-    en: "Bahir Dar Eye Care Center",
-    am: "ባሕር ዳር የዓይን እንክብካቤ ማእከል",
+    en: "Bahir Dar Specialty Eye Care Center",
+    am: "ባሕር ዳር ልዩ የዓይን እንክብካቤ ማዕከል",
   },
   "footer.brand.tagline": { en: "Vision Excellence", am: "በእይታ ልምድ ብርታት" },
   "footer.desc": {
@@ -850,12 +850,12 @@ const translations: Translations = {
     am: "ሰኞ-አርብ: 2:00-12:00 (LT)",
   },
   "footer.copy": {
-    en: "© 2024 Bahir Dar Specality Eye Care Center. All rights reserved.",
-    am: "© 2024 ባሕር ዳር ልዩ የዓይን ህክምና ማዕከል። መብቶች ሁሉ ተጠብቀዋል።",
+    en: "© 2026 Bahir Dar Specality Eye Care Center. All rights reserved.",
+    am: "© 2026  ባሕር ዳር ልዩ የዓይን ህክምና ማዕከል። መብቶች ሁሉ ተጠብቀዋል።",
   },
   "footer.links.privacy": { en: "Privacy Policy", am: "የግላዊነት መመሪያ" },
-  "footer.links.terms": { en: "Terms of Service", am: "የአገልግሎት ውሎች" },
-  "footer.links.accessibility": { en: "Accessibility", am: "ተደራሽነት" },
+  "footer.links.terms": { en: "Terms of Service", am: "Terms of Service" },
+  "footer.links.accessibility": { en: "Acceptable Use Policy", am: "Acceptable Use Policy" },
 };
 
 type I18nContextType = {

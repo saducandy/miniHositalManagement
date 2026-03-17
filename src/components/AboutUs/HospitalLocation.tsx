@@ -116,7 +116,7 @@ const HospitalLocation: React.FC = () => {
                     Working Hours
                   </h2>
                   <ul className="mt-2 text-sm text-gray-700 space-y-1">
-                    <li>Monday to Friday</li>
+                    <li>Monday to Sunday</li>
                     <li>8:00 AM to 12:30 AM</li>
                     <li>1:30 PM to 5:00 PM</li>
                   </ul>

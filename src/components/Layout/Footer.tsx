@@ -106,7 +106,7 @@ export const Footer: React.FC = () => {
               <li className="flex items-start space-x-3">
                 <Clock className="h-4 w-4 text-brandYellow flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300 text-sm">
-                  Monday to Friday
+                  Monday to Sunday
                   <br />
                   24 hours a day
                   <br />7 days a week
@@ -124,20 +124,22 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-300 text-sm">{t("footer.copy")}</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link
+              {/* <Link
                 to="/privacy"
                 className="text-gray-300 hover:text-brandYellow text-sm transition-colors focus:outline-none focus:text-brandYellow"
               >
                 {t("footer.links.privacy")}
-              </Link>
+              </Link> */}
               <Link
-                to="/terms"
+                target="_blank"
+                to="https://dev.bdsec.org:8081/uploads/terms_Of_Service_801c91ce7e.pdf"
                 className="text-gray-300 hover:text-brandYellow text-sm transition-colors focus:outline-none focus:text-brandYellow"
               >
                 {t("footer.links.terms")}
               </Link>
               <Link
-                to="/accessibility"
+                target="_blank"
+                to="https://dev.bdsec.org:8081/uploads/Acceptable_Use_Policy_2dc40df2fe.pdf"
                 className="text-gray-300 hover:text-brandYellow text-sm transition-colors focus:outline-none focus:text-brandYellow"
               >
                 {t("footer.links.accessibility")}

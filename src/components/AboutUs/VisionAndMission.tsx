@@ -39,8 +39,8 @@ export const VisionAndMission: React.FC = () => {
                 </h2>
               </div>
               <p className="text-lg text-gray-700 leading-relaxed">
-                To provide the highest standard of affordable, compassionate,
-                and specialized eye care services to all our patients.
+              To provide affordable, high-quality, and compassionate eye care service to all in the 
+              region.
               </p>
             </div>
             <div className="order-1 lg:order-2 flex justify-center lg:justify-start">
@@ -73,10 +73,7 @@ export const VisionAndMission: React.FC = () => {
                 </h2>
               </div>
               <p className="text-lg text-gray-700 leading-relaxed">
-                To be the definitive leader in specialty eye care across
-                Sub-Saharan Africa, ensuring that life-changing, high-quality
-                eye care is accessible to every individual, regardless of their
-                circumstances.
+              To be Sub-Saharan Africa's leader in specialty eye care, making high-quality eye care accessible to all.
               </p>
             </div>
           </div>

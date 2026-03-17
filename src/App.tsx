@@ -35,6 +35,7 @@ import Insurance from "./components/ForPatients/Insurance";
 import Donate from "./components/GetInvolved/Donate";
 import OrganizeOutreach from "./components/GetInvolved/OrganizeOutReach";
 import Vacancy from "./components/Notice/Vacancy";
+import Bid from "./components/Notice/Bid";
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
               element={<OrganizeOutreach />}
             />
             <Route path="/notice/vacancy" element={<Vacancy />} />
+            <Route path="/notice/bid" element={<Bid />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </Layout>
