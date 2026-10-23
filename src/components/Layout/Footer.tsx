@@ -132,14 +132,14 @@ export const Footer: React.FC = () => {
               </Link> */}
               <Link
                 target="_blank"
-                to="https://dev.bdsec.org:8081/uploads/terms_Of_Service_801c91ce7e.pdf"
+                to="https://bdsec.org:8081/uploads/terms_Of_Service_801c91ce7e.pdf"
                 className="text-gray-300 hover:text-brandYellow text-sm transition-colors focus:outline-none focus:text-brandYellow"
               >
                 {t("footer.links.terms")}
               </Link>
               <Link
                 target="_blank"
-                to="https://dev.bdsec.org:8081/uploads/Acceptable_Use_Policy_2dc40df2fe.pdf"
+                to="https://bdsec.org:8081/uploads/Acceptable_Use_Policy_2dc40df2fe.pdf"
                 className="text-gray-300 hover:text-brandYellow text-sm transition-colors focus:outline-none focus:text-brandYellow"
               >
                 {t("footer.links.accessibility")}

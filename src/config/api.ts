@@ -3,7 +3,7 @@
  * Centralized base URL for all API requests
  */
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://dev.bdsec.org:8081";
+  import.meta.env.VITE_API_BASE_URL || "https://bdsec.org:8081";
 
 /**
  * Helper function to get the full API URL
